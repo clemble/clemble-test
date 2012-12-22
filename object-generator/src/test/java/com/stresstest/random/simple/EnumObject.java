@@ -1,0 +1,33 @@
+package com.stresstest.random.simple;
+
+public enum EnumObject {
+    FIRST,
+    TWO,
+    THREE,
+    FORE,
+    FIVE,
+    SIX,
+    SEVEN,
+    EIGHT,
+    NINE,
+    TEN,
+    ELEVEN,
+    TWELVE,
+    THERTEEN,
+    FORTEEN,
+    FIVTEEN,
+    SIXTEEN,
+    EIGHTEEN,
+    NINETEEN,
+    TWENTY,
+    TWENTYONE,
+    TWENTYTWO,
+    TWENTYTHREE,
+    TWENTYFORE,
+    TWENTYFIVE,
+    TWENTYSIX,
+    TWENTYSEVEN,
+    TWENTYEIGHT,
+    TWENTYNINE,
+    THERTY;
+}
