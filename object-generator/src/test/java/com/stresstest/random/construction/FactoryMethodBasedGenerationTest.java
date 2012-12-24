@@ -18,6 +18,15 @@ public class FactoryMethodBasedGenerationTest {
                 }
             };
         }
+        
+        public static PublicAbstractFactoryMethodBasedClass create(final PublicAbstractFactoryMethodBasedClass value) {
+            return new PublicAbstractFactoryMethodBasedClass() {
+                @Override
+                public Boolean getData() {
+                    return value.getData();
+                }
+            };
+        }
     }
 
     @Test
@@ -35,6 +44,15 @@ public class FactoryMethodBasedGenerationTest {
                 @Override
                 public Boolean getData() {
                     return value;
+                }
+            };
+        }
+        
+        private static PrivateAbstractFactoryMethodBasedClass create(final PrivateAbstractFactoryMethodBasedClass value) {
+            return new PrivateAbstractFactoryMethodBasedClass() {
+                @Override
+                public Boolean getData() {
+                    return value.getData();
                 }
             };
         }
@@ -57,6 +75,15 @@ public class FactoryMethodBasedGenerationTest {
                 }
             };
         }
+        
+        static DefaultAbstractFactoryMethodBasedClass<Boolean> create(final DefaultAbstractFactoryMethodBasedClass<Boolean> value) {
+            return new DefaultAbstractFactoryMethodBasedClass<Boolean>() {
+                @Override
+                public Boolean getData() {
+                    return value.getData();
+                }
+            };
+        }
     }
 
     @Test
@@ -72,6 +99,14 @@ public class FactoryMethodBasedGenerationTest {
                 @Override
                 public Boolean getData() {
                     return value;
+                }
+            };
+        }
+        protected static ProtectedAbstractFactoryMethodBasedClass create(final ProtectedAbstractFactoryMethodBasedClass value) {
+            return new ProtectedAbstractFactoryMethodBasedClass() {
+                @Override
+                public Boolean getData() {
+                    return value.getData();
                 }
             };
         }

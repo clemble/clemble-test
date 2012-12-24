@@ -4,10 +4,11 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
+import com.stresstest.random.ObjectGenerator;
 import com.stresstest.random.SimpleValueGeneratorFactory;
 import com.stresstest.random.ValueGenerator;
-import com.stresstest.random.impl.ClassValueGenerator;
 import com.stresstest.random.impl.ClassConstructor.BuilderBasedConstructor;
+import com.stresstest.random.impl.ClassValueGenerator;
 
 public class ConstructionBuilderStructureTest {
 
@@ -153,4 +154,31 @@ public class ConstructionBuilderStructureTest {
         Assert.assertNotNull(classValueGenerator.getPropertySetter());
     }
 
+    public static class UnconstructableBuilderBasedClass {
+        final private boolean data;
+
+        private UnconstructableBuilderBasedClass(boolean dataValue) {
+            this.data = dataValue;
+        }
+
+        public boolean getData() {
+            return data;
+        }
+        
+        public static class PublicBuilderBasedClassBuilder {
+            private boolean value;
+            public UnconstructableBuilderBasedClass build(){
+                return new UnconstructableBuilderBasedClass(value);
+            }
+        }
+        
+        private static PublicBuilderBasedClassBuilder newBuilder() {
+            throw new IllegalAccessError();
+        }
+    }
+    
+    @Test(expected = RuntimeException.class)
+    public void testUnconstructableInitiation() {
+        UnconstructableBuilderBasedClass result = ObjectGenerator.generate(UnconstructableBuilderBasedClass.class);
+    }
 }

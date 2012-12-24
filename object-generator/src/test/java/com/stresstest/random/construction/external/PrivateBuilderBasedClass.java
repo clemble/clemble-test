@@ -22,5 +22,11 @@ public class PrivateBuilderBasedClass {
     private static PrivateBuilderBasedClassBuilder newBuilder() {
         return new PrivateBuilderBasedClassBuilder();
     }
+    
+    private static PrivateBuilderBasedClassBuilder newBuilder(PrivateBuilderBasedClass builderBasedClass) {
+        PrivateBuilderBasedClassBuilder builder = new PrivateBuilderBasedClassBuilder();
+        builder.value = builderBasedClass.data;
+        return builder;
+    }
 
 }

@@ -20,5 +20,11 @@ abstract class DefaultAbstractBuilderBasedClass {
     static DefaultBuilderBasedClassBuilder create() {
         return new DefaultBuilderBasedClassBuilder();
     }
+    
+    static DefaultBuilderBasedClassBuilder create(DefaultAbstractBuilderBasedClass basedClass) {
+        DefaultBuilderBasedClassBuilder builder = new DefaultBuilderBasedClassBuilder();
+        builder.data = basedClass.getData();
+        return builder;
+    }
 
 }

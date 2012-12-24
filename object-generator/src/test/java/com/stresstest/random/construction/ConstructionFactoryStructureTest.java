@@ -24,10 +24,11 @@ public class ConstructionFactoryStructureTest {
         private boolean getData() {
             return data;
         }
-        
+
         private static class PrivateFactoryMethodClassBuilder {
             private boolean value;
-            private PrivateFactoryMethodClass build(){
+
+            private PrivateFactoryMethodClass build() {
                 return new PrivateFactoryMethodClass(value);
             }
         }
@@ -35,8 +36,12 @@ public class ConstructionFactoryStructureTest {
         private static PrivateFactoryMethodClass create(boolean value) {
             return new PrivateFactoryMethodClass(value);
         }
-       
-        private static PrivateFactoryMethodClassBuilder newBuilder(){
+
+        private static PrivateFactoryMethodClass create(final PrivateFactoryMethodClass value) {
+            return value;
+        }
+
+        private static PrivateFactoryMethodClassBuilder newBuilder() {
             return new PrivateFactoryMethodClassBuilder();
         }
     }
@@ -61,15 +66,20 @@ public class ConstructionFactoryStructureTest {
 
         protected static class ProtectedFactoryMethodClassBuilder {
             protected boolean value;
-            protected ProtectedFactoryMethodClass build(){
+
+            protected ProtectedFactoryMethodClass build() {
                 return new ProtectedFactoryMethodClass(value);
             }
         }
-        
+
         protected static ProtectedFactoryMethodClass create(boolean value) {
             return new ProtectedFactoryMethodClass(value);
         }
-        
+
+        protected static ProtectedFactoryMethodClass create(final ProtectedFactoryMethodClass value) {
+            return value;
+        }
+
         protected static ProtectedFactoryMethodClassBuilder newBuilder() {
             return new ProtectedFactoryMethodClassBuilder();
         }
@@ -95,15 +105,20 @@ public class ConstructionFactoryStructureTest {
 
         static class DefaultFactoryMethodClassBuilder {
             protected boolean value;
-            protected DefaultFactoryMethodClass build(){
+
+            protected DefaultFactoryMethodClass build() {
                 return new DefaultFactoryMethodClass(value);
             }
         }
-        
+
         static DefaultFactoryMethodClass create(boolean value) {
             return new DefaultFactoryMethodClass(value);
         }
         
+        static DefaultFactoryMethodClass create(final DefaultFactoryMethodClass value) {
+            return value;
+        }
+
         static DefaultFactoryMethodClassBuilder newBuilder() {
             return new DefaultFactoryMethodClassBuilder();
         }
@@ -126,10 +141,11 @@ public class ConstructionFactoryStructureTest {
         public boolean getData() {
             return data;
         }
-        
+
         public static class PublicFactoryMethodClassBuilder {
             private boolean value;
-            public PublicFactoryMethodClass build(){
+
+            public PublicFactoryMethodClass build() {
                 return new PublicFactoryMethodClass(value);
             }
         }
@@ -138,6 +154,10 @@ public class ConstructionFactoryStructureTest {
             return new PublicFactoryMethodClass(value);
         }
         
+        public static PublicFactoryMethodClass create(PublicFactoryMethodClass value) {
+            return value;
+        }
+
         public static PublicFactoryMethodClassBuilder newBuilder() {
             return new PublicFactoryMethodClassBuilder();
         }
@@ -149,21 +169,21 @@ public class ConstructionFactoryStructureTest {
         ClassValueGenerator<PublicFactoryMethodClass> classValueGenerator = (ClassValueGenerator<PublicFactoryMethodClass>) factoryGenerator;
         Assert.assertTrue(classValueGenerator.getObjectConstructor() instanceof FactoryMethodBasedConstructor);
     }
-    
+
     private static class TwoParametersClass {
-        
+
         final private int numberValue;
         final private boolean booleanValue;
-        
-        private TwoParametersClass(){
+
+        private TwoParametersClass() {
             this(10);
         }
-        
-        private TwoParametersClass(final int number){
+
+        private TwoParametersClass(final int number) {
             this(number, false);
         }
-        
-        private TwoParametersClass(final int number, final boolean booleanValue){
+
+        private TwoParametersClass(final int number, final boolean booleanValue) {
             this.numberValue = number;
             this.booleanValue = booleanValue;
         }

@@ -12,22 +12,21 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.TreeSet;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 
-abstract public class PropertySetter<T> implements Comparable<PropertySetter<?>> {
+abstract public class PropertySetter<T> {
 
     abstract public void apply(Object target);
 
     abstract protected Class<?> getAffectedClass();
 
     final public boolean isApplicable(ClassReflectionAccessWrapper<?> applicableToClass) {
-        return applicableToClass == null ? false : applicableToClass.canReplace(getAffectedClass());
-    }
-
-    final public boolean isMoreSpecific(PropertySetter<?> anotherPropertySelector) {
-        return anotherPropertySelector == null ? true : anotherPropertySelector.getAffectedClass().isAssignableFrom(getAffectedClass());
+        return applicableToClass.canReplace(getAffectedClass());
     }
 
     @Override
@@ -51,14 +50,12 @@ abstract public class PropertySetter<T> implements Comparable<PropertySetter<?>>
 
         @Override
         public void apply(Object target) {
-            if (target == null)
-                return;
             Object valueToSet = valueGenerator.generate();
-            // Step 1. Setting method as a regular expression
+            // Step 1. Setting method preferably to field as a regular expression
             try {
                 if (method != null) {
                     method.invoke(target, valueToSet);
-                } else if (field != null) {
+                } else {
                     field.set(target, valueToSet);
                 }
             } catch (Exception methodSetException) {
@@ -67,7 +64,7 @@ abstract public class PropertySetter<T> implements Comparable<PropertySetter<?>>
                     if (method != null) {
                         method.setAccessible(true);
                         method.invoke(target, valueToSet);
-                    } else if (field != null) {
+                    } else {
                         field.setAccessible(true);
                         field.set(target, valueToSet);
                     }
@@ -83,14 +80,11 @@ abstract public class PropertySetter<T> implements Comparable<PropertySetter<?>>
 
         @Override
         public int hashCode() {
-            final int prime = 31;
-            int result = 1;
-            result = prime * result + ((field == null) ? 0 : field.hashCode());
-            result = prime * result + ((method == null) ? 0 : method.hashCode());
-            return result;
+            return new HashCodeBuilder().append(field).append(method).toHashCode();
         }
 
         @Override
+        @SuppressWarnings("unchecked")
         public boolean equals(Object obj) {
             if (this == obj)
                 return true;
@@ -98,42 +92,13 @@ abstract public class PropertySetter<T> implements Comparable<PropertySetter<?>>
                 return false;
             if (getClass() != obj.getClass())
                 return false;
-            SimplePropertySetter other = (SimplePropertySetter) obj;
-            if (field == null) {
-                if (other.field != null)
-                    return false;
-            } else if (!field.equals(other.field))
-                return false;
-            if (method == null) {
-                if (other.method != null)
-                    return false;
-            } else if (!method.equals(other.method))
-                return false;
-            return true;
+            SimplePropertySetter<T> other = (SimplePropertySetter<T>) obj;
+            return new EqualsBuilder().append(field, other.field).append(method, other.method).isEquals();
         }
 
         @Override
         public String toString() {
             return (field != null ? field.getName() : "-") + " / " + (method != null ? method.getName() : "-");
-        }
-
-        @Override
-        public int compareTo(PropertySetter<?> anotherPropertySetter) {
-            int comparison = 1;
-            if (anotherPropertySetter instanceof SimplePropertySetter) {
-                Field anotherField = ((SimplePropertySetter<?>) anotherPropertySetter).field;
-                Method anotherMethod = ((SimplePropertySetter<?>) anotherPropertySetter).method;
-                if (field != null && anotherField != null) {
-                    comparison = -field.getName().compareTo(anotherField.getName());
-                }
-                if (comparison == 0 && method != null && anotherMethod != null) {
-                    comparison = -method.getName().compareTo(anotherMethod.getName());
-                }
-                if (comparison == 0) {
-                    comparison = getAffectedClass().isAssignableFrom(anotherPropertySetter.getAffectedClass()) ? 1 : -1;
-                }
-            }
-            return comparison;
         }
 
     }
@@ -153,21 +118,16 @@ abstract public class PropertySetter<T> implements Comparable<PropertySetter<?>>
 
         @Override
         public void apply(Object target) {
-            if (target == null)
-                return;
             initialPropertySetter.apply(target);
             Object valueToSet = valueGenerator.generate();
             // Step 1. Setting method as a regular expression
             try {
-                if (method != null) {
+                if (method != null)
                     method.invoke(target, valueToSet);
-                }
             } catch (Exception methodSetException) {
                 try {
-                    if (method != null) {
-                        method.setAccessible(true);
-                        method.invoke(target, valueToSet);
-                    }
+                    method.setAccessible(true);
+                    method.invoke(target, valueToSet);
                 } catch (Exception exception) {
                 }
             }
@@ -180,13 +140,11 @@ abstract public class PropertySetter<T> implements Comparable<PropertySetter<?>>
 
         @Override
         public int hashCode() {
-            final int prime = 31;
-            int result = 1;
-            result = prime * result + ((initialPropertySetter == null) ? 0 : initialPropertySetter.hashCode());
-            return result;
+            return new HashCodeBuilder().append(initialPropertySetter).toHashCode();
         }
 
         @Override
+        @SuppressWarnings("rawtypes")
         public boolean equals(Object obj) {
             if (this == obj)
                 return true;
@@ -195,19 +153,7 @@ abstract public class PropertySetter<T> implements Comparable<PropertySetter<?>>
             if (getClass() != obj.getClass())
                 return false;
             CollectionPropertySetter other = (CollectionPropertySetter) obj;
-            if (initialPropertySetter == null) {
-                if (other.initialPropertySetter != null)
-                    return false;
-            } else if (!initialPropertySetter.equals(other.initialPropertySetter))
-                return false;
-            return true;
-        }
-
-        @Override
-        public int compareTo(PropertySetter<?> o) {
-            if (o instanceof CollectionPropertySetter)
-                return -initialPropertySetter.compareTo(((CollectionPropertySetter) o).initialPropertySetter);
-            return -1;
+            return new EqualsBuilder().append(initialPropertySetter, other.initialPropertySetter).isEquals();
         }
 
         @Override
@@ -248,6 +194,59 @@ abstract public class PropertySetter<T> implements Comparable<PropertySetter<?>>
             return field.getName().toLowerCase();
         }
     };
+    
+    final private static Comparator<PropertySetter<?>> STRING_PRESENTATION_COMPARATOR = new Comparator<PropertySetter<?>>() {
+        @Override
+        public int compare(final PropertySetter<?> firstPropertySetter, final PropertySetter<?> secondPropertySetter) {
+            return firstPropertySetter.toString().compareTo(secondPropertySetter.toString());
+        }
+    };
+    
+    final private static Comparator<PropertySetter<?>> PRESENTATION_TYPE_COMPARATOR = new Comparator<PropertySetter<?>>() {
+        @Override
+        public int compare(final PropertySetter<?> firstPropertySetter, final PropertySetter<?> secondPropertySetter) {
+            boolean firstCollection = firstPropertySetter instanceof CollectionPropertySetter;
+            boolean secondCollection = secondPropertySetter instanceof CollectionPropertySetter;
+            return firstCollection && secondCollection ? 0 : firstCollection ? -1 : 1;
+        }
+    };
+    
+    final private static Comparator<PropertySetter<?>> TYPE_COMPARATOR = new Comparator<PropertySetter<?>>() {
+        @Override
+        public int compare(final PropertySetter<?> firstPropertySetter, final PropertySetter<?> secondPropertySetter) {
+            boolean firstSimpleProperty = firstPropertySetter instanceof SimplePropertySetter;
+            boolean secondSimpleProperty = secondPropertySetter instanceof SimplePropertySetter;
+            if(firstSimpleProperty && secondSimpleProperty) {
+                // Step 1. Check field names
+                Field firstField = ((SimplePropertySetter<?>) firstPropertySetter).field;
+                Field secondField = ((SimplePropertySetter<?>) secondPropertySetter).field;
+                if (firstField != null && secondField != null) {
+                    int comparison = secondField.getName().compareTo(firstField.getName());
+                    if (comparison != 0)
+                        return comparison;
+                }
+                // Step 2. Check method names
+                Method firstMethod = ((SimplePropertySetter<?>) firstPropertySetter).method;
+                Method secondMethod = ((SimplePropertySetter<?>) secondPropertySetter).method;
+                if (firstMethod != null && secondMethod != null) {
+                    int comparison = secondMethod.getName().compareTo(firstMethod.getName());
+                    if(comparison != 0)
+                        return comparison;
+                }
+                return ((SimplePropertySetter<?>) firstPropertySetter).getAffectedClass().isAssignableFrom(((SimplePropertySetter<?>) secondPropertySetter).getAffectedClass()) ? 1 : -1;
+            } else if(!firstSimpleProperty && !secondSimpleProperty) {
+                // Comparison of Collections is equivalent to comparison of the types
+                return compare(((CollectionPropertySetter<?>) firstPropertySetter).initialPropertySetter, ((CollectionPropertySetter<?>) secondPropertySetter).initialPropertySetter);
+            } else if(firstSimpleProperty){
+                return 1;
+            } else if(secondSimpleProperty) {
+                return -1;
+            }
+            // This is never reached :)
+            return 0;
+        }
+    };
+
 
     private static Field findField(final Class searchClass, final String fieldName) {
         Collection<Field> fieldCandidates = Collections2.filter(Arrays.asList(searchClass.getDeclaredFields()), new Predicate<Field>() {
@@ -304,13 +303,6 @@ abstract public class PropertySetter<T> implements Comparable<PropertySetter<?>>
         return create(possibleField, method, valueGenerator);
     }
 
-    public static <T> PropertySetter<T> create(final Class<?> searchClass, final String name, final ValueGenerator<T> valueGenerator) {
-        final String possibleName = name.toLowerCase();
-        final Field possibleField = findField(searchClass, possibleName);
-        final Method possibleMethod = findSetMethod(searchClass, possibleName);
-        return create(possibleField, possibleMethod, valueGenerator);
-    }
-
     public static <T> PropertySetter<T> create(final Field field, final Method method, final ValueGenerator<T> valueGenerator) {
         if (field != null && Collection.class.isAssignableFrom(field.getType())) {
             Method addMethod = findAddMethod(field.getDeclaringClass(), EXTRACT_FIELD_NAME.apply(field));
@@ -323,20 +315,12 @@ abstract public class PropertySetter<T> implements Comparable<PropertySetter<?>>
         }
     }
 
-    public static <T> Collection<PropertySetter<?>> create(final ClassReflectionAccessWrapper<T> searchClass) {
+    public static <T> Collection<PropertySetter<?>> extractAvailableProperties(final ClassReflectionAccessWrapper<T> searchClass) {
         // Step 1. Create Collection field setters
-        final Collection<PropertySetter<?>> propertySetters = new TreeSet<PropertySetter<?>>(new Comparator<PropertySetter<?>>() {
-            @Override
-            public int compare(PropertySetter<?> o1, PropertySetter<?> o2) {
-                return o1.toString().compareTo(o2.toString());
-            }
-        });
+        final Collection<PropertySetter<?>> propertySetters = new TreeSet<PropertySetter<?>>(STRING_PRESENTATION_COMPARATOR);
         propertySetters.addAll(SELECTOR_MANAGER.getApplicableProperties(searchClass));
         for (Field field : searchClass.getFields()) {
-            PropertySetter<?> fieldSetter = createFieldSetter(field);
-            if (fieldSetter != null) {
-                propertySetters.add(fieldSetter);
-            }
+            propertySetters.add(createFieldSetter(field));
         }
         // Step 2. Create Collection of method setters
         for (Method method : Collections2.filter(searchClass.getMethods(), EXTRACT_APPLICABLE_METHODS)) {
@@ -347,26 +331,22 @@ abstract public class PropertySetter<T> implements Comparable<PropertySetter<?>>
         }
 
         final List<PropertySetter<?>> resultSetters = new ArrayList<PropertySetter<?>>(propertySetters);
-        Collections.sort(resultSetters, new Comparator<PropertySetter<?>>() {
-            @Override
-            public int compare(PropertySetter<?> o1, PropertySetter<?> o2) {
-                boolean firstCollection = o1 instanceof CollectionPropertySetter;
-                boolean secondCollection = o2 instanceof CollectionPropertySetter;
-                return firstCollection && secondCollection ? 0 : firstCollection ? -1 : 1;
-            }
-        });
+        Collections.sort(resultSetters, PRESENTATION_TYPE_COMPARATOR);
         // Step 3. Returning accumulated result
         return resultSetters;
     }
 
-    final private static SimplePropertySelectorManager SELECTOR_MANAGER = new SimplePropertySelectorManager();
+    final private static PropertySetterManager SELECTOR_MANAGER = new PropertySetterManager();
 
     public static <T> void register(final Class<?> searchClass, final String name, final ValueGenerator<T> valueGenerator) {
-        PropertySetter<T> propertySetter = create(searchClass, name, valueGenerator);
+        final String possibleName = name.toLowerCase();
+        final Field possibleField = findField(searchClass, possibleName);
+        final Method possibleMethod = findSetMethod(searchClass, possibleName);
+        PropertySetter<T> propertySetter = create(possibleField, possibleMethod, valueGenerator);
         SELECTOR_MANAGER.addSpecificProperties(propertySetter);
     }
 
-    final private static class SimplePropertySelectorManager {
+    final private static class PropertySetterManager {
 
         final private Collection<PropertySetter<?>> propertySelectors = new HashSet<PropertySetter<?>>();
 
@@ -383,7 +363,7 @@ abstract public class PropertySetter<T> implements Comparable<PropertySetter<?>>
                 }
             });
             List<PropertySetter<?>> sortedSelectors = new ArrayList<PropertySetter<?>>(applicableSelectors);
-            Collections.sort(sortedSelectors);
+            Collections.sort(sortedSelectors, TYPE_COMPARATOR);
             return sortedSelectors;
         }
 

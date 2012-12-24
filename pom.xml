@@ -49,11 +49,6 @@
                 <version>${guava.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.stresstest</groupId>
-                <artifactId>runners</artifactId>
-                <version>0.0.1-SNAPSHOT</version>
-            </dependency>
-            <dependency>
                 <groupId>org.reflections</groupId>
                 <artifactId>reflections</artifactId>
                 <version>${reflections.version}</version>

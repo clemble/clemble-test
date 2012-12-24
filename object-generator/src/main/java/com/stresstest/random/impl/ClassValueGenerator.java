@@ -2,7 +2,7 @@ package com.stresstest.random.impl;
 
 import com.stresstest.random.ValueGenerator;
 
-public class ClassValueGenerator<T> implements ValueGenerator<T> {
+public class ClassValueGenerator<T> extends ValueGenerator<T> {
 
     final private ClassConstructor<T> objectConstructor;
     final private ClassPropertySetter<T> propertySetter;

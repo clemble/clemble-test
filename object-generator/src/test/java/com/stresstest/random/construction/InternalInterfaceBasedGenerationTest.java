@@ -12,11 +12,14 @@ public class InternalInterfaceBasedGenerationTest {
     }
 
     public class PublicImplementation implements PublicInterface<Boolean> {
-
         final public boolean data;
 
         public PublicImplementation(boolean data) {
             this.data = data;
+        }
+
+        public PublicImplementation(PublicImplementation data) {
+            this.data = data.data;
         }
 
         @Override
@@ -37,11 +40,14 @@ public class InternalInterfaceBasedGenerationTest {
     }
 
     private class PrivateImplementation implements PrivateInterface<Boolean> {
-
         final public boolean data;
 
         private PrivateImplementation(boolean data) {
             this.data = data;
+        }
+
+        private PrivateImplementation(PrivateImplementation data) {
+            this.data = data.data;
         }
 
         @Override
@@ -58,17 +64,18 @@ public class InternalInterfaceBasedGenerationTest {
     }
 
     interface DefaultInterface<T> {
-
         public T getData();
-
     }
 
     class DefaultImplementation implements DefaultInterface<Boolean> {
-
         final private boolean data;
 
         DefaultImplementation(boolean dataValue) {
             this.data = dataValue;
+        }
+
+        DefaultImplementation(DefaultImplementation dataValue) {
+            this.data = dataValue.data;
         }
 
         @Override
@@ -77,25 +84,28 @@ public class InternalInterfaceBasedGenerationTest {
         }
 
     }
-    
+
     @Test
     public void testDefaultInitiation() {
         DefaultInterface<?> result = ObjectGenerator.generate(DefaultInterface.class);
         Assert.assertTrue(result instanceof DefaultImplementation);
     }
-    
+
     protected interface ProtectedInterface<T> {
         public T getData();
     }
-    
+
     protected class ProtectedImplementation implements ProtectedInterface<Boolean> {
-        
         final private boolean data;
-        
-        protected ProtectedImplementation(boolean dataValue){
+
+        protected ProtectedImplementation(boolean dataValue) {
             this.data = dataValue;
         }
-        
+
+        protected ProtectedImplementation(ProtectedImplementation dataValue) {
+            this.data = dataValue.data;
+        }
+
         public Boolean getData() {
             return data;
         }

@@ -210,7 +210,7 @@ abstract public class ClassConstructor<T> {
             // Step 4. Selecting most factory method based
             ClassConstructor<T> builderMethod = new FactoryMethodBasedConstructor(builder, createValueGenerators(builder.getParameterTypes(),
                     valueGeneratorFactory));
-            ClassPropertySetter<T> builderPropertySetter = new ClassPropertySetter<T>(PropertySetter.create(classToGenerate.wrap(builder.getReturnType())));
+            ClassPropertySetter<T> builderPropertySetter = new ClassPropertySetter<T>(PropertySetter.extractAvailableProperties(classToGenerate.wrap(builder.getReturnType())));
 
             Method valueBuilderMethod = null;
             for (Method constructorMethod : builder.getReturnType().getDeclaredMethods()) {

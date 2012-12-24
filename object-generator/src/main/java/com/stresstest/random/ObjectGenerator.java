@@ -4,12 +4,14 @@ public class ObjectGenerator {
 
     final private static ValueGeneratorFactory STANDARD_VALUE_GENERATOR = new SimpleValueGeneratorFactory();
 
-    final private static ValueGeneratorFactory CACHED_VALUE_GENERATOR = new CachedValueGeneratorFactory(STANDARD_VALUE_GENERATOR);
-
     private static ValueGeneratorFactory valueGeneratorFactory = STANDARD_VALUE_GENERATOR;
 
+    private ObjectGenerator(){
+        throw new IllegalAccessError();
+    }
+    
     public static void enableCaching() {
-        valueGeneratorFactory = CACHED_VALUE_GENERATOR;
+        valueGeneratorFactory = new CachedValueGeneratorFactory(STANDARD_VALUE_GENERATOR);
     }
 
     public static void disableCaching() {

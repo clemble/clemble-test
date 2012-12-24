@@ -16,6 +16,9 @@ public class InternalAbstractBasedGenerationTest {
         public PublicAbstractClassImpl(boolean data) {
             this.data = data;
         }
+        public PublicAbstractClassImpl(PublicAbstractClassImpl data) {
+            this.data = data.data;
+        }
         @Override
         public Boolean getData() {
             return data;
@@ -37,6 +40,9 @@ public class InternalAbstractBasedGenerationTest {
         private PrivateAbstractCassImpl(boolean data) {
             this.data = data;
         }
+        private PrivateAbstractCassImpl(PrivateAbstractCassImpl data) {
+            this.data = data.data;
+        }
         @Override
         public Boolean getData() {
             return data;
@@ -57,6 +63,9 @@ public class InternalAbstractBasedGenerationTest {
         DefaultAbstractClassImplementation(boolean dataValue) {
             this.data = dataValue;
         }
+        DefaultAbstractClassImplementation(DefaultAbstractClassImplementation dataValue) {
+            this.data = dataValue.data;
+        }
         @Override
         public Boolean getData() {
             return data;
@@ -76,6 +85,9 @@ public class InternalAbstractBasedGenerationTest {
         final private boolean data;
         protected ProtectedAbstractClassImpl(boolean dataValue){
             this.data = dataValue;
+        }
+        protected ProtectedAbstractClassImpl(ProtectedAbstractClassImpl dataValue){
+            this.data = dataValue.data;
         }
         public Boolean getData() {
             return data;

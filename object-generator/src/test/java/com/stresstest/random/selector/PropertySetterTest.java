@@ -2,24 +2,33 @@ package com.stresstest.random.selector;
 
 import junit.framework.Assert;
 
-import org.junit.Ignore;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import com.stresstest.random.ObjectGenerator;
 import com.stresstest.random.PropertySetter;
+import com.stresstest.random.ValueGenerator;
 import com.stresstest.random.impl.ClassConstructor.ConstructorBasedConstructor;
 import com.stresstest.random.impl.ClassPropertySetter;
 import com.stresstest.random.impl.ClassValueGenerator;
-import com.stresstest.random.impl.ConstantValueGenerator;
-import com.stresstest.random.impl.IntegerValueGenerator;
 
 public class PropertySetterTest {
+    @Before
+    public void setUp() {
+        ObjectGenerator.disableCaching();
+    }
+
+    @After
+    public void clean() {
+        ObjectGenerator.enableCaching();
+    }
 
     @Test
     public void testRandomGeneration() {
-        PropertySetter.register(A.class, "intValue", new IntegerValueGenerator());
-        PropertySetter.register(C.class, "intValue", new IntegerValueGenerator());
-        PropertySetter.register(D.class, "intValue", new IntegerValueGenerator());
+        PropertySetter.register(A.class, "intValue", ValueGenerator.INTEGER_VALUE_GENERATOR);
+        PropertySetter.register(C.class, "intValue", ValueGenerator.INTEGER_VALUE_GENERATOR);
+        PropertySetter.register(D.class, "intValue", ValueGenerator.INTEGER_VALUE_GENERATOR);
 
         D randomValue = ObjectGenerator.generate(D.class);
         Assert.assertNotSame(randomValue.getIntValue(), ((C) randomValue).getIntValue());
@@ -37,19 +46,46 @@ public class PropertySetterTest {
 
     @Test
     public void testFixedValueGeneration() {
-        PropertySetter.register(A.class, "intValue", new ConstantValueGenerator(10));
-        PropertySetter.register(C.class, "intValue", new ConstantValueGenerator(20));
-        PropertySetter.register(D.class, "intValue", new ConstantValueGenerator(30));
+        PropertySetter.register(A.class, "intValue", ValueGenerator.constantValueGenerator(10));
+        PropertySetter.register(C.class, "intValue", ValueGenerator.constantValueGenerator(20));
+        PropertySetter.register(D.class, "intValue", ValueGenerator.constantValueGenerator(30));
 
+        PropertySetter.register(B.class, "doubleValue", ValueGenerator.constantValueGenerator(40.0));
+        PropertySetter.register(D.class, "doubleValue", ValueGenerator.constantValueGenerator(50.0));
+        
         A randomAValue = ObjectGenerator.generate(A.class);
         B randomBValue = ObjectGenerator.generate(B.class);
         C randomCValue = ObjectGenerator.generate(C.class);
         D randomDValue = ObjectGenerator.generate(D.class);
 
-        Assert.assertEquals("A did not match", randomAValue.getIntValue(), 10);
-        Assert.assertEquals("B did not match", randomBValue.getIntValue(), 10);
-        Assert.assertEquals("C did not match", randomCValue.getIntValue(), 20);
-//        Assert.assertEquals("D did not match", randomDValue.getIntValue(), 30);
+        Assert.assertEquals("A integer did not match", randomAValue.getIntValue(), 10);
+        Assert.assertEquals("B integer did not match", randomBValue.getIntValue(), 10);
+        Assert.assertEquals("B double did not match", randomBValue.getDoubleValue(), 40.0);
+        Assert.assertEquals("C integer did not match", randomCValue.getIntValue(), 20);
+        Assert.assertEquals("C double did not match", randomCValue.getDoubleValue(), 40.0);
+        Assert.assertEquals("D integer did not match", randomDValue.getIntValue(), 30);
+        Assert.assertEquals("D double did not match", randomDValue.getDoubleValue(), 50.0);
+
+        PropertySetter.register(A.class, "intValue", ValueGenerator.constantValueGenerator(60));
+        PropertySetter.register(C.class, "intValue", ValueGenerator.constantValueGenerator(70));
+        PropertySetter.register(D.class, "intValue", ValueGenerator.constantValueGenerator(80));
+
+        PropertySetter.register(B.class, "doubleValue", ValueGenerator.constantValueGenerator(90.0));
+        PropertySetter.register(D.class, "doubleValue", ValueGenerator.constantValueGenerator(100.0));
+        
+        randomAValue = ObjectGenerator.generate(A.class);
+        randomBValue = ObjectGenerator.generate(B.class);
+        randomCValue = ObjectGenerator.generate(C.class);
+        randomDValue = ObjectGenerator.generate(D.class);
+
+        Assert.assertEquals("A integer did not match", randomAValue.getIntValue(), 60);
+        Assert.assertEquals("B integer did not match", randomBValue.getIntValue(), 60);
+        Assert.assertEquals("B double did not match", randomBValue.getDoubleValue(), 90.0);
+        Assert.assertEquals("C integer did not match", randomCValue.getIntValue(), 70);
+        Assert.assertEquals("C double did not match", randomCValue.getDoubleValue(), 90.0);
+        Assert.assertEquals("D integer did not match", randomDValue.getIntValue(), 80);
+        Assert.assertEquals("D double did not match", randomDValue.getDoubleValue(), 100.0);
+
     }
 
 }

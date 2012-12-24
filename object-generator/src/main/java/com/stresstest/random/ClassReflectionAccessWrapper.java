@@ -21,15 +21,11 @@ abstract public class ClassReflectionAccessWrapper<T> {
     }
 
     final public boolean canBeReplacedWith(Class<?> replacementCandidate) {
-        return replacementCandidate != null && getSourceClass().isAssignableFrom(replacementCandidate);
-    }
-
-    final public boolean canBeReplacedWith(ClassReflectionAccessWrapper<?> replacementCandidate) {
-        return replacementCandidate != null && getSourceClass().isAssignableFrom(replacementCandidate.getSourceClass());
+        return getSourceClass().isAssignableFrom(replacementCandidate);
     }
 
     final public boolean canReplace(Class<?> classToReplace) {
-        return classToReplace == null || classToReplace.isAssignableFrom(getSourceClass());
+        return classToReplace.isAssignableFrom(getSourceClass());
     }
 
     final public Collection<Method> getMethods() {
