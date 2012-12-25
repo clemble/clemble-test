@@ -1,25 +1,27 @@
 package com.stresstest.random;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 
-public class CachedValueGeneratorFactory implements ValueGeneratorFactory {
+/**
+ * {@link ValueGeneratorFactory} implementation that uses caching to optimize {@link ValueGenerator} production.
+ * 
+ * @author Anton Oparin
+ * 
+ */
+public class CachedValueGeneratorFactory extends ValueGeneratorFactory {
 
-    final private ValueGeneratorFactory delegateValueGenerator;
-
-    final private LoadingCache<Class<?>, ValueGenerator<?>> cachedValueGenerators = CacheBuilder.newBuilder().build(new CacheLoader<Class<?>, ValueGenerator<?>>() {
-        @Override
-        public ValueGenerator<?> load(Class<?> key) throws Exception {
-            return delegateValueGenerator.getValueGenerator(key);
-        }
-    });
-
-    public CachedValueGeneratorFactory(ValueGeneratorFactory valueGeneratorFactory) {
-        this.delegateValueGenerator = checkNotNull(valueGeneratorFactory);
-    }
+    /**
+     * Google LoadingCache that is used as a primary cache implementation.
+     */
+    final private LoadingCache<Class<?>, ValueGenerator<?>> cachedValueGenerators = CacheBuilder.newBuilder().build(
+            new CacheLoader<Class<?>, ValueGenerator<?>>() {
+                @Override
+                public ValueGenerator<?> load(Class<?> key) throws Exception {
+                    return getParentValueGenerator(key);
+                }
+            });
 
     @Override
     @SuppressWarnings("unchecked")
@@ -29,6 +31,16 @@ public class CachedValueGeneratorFactory implements ValueGeneratorFactory {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    /**
+     * Returns parent implementation.
+     * 
+     * @param klass {@link Class} source.
+     * @return {@link ValueGenerator} from parent implementation.
+     */
+    private <T> ValueGenerator<T> getParentValueGenerator(Class<T> klass) {
+        return super.getValueGenerator(klass);
     }
 
 }

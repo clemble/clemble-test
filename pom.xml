@@ -3,10 +3,38 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.stresstest</groupId>
     <artifactId>parent</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-    <packaging>pom</packaging>
 
+    <version>0.0.1</version>
+    <packaging>pom</packaging>
+    <name>stresstest</name>
+
+    <description>Utilities for stress testing</description>
+
+    <url>https://github.com/AntonOparin/stress-test</url>
+
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <scm>
+        <connection>scm:git:git@github.com:AntonOparin/stress-test.git</connection>
+        <url>scm:git:git@github.com:AntonOparin/stress-test.git</url>
+        <developerConnection>scm:git:git@github.com:AntonOparin/stress-test.git</developerConnection>
+    </scm>
+
+    <developers>
+        <developer>
+            <name>Anton Oparin</name>
+            <email>mavarazy@gmail.com</email>
+        </developer>
+    </developers>
+    
     <modules>
+        <module>common</module>
         <module>runners</module>
         <module>spring-runners</module>
         <module>object-generator</module>
@@ -28,6 +56,11 @@
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>com.stresstest</groupId>
+                <artifactId>common</artifactId>
+                <version>${project.version}</version>
+            </dependency>
             <dependency>
                 <groupId>com.stresstest</groupId>
                 <artifactId>runners</artifactId>
@@ -111,4 +144,37 @@
         </plugins>
     </build>
 
+    <profiles>
+        <profile>
+            <id>release-sign-artifacts</id>
+            <activation>
+                <property>
+                    <name>performRelease</name>
+                    <value>true</value>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>1.1</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
+    <distributionManagement>
+        <snapshotRepository></snapshotRepository>
+    </distributionManagement>
 </project>

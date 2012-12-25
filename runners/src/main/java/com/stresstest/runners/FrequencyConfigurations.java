@@ -2,6 +2,8 @@ package com.stresstest.runners;
 
 import java.lang.reflect.Method;
 
+import com.stresstest.utils.ReflectionUtils;
+
 
 public class FrequencyConfigurations {
 

@@ -5,14 +5,14 @@ import junit.framework.Assert;
 import org.junit.Test;
 
 import com.stresstest.random.ObjectGenerator;
-import com.stresstest.random.SimpleValueGeneratorFactory;
 import com.stresstest.random.ValueGenerator;
+import com.stresstest.random.ValueGeneratorFactory;
 import com.stresstest.random.impl.ClassConstructor.BuilderBasedConstructor;
 import com.stresstest.random.impl.ClassValueGenerator;
 
 public class ConstructionBuilderStructureTest {
 
-    final private SimpleValueGeneratorFactory valueGeneratorFactory = new SimpleValueGeneratorFactory();
+    final private ValueGeneratorFactory valueGeneratorFactory = new ValueGeneratorFactory();
 
     private static class PrivateBuilderBasedClass {
         final private boolean data;

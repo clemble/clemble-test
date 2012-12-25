@@ -4,13 +4,13 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.stresstest.random.CachedValueGeneratorFactory;
-import com.stresstest.random.SimpleValueGeneratorFactory;
 import com.stresstest.random.ValueGenerator;
+import com.stresstest.random.ValueGeneratorFactory;
 
 public class ValueGeneratorsCaching {
 
-    final private SimpleValueGeneratorFactory simpleValueGeneratorFactory = new SimpleValueGeneratorFactory();
-    final private CachedValueGeneratorFactory cachedValueGeneratorFactory = new CachedValueGeneratorFactory(simpleValueGeneratorFactory);
+    final private ValueGeneratorFactory simpleValueGeneratorFactory = new ValueGeneratorFactory();
+    final private CachedValueGeneratorFactory cachedValueGeneratorFactory = new CachedValueGeneratorFactory();
 
     static class IntRandomClass {
         private int randomClass;

@@ -1,15 +1,36 @@
 package com.stresstest.random.impl;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import com.stresstest.random.ValueGenerator;
 
+/**
+ * Generates random valure of specified Class.
+ * 
+ * @author Anton Oparin
+ *
+ * @param <T> parameterized {@link Class}.
+ */
 public class ClassValueGenerator<T> extends ValueGenerator<T> {
 
+    /**
+     * {@link ClassConstructor} used for value construction.
+     */
     final private ClassConstructor<T> objectConstructor;
+    /**
+     * {@link ClassPropertySetter} used for properties population.
+     */
     final private ClassPropertySetter<T> propertySetter;
 
+    /**
+     * Default constructor.
+     * 
+     * @param objectConstructor {@link ClassConstructor} to use.
+     * @param propertySetter {@link ClassPropertySetter} to use.
+     */
     public ClassValueGenerator(final ClassConstructor<T> objectConstructor, final ClassPropertySetter<T> propertySetter) {
-        this.objectConstructor = objectConstructor;
-        this.propertySetter = propertySetter;
+        this.objectConstructor = checkNotNull(objectConstructor);
+        this.propertySetter = checkNotNull(propertySetter);
     }
 
     @Override
@@ -23,10 +44,20 @@ public class ClassValueGenerator<T> extends ValueGenerator<T> {
         return (T) generatedObject;
     }
 
+    /**
+     * Returns associated {@link ClassConstructor}.
+     * 
+     * @return associated {@link ClassConstructor}.
+     */
     public ClassConstructor<T> getObjectConstructor() {
         return objectConstructor;
     }
 
+    /**
+     * Returns associated {@link ClassPropertySetter}.
+     * 
+     * @return associated {@link ClassPropertySetter}.
+     */
     public ClassPropertySetter<T> getPropertySetter() {
         return propertySetter;
     }

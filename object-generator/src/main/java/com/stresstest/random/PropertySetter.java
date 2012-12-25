@@ -21,7 +21,7 @@ import com.google.common.collect.Collections2;
 
 abstract public class PropertySetter<T> {
 
-    abstract public void apply(Object target);
+    abstract public void setProperty(Object target);
 
     abstract protected Class<?> getAffectedClass();
 
@@ -49,7 +49,7 @@ abstract public class PropertySetter<T> {
         }
 
         @Override
-        public void apply(Object target) {
+        public void setProperty(Object target) {
             Object valueToSet = valueGenerator.generate();
             // Step 1. Setting method preferably to field as a regular expression
             try {
@@ -117,8 +117,8 @@ abstract public class PropertySetter<T> {
         }
 
         @Override
-        public void apply(Object target) {
-            initialPropertySetter.apply(target);
+        public void setProperty(Object target) {
+            initialPropertySetter.setProperty(target);
             Object valueToSet = valueGenerator.generate();
             // Step 1. Setting method as a regular expression
             try {

@@ -1,4 +1,4 @@
-package com.stresstest.runners;
+package com.stresstest.utils;
 
 import java.lang.annotation.Annotation;
 import java.util.Collection;

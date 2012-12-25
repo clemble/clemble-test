@@ -5,17 +5,18 @@
     <parent>
         <groupId>com.stresstest</groupId>
         <artifactId>parent</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>0.0.1</version>
     </parent>
 
     <dependencies>
         <dependency>
             <groupId>com.stresstest</groupId>
-            <artifactId>runners</artifactId>
+            <artifactId>common</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.reflections</groupId>
-            <artifactId>reflections</artifactId>
+            <groupId>com.stresstest</groupId>
+            <artifactId>runners</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>

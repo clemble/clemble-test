@@ -4,15 +4,15 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-import com.stresstest.random.SimpleValueGeneratorFactory;
 import com.stresstest.random.ValueGenerator;
-import com.stresstest.random.impl.ClassValueGenerator;
+import com.stresstest.random.ValueGeneratorFactory;
 import com.stresstest.random.impl.ClassConstructor.ConstructorBasedConstructor;
 import com.stresstest.random.impl.ClassConstructor.FactoryMethodBasedConstructor;
+import com.stresstest.random.impl.ClassValueGenerator;
 
 public class ConstructionFactoryStructureTest {
 
-    final private SimpleValueGeneratorFactory valueGeneratorFactory = new SimpleValueGeneratorFactory();
+    final private ValueGeneratorFactory valueGeneratorFactory = new ValueGeneratorFactory();
 
     private static class PrivateFactoryMethodClass {
         final private boolean data;
@@ -195,7 +195,7 @@ public class ConstructionFactoryStructureTest {
         ClassValueGenerator<TwoParametersClass> classValueGenerator = (ClassValueGenerator<TwoParametersClass>) factoryGenerator;
         Assert.assertTrue(classValueGenerator.getObjectConstructor() instanceof ConstructorBasedConstructor);
         Assert.assertNotNull(factoryGenerator.generate());
-        ConstructorBasedConstructor constructor = (ConstructorBasedConstructor) classValueGenerator.getObjectConstructor();
+        ConstructorBasedConstructor<?> constructor = (ConstructorBasedConstructor<?>) classValueGenerator.getObjectConstructor();
         Assert.assertEquals(constructor.getConstructor().getParameterTypes().length, 2);
     }
 }

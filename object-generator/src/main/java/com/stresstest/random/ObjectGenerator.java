@@ -2,7 +2,7 @@ package com.stresstest.random;
 
 public class ObjectGenerator {
 
-    final private static ValueGeneratorFactory STANDARD_VALUE_GENERATOR = new SimpleValueGeneratorFactory();
+    final private static ValueGeneratorFactory STANDARD_VALUE_GENERATOR = new ValueGeneratorFactory();
 
     private static ValueGeneratorFactory valueGeneratorFactory = STANDARD_VALUE_GENERATOR;
 
@@ -11,7 +11,7 @@ public class ObjectGenerator {
     }
     
     public static void enableCaching() {
-        valueGeneratorFactory = new CachedValueGeneratorFactory(STANDARD_VALUE_GENERATOR);
+        valueGeneratorFactory = new CachedValueGeneratorFactory();
     }
 
     public static void disableCaching() {
