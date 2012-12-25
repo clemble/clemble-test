@@ -1,6 +1,7 @@
 package com.stresstest.random;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
@@ -8,48 +9,33 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashSet;
 import java.util.List;
 import java.util.TreeSet;
-
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 
-abstract public class PropertySetter<T> {
+abstract public class ValueSetter<T> {
 
-    abstract public void setProperty(Object target);
+    abstract public void setValue(Object target);
 
     abstract protected Class<?> getAffectedClass();
 
-    final public boolean isApplicable(ClassReflectionAccessWrapper<?> applicableToClass) {
-        return applicableToClass.canReplace(getAffectedClass());
-    }
-
-    @Override
-    abstract public int hashCode();
-
-    @Override
-    abstract public boolean equals(Object obj);
-
-    final private static class SimplePropertySetter<T> extends PropertySetter<T> {
+    final private static class SimpleValueSetter<T> extends ValueSetter<T> {
 
         final private Field field;
-
         final private Method method;
         final private ValueGenerator<T> valueGenerator;
 
-        private SimplePropertySetter(Field field, Method method, ValueGenerator<T> valueGenerator) {
+        private SimpleValueSetter(Field field, Method method, ValueGenerator<T> valueGenerator) {
             this.field = field;
             this.method = method;
             this.valueGenerator = valueGenerator;
         }
 
         @Override
-        public void setProperty(Object target) {
+        public void setValue(Object target) {
             Object valueToSet = valueGenerator.generate();
             // Step 1. Setting method preferably to field as a regular expression
             try {
@@ -79,46 +65,27 @@ abstract public class PropertySetter<T> {
         }
 
         @Override
-        public int hashCode() {
-            return new HashCodeBuilder().append(field).append(method).toHashCode();
-        }
-
-        @Override
-        @SuppressWarnings("unchecked")
-        public boolean equals(Object obj) {
-            if (this == obj)
-                return true;
-            if (obj == null)
-                return false;
-            if (getClass() != obj.getClass())
-                return false;
-            SimplePropertySetter<T> other = (SimplePropertySetter<T>) obj;
-            return new EqualsBuilder().append(field, other.field).append(method, other.method).isEquals();
-        }
-
-        @Override
         public String toString() {
             return (field != null ? field.getName() : "-") + " / " + (method != null ? method.getName() : "-");
         }
 
     }
 
-    final private static class CollectionPropertySetter<T> extends PropertySetter<T> {
+    final private static class CollectionValueSetter<T> extends ValueSetter<T> {
 
-        final private PropertySetter<T> initialPropertySetter;
-
+        final private ValueSetter<T> initialPropertySetter;
         final private Method method;
         final private ValueGenerator<T> valueGenerator;
 
-        private CollectionPropertySetter(final PropertySetter<T> initialPropertySetter, final Method method, final ValueGenerator<T> valueGenerator) {
+        private CollectionValueSetter(final ValueSetter<T> initialPropertySetter, final Method method, final ValueGenerator<T> valueGenerator) {
             this.initialPropertySetter = initialPropertySetter;
             this.method = method;
             this.valueGenerator = valueGenerator;
         }
 
         @Override
-        public void setProperty(Object target) {
-            initialPropertySetter.setProperty(target);
+        public void setValue(Object target) {
+            initialPropertySetter.setValue(target);
             Object valueToSet = valueGenerator.generate();
             // Step 1. Setting method as a regular expression
             try {
@@ -139,32 +106,14 @@ abstract public class PropertySetter<T> {
         }
 
         @Override
-        public int hashCode() {
-            return new HashCodeBuilder().append(initialPropertySetter).toHashCode();
-        }
-
-        @Override
-        @SuppressWarnings("rawtypes")
-        public boolean equals(Object obj) {
-            if (this == obj)
-                return true;
-            if (obj == null)
-                return false;
-            if (getClass() != obj.getClass())
-                return false;
-            CollectionPropertySetter other = (CollectionPropertySetter) obj;
-            return new EqualsBuilder().append(initialPropertySetter, other.initialPropertySetter).isEquals();
-        }
-
-        @Override
         public String toString() {
             return initialPropertySetter.toString();
         }
     }
 
-    final private static Predicate<Method> EXTRACT_APPLICABLE_METHODS = new Predicate<Method>() {
+    final private static Predicate<Member> FILTER_APPLICABLE_METHODS = new Predicate<Member>() {
         @Override
-        public boolean apply(Method input) {
+        public boolean apply(Member input) {
             if ((input.getModifiers() & Modifier.STATIC) != 0)
                 return false;
             String name = input.getName().toLowerCase();
@@ -172,19 +121,18 @@ abstract public class PropertySetter<T> {
         }
     };
 
-    final private static Function<Method, String> EXTRACT_POSSIBLE_FIELD_NAME = new Function<Method, String>() {
+    final private static Function<Member, String> EXTRACT_MEMBER_NAME = new Function<Member, String>() {
         @Override
-        public String apply(Method method) {
+        public String apply(Member method) {
             final String lowerMethodName = method.getName().toLowerCase();
             return lowerMethodName.startsWith("set") || lowerMethodName.startsWith("add") ? lowerMethodName.substring(3) : lowerMethodName;
         }
     };
 
-    final private static Function<Method, String> EXTRACT_ADD_METHOD_NAME = new Function<Method, String>() {
+    final private static Function<Member, String> EXTRACT_ADD_METHOD_NAME = new Function<Member, String>() {
         @Override
-        public String apply(Method method) {
-            final String lowerMethodName = method.getName().toLowerCase();
-            return lowerMethodName.startsWith("add") ? lowerMethodName.substring(3) + "s" : lowerMethodName + "s";
+        public String apply(Member method) {
+            return EXTRACT_MEMBER_NAME.apply(method) + "s";
         }
     };
 
@@ -194,59 +142,54 @@ abstract public class PropertySetter<T> {
             return field.getName().toLowerCase();
         }
     };
-    
-    final private static Comparator<PropertySetter<?>> STRING_PRESENTATION_COMPARATOR = new Comparator<PropertySetter<?>>() {
+
+    final private static Comparator<ValueSetter<?>> COMPARE_STRING_PRESENTATION = new Comparator<ValueSetter<?>>() {
         @Override
-        public int compare(final PropertySetter<?> firstPropertySetter, final PropertySetter<?> secondPropertySetter) {
+        public int compare(final ValueSetter<?> firstPropertySetter, final ValueSetter<?> secondPropertySetter) {
             return firstPropertySetter.toString().compareTo(secondPropertySetter.toString());
         }
     };
-    
-    final private static Comparator<PropertySetter<?>> PRESENTATION_TYPE_COMPARATOR = new Comparator<PropertySetter<?>>() {
+
+    final private static Comparator<ValueSetter<?>> COMPARE_PRESENTATION_TYPE = new Comparator<ValueSetter<?>>() {
         @Override
-        public int compare(final PropertySetter<?> firstPropertySetter, final PropertySetter<?> secondPropertySetter) {
-            boolean firstCollection = firstPropertySetter instanceof CollectionPropertySetter;
-            boolean secondCollection = secondPropertySetter instanceof CollectionPropertySetter;
-            return firstCollection && secondCollection ? 0 : firstCollection ? -1 : 1;
-        }
-    };
-    
-    final private static Comparator<PropertySetter<?>> TYPE_COMPARATOR = new Comparator<PropertySetter<?>>() {
-        @Override
-        public int compare(final PropertySetter<?> firstPropertySetter, final PropertySetter<?> secondPropertySetter) {
-            boolean firstSimpleProperty = firstPropertySetter instanceof SimplePropertySetter;
-            boolean secondSimpleProperty = secondPropertySetter instanceof SimplePropertySetter;
-            if(firstSimpleProperty && secondSimpleProperty) {
+        public int compare(final ValueSetter<?> firstPropertySetter, final ValueSetter<?> secondPropertySetter) {
+            boolean firstSimpleProperty = firstPropertySetter instanceof SimpleValueSetter;
+            boolean secondSimpleProperty = secondPropertySetter instanceof SimpleValueSetter;
+            if (firstSimpleProperty && secondSimpleProperty) {
                 // Step 1. Check field names
-                Field firstField = ((SimplePropertySetter<?>) firstPropertySetter).field;
-                Field secondField = ((SimplePropertySetter<?>) secondPropertySetter).field;
+                Field firstField = ((SimpleValueSetter<?>) firstPropertySetter).field;
+                Field secondField = ((SimpleValueSetter<?>) secondPropertySetter).field;
                 if (firstField != null && secondField != null) {
                     int comparison = secondField.getName().compareTo(firstField.getName());
                     if (comparison != 0)
                         return comparison;
                 }
                 // Step 2. Check method names
-                Method firstMethod = ((SimplePropertySetter<?>) firstPropertySetter).method;
-                Method secondMethod = ((SimplePropertySetter<?>) secondPropertySetter).method;
+                Method firstMethod = ((SimpleValueSetter<?>) firstPropertySetter).method;
+                Method secondMethod = ((SimpleValueSetter<?>) secondPropertySetter).method;
                 if (firstMethod != null && secondMethod != null) {
                     int comparison = secondMethod.getName().compareTo(firstMethod.getName());
-                    if(comparison != 0)
+                    if (comparison != 0)
                         return comparison;
                 }
-                return ((SimplePropertySetter<?>) firstPropertySetter).getAffectedClass().isAssignableFrom(((SimplePropertySetter<?>) secondPropertySetter).getAffectedClass()) ? 1 : -1;
-            } else if(!firstSimpleProperty && !secondSimpleProperty) {
+                // Step 2. Check classes
+                Class<?> firstClass = ((SimpleValueSetter<?>) firstPropertySetter).getAffectedClass();
+                Class<?> secondClass = ((SimpleValueSetter<?>) secondPropertySetter).getAffectedClass();
+                if (firstClass != secondClass) {
+                    return firstClass.isAssignableFrom(secondClass) ? 1 : -1;
+                }
+            } else if (!firstSimpleProperty && !secondSimpleProperty) {
                 // Comparison of Collections is equivalent to comparison of the types
-                return compare(((CollectionPropertySetter<?>) firstPropertySetter).initialPropertySetter, ((CollectionPropertySetter<?>) secondPropertySetter).initialPropertySetter);
-            } else if(firstSimpleProperty){
+                return compare(((CollectionValueSetter<?>) firstPropertySetter).initialPropertySetter,
+                        ((CollectionValueSetter<?>) secondPropertySetter).initialPropertySetter);
+            } else if (firstSimpleProperty) {
                 return 1;
-            } else if(secondSimpleProperty) {
+            } else if (secondSimpleProperty) {
                 return -1;
             }
-            // This is never reached :)
             return 0;
         }
     };
-
 
     private static Field findField(final Class searchClass, final String fieldName) {
         Collection<Field> fieldCandidates = Collections2.filter(Arrays.asList(searchClass.getDeclaredFields()), new Predicate<Field>() {
@@ -264,7 +207,7 @@ abstract public class PropertySetter<T> {
             @Override
             public boolean apply(Method method) {
                 return method.getParameterTypes().length == 1 && method.getName().toLowerCase().startsWith("set")
-                        && EXTRACT_POSSIBLE_FIELD_NAME.apply(method).equals(methodName);
+                        && EXTRACT_MEMBER_NAME.apply(method).equals(methodName);
             }
         });
 
@@ -283,55 +226,55 @@ abstract public class PropertySetter<T> {
         return methodCandidates.isEmpty() ? null : methodCandidates.iterator().next();
     }
 
-    public static <T> PropertySetter<T> createFieldSetter(final Field field) {
-        return (PropertySetter<T>) createFieldSetter(field, ObjectGenerator.getValueGenerator(field.getType()));
+    public static <T> ValueSetter<T> createFieldSetter(final Field field) {
+        return (ValueSetter<T>) createFieldSetter(field, ObjectGenerator.getValueGenerator(field.getType()));
     }
 
-    public static <T> PropertySetter<T> createFieldSetter(final Field field, final ValueGenerator<T> valueGenerator) {
+    public static <T> ValueSetter<T> createFieldSetter(final Field field, final ValueGenerator<T> valueGenerator) {
         Method possibleMethods = findSetMethod(field.getDeclaringClass(), EXTRACT_FIELD_NAME.apply(field));
         return create(field, possibleMethods, valueGenerator);
     }
 
-    public static <T> PropertySetter<T> createMethodSetter(final Method method) {
+    public static <T> ValueSetter<T> createMethodSetter(final Method method) {
         if (method.getParameterTypes().length != 1)
             return null;
-        return (PropertySetter<T>) createMethodSetter(method, ObjectGenerator.getValueGenerator(method.getParameterTypes()[0]));
+        return (ValueSetter<T>) createMethodSetter(method, ObjectGenerator.getValueGenerator(method.getParameterTypes()[0]));
     }
 
-    public static <T> PropertySetter<T> createMethodSetter(final Method method, final ValueGenerator<T> valueGenerator) {
-        Field possibleField = findField(method.getDeclaringClass(), EXTRACT_POSSIBLE_FIELD_NAME.apply(method));
+    public static <T> ValueSetter<T> createMethodSetter(final Method method, final ValueGenerator<T> valueGenerator) {
+        Field possibleField = findField(method.getDeclaringClass(), EXTRACT_MEMBER_NAME.apply(method));
         return create(possibleField, method, valueGenerator);
     }
 
-    public static <T> PropertySetter<T> create(final Field field, final Method method, final ValueGenerator<T> valueGenerator) {
+    public static <T> ValueSetter<T> create(final Field field, final Method method, final ValueGenerator<T> valueGenerator) {
         if (field != null && Collection.class.isAssignableFrom(field.getType())) {
             Method addMethod = findAddMethod(field.getDeclaringClass(), EXTRACT_FIELD_NAME.apply(field));
             Method setMethod = findSetMethod(field.getDeclaringClass(), EXTRACT_FIELD_NAME.apply(field));
-            PropertySetter<T> collectionValueInitializer = new SimplePropertySetter<T>(field, setMethod,
-                    (ValueGenerator<T>) ObjectGenerator.getValueGenerator(field.getType()));
-            return new CollectionPropertySetter<T>(collectionValueInitializer, addMethod, valueGenerator);
+            ValueSetter<T> collectionValueInitializer = new SimpleValueSetter<T>(field, setMethod, (ValueGenerator<T>) ObjectGenerator.getValueGenerator(field
+                    .getType()));
+            return new CollectionValueSetter<T>(collectionValueInitializer, addMethod, valueGenerator);
         } else {
-            return new SimplePropertySetter<T>(field, method, valueGenerator);
+            return new SimpleValueSetter<T>(field, method, valueGenerator);
         }
     }
 
-    public static <T> Collection<PropertySetter<?>> extractAvailableProperties(final ClassReflectionAccessWrapper<T> searchClass) {
+    public static <T> Collection<ValueSetter<?>> extractAvailableProperties(final ClassReflectionAccessWrapper<T> searchClass) {
         // Step 1. Create Collection field setters
-        final Collection<PropertySetter<?>> propertySetters = new TreeSet<PropertySetter<?>>(STRING_PRESENTATION_COMPARATOR);
+        final Collection<ValueSetter<?>> propertySetters = new TreeSet<ValueSetter<?>>(COMPARE_STRING_PRESENTATION);
         propertySetters.addAll(SELECTOR_MANAGER.getApplicableProperties(searchClass));
         for (Field field : searchClass.getFields()) {
             propertySetters.add(createFieldSetter(field));
         }
         // Step 2. Create Collection of method setters
-        for (Method method : Collections2.filter(searchClass.getMethods(), EXTRACT_APPLICABLE_METHODS)) {
-            PropertySetter<?> propertySetter = createMethodSetter(method);
+        for (Method method : Collections2.filter(searchClass.getMethods(), FILTER_APPLICABLE_METHODS)) {
+            ValueSetter<?> propertySetter = createMethodSetter(method);
             if (propertySetter != null) {
                 propertySetters.add(propertySetter);
             }
         }
 
-        final List<PropertySetter<?>> resultSetters = new ArrayList<PropertySetter<?>>(propertySetters);
-        Collections.sort(resultSetters, PRESENTATION_TYPE_COMPARATOR);
+        final List<ValueSetter<?>> resultSetters = new ArrayList<ValueSetter<?>>(propertySetters);
+        Collections.sort(resultSetters, COMPARE_PRESENTATION_TYPE);
         // Step 3. Returning accumulated result
         return resultSetters;
     }
@@ -342,28 +285,28 @@ abstract public class PropertySetter<T> {
         final String possibleName = name.toLowerCase();
         final Field possibleField = findField(searchClass, possibleName);
         final Method possibleMethod = findSetMethod(searchClass, possibleName);
-        PropertySetter<T> propertySetter = create(possibleField, possibleMethod, valueGenerator);
+        ValueSetter<T> propertySetter = create(possibleField, possibleMethod, valueGenerator);
         SELECTOR_MANAGER.addSpecificProperties(propertySetter);
     }
 
     final private static class PropertySetterManager {
 
-        final private Collection<PropertySetter<?>> propertySelectors = new HashSet<PropertySetter<?>>();
+        final private Collection<ValueSetter<?>> propertySelectors = new TreeSet<ValueSetter<?>>(COMPARE_PRESENTATION_TYPE);
 
-        public void addSpecificProperties(PropertySetter<?> propertySelector) {
+        public void addSpecificProperties(ValueSetter<?> propertySelector) {
             propertySelectors.remove(propertySelector);
             propertySelectors.add(propertySelector);
         }
 
-        public Collection<PropertySetter<?>> getApplicableProperties(final ClassReflectionAccessWrapper<?> applicableClass) {
-            Collection<PropertySetter<?>> applicableSelectors = Collections2.filter(propertySelectors, new Predicate<PropertySetter<?>>() {
+        public Collection<ValueSetter<?>> getApplicableProperties(final ClassReflectionAccessWrapper<?> applicableClass) {
+            Collection<ValueSetter<?>> applicableSelectors = Collections2.filter(propertySelectors, new Predicate<ValueSetter<?>>() {
                 @Override
-                public boolean apply(PropertySetter<?> selector) {
-                    return selector.isApplicable(applicableClass);
+                public boolean apply(ValueSetter<?> selector) {
+                    return applicableClass.canReplace(selector.getAffectedClass());
                 }
             });
-            List<PropertySetter<?>> sortedSelectors = new ArrayList<PropertySetter<?>>(applicableSelectors);
-            Collections.sort(sortedSelectors, TYPE_COMPARATOR);
+            List<ValueSetter<?>> sortedSelectors = new ArrayList<ValueSetter<?>>(applicableSelectors);
+            Collections.sort(sortedSelectors, COMPARE_PRESENTATION_TYPE);
             return sortedSelectors;
         }
 

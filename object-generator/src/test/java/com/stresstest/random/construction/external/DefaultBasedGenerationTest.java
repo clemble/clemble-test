@@ -4,11 +4,11 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
+import com.stresstest.random.ClassValueGenerator;
 import com.stresstest.random.ObjectGenerator;
 import com.stresstest.random.ValueGenerator;
 import com.stresstest.random.ValueGeneratorFactory;
-import com.stresstest.random.impl.ClassConstructor.BuilderBasedConstructor;
-import com.stresstest.random.impl.ClassValueGenerator;
+import com.stresstest.random.ClassConstructor.BuilderBasedConstructor;
 
 public class DefaultBasedGenerationTest {
 

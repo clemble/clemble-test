@@ -1,8 +1,7 @@
-package com.stresstest.random.impl;
+package com.stresstest.random;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import com.stresstest.random.ValueGenerator;
 
 /**
  * Generates random valure of specified Class.

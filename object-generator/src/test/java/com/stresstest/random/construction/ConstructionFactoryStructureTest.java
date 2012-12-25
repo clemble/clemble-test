@@ -4,11 +4,11 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
+import com.stresstest.random.ClassValueGenerator;
 import com.stresstest.random.ValueGenerator;
 import com.stresstest.random.ValueGeneratorFactory;
-import com.stresstest.random.impl.ClassConstructor.ConstructorBasedConstructor;
-import com.stresstest.random.impl.ClassConstructor.FactoryMethodBasedConstructor;
-import com.stresstest.random.impl.ClassValueGenerator;
+import com.stresstest.random.ClassConstructor.ConstructorBasedConstructor;
+import com.stresstest.random.ClassConstructor.FactoryMethodBasedConstructor;
 
 public class ConstructionFactoryStructureTest {
 

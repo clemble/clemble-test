@@ -4,8 +4,10 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
+import com.stresstest.random.ClassValueGenerator;
 import com.stresstest.random.ObjectGenerator;
 import com.stresstest.random.ValueGenerator;
+import com.stresstest.random.ClassConstructor.BuilderBasedConstructor;
 import com.stresstest.random.construction.external.PrivateBuilderBasedClass;
 import com.stresstest.random.construction.external.PrivateClass;
 import com.stresstest.random.construction.external.PublicAbstractBuilderBasedClass;
@@ -17,8 +19,6 @@ import com.stresstest.random.construction.external.UncreatableInterface;
 import com.stresstest.random.construction.external.UncreatableObject;
 import com.stresstest.random.construction.external.impl.PublicAbstractClassImpl;
 import com.stresstest.random.construction.external.impl.PublicInterfaceImpl;
-import com.stresstest.random.impl.ClassValueGenerator;
-import com.stresstest.random.impl.ClassConstructor.BuilderBasedConstructor;
 
 public class ExternalPublicBasedGenerationTest {
 

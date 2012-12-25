@@ -6,12 +6,12 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.stresstest.random.ClassPropertySetter;
+import com.stresstest.random.ClassValueGenerator;
 import com.stresstest.random.ObjectGenerator;
-import com.stresstest.random.PropertySetter;
+import com.stresstest.random.ValueSetter;
 import com.stresstest.random.ValueGenerator;
-import com.stresstest.random.impl.ClassConstructor.ConstructorBasedConstructor;
-import com.stresstest.random.impl.ClassPropertySetter;
-import com.stresstest.random.impl.ClassValueGenerator;
+import com.stresstest.random.ClassConstructor.ConstructorBasedConstructor;
 
 public class PropertySetterTest {
     @Before
@@ -26,9 +26,9 @@ public class PropertySetterTest {
 
     @Test
     public void testRandomGeneration() {
-        PropertySetter.register(A.class, "intValue", ValueGenerator.INTEGER_VALUE_GENERATOR);
-        PropertySetter.register(C.class, "intValue", ValueGenerator.INTEGER_VALUE_GENERATOR);
-        PropertySetter.register(D.class, "intValue", ValueGenerator.INTEGER_VALUE_GENERATOR);
+        ValueSetter.register(A.class, "intValue", ValueGenerator.INTEGER_VALUE_GENERATOR);
+        ValueSetter.register(C.class, "intValue", ValueGenerator.INTEGER_VALUE_GENERATOR);
+        ValueSetter.register(D.class, "intValue", ValueGenerator.INTEGER_VALUE_GENERATOR);
 
         D randomValue = ObjectGenerator.generate(D.class);
         Assert.assertNotSame(randomValue.getIntValue(), ((C) randomValue).getIntValue());
@@ -46,12 +46,12 @@ public class PropertySetterTest {
 
     @Test
     public void testFixedValueGeneration() {
-        PropertySetter.register(A.class, "intValue", ValueGenerator.constantValueGenerator(10));
-        PropertySetter.register(C.class, "intValue", ValueGenerator.constantValueGenerator(20));
-        PropertySetter.register(D.class, "intValue", ValueGenerator.constantValueGenerator(30));
+        ValueSetter.register(A.class, "intValue", ValueGenerator.constantValueGenerator(10));
+        ValueSetter.register(C.class, "intValue", ValueGenerator.constantValueGenerator(20));
+        ValueSetter.register(D.class, "intValue", ValueGenerator.constantValueGenerator(30));
 
-        PropertySetter.register(B.class, "doubleValue", ValueGenerator.constantValueGenerator(40.0));
-        PropertySetter.register(D.class, "doubleValue", ValueGenerator.constantValueGenerator(50.0));
+        ValueSetter.register(B.class, "doubleValue", ValueGenerator.constantValueGenerator(40.0));
+        ValueSetter.register(D.class, "doubleValue", ValueGenerator.constantValueGenerator(50.0));
         
         A randomAValue = ObjectGenerator.generate(A.class);
         B randomBValue = ObjectGenerator.generate(B.class);
@@ -66,12 +66,12 @@ public class PropertySetterTest {
         Assert.assertEquals("D integer did not match", randomDValue.getIntValue(), 30);
         Assert.assertEquals("D double did not match", randomDValue.getDoubleValue(), 50.0);
 
-        PropertySetter.register(A.class, "intValue", ValueGenerator.constantValueGenerator(60));
-        PropertySetter.register(C.class, "intValue", ValueGenerator.constantValueGenerator(70));
-        PropertySetter.register(D.class, "intValue", ValueGenerator.constantValueGenerator(80));
+        ValueSetter.register(A.class, "intValue", ValueGenerator.constantValueGenerator(60));
+        ValueSetter.register(C.class, "intValue", ValueGenerator.constantValueGenerator(70));
+        ValueSetter.register(D.class, "intValue", ValueGenerator.constantValueGenerator(80));
 
-        PropertySetter.register(B.class, "doubleValue", ValueGenerator.constantValueGenerator(90.0));
-        PropertySetter.register(D.class, "doubleValue", ValueGenerator.constantValueGenerator(100.0));
+        ValueSetter.register(B.class, "doubleValue", ValueGenerator.constantValueGenerator(90.0));
+        ValueSetter.register(D.class, "doubleValue", ValueGenerator.constantValueGenerator(100.0));
         
         randomAValue = ObjectGenerator.generate(A.class);
         randomBValue = ObjectGenerator.generate(B.class);

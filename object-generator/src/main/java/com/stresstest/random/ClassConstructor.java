@@ -1,4 +1,4 @@
-package com.stresstest.random.impl;
+package com.stresstest.random;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -12,10 +12,6 @@ import java.util.Collection;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.ImmutableList;
-import com.stresstest.random.ClassReflectionAccessWrapper;
-import com.stresstest.random.PropertySetter;
-import com.stresstest.random.ValueGenerator;
-import com.stresstest.random.ValueGeneratorFactory;
 
 /**
  * Constructor of empty Objects, for {@link ClassValueGenerator}.
@@ -325,7 +321,7 @@ abstract public class ClassConstructor<T> {
             // Step 4. Selecting most factory method based
             FactoryMethodBasedConstructor<T> builderMethod = new FactoryMethodBasedConstructor<T>(builder, valueGeneratorFactory.getValueGenerators(builder
                     .getParameterTypes()));
-            ClassPropertySetter<T> builderPropertySetter = new ClassPropertySetter<T>(PropertySetter.extractAvailableProperties(classToGenerate.wrap(builder
+            ClassPropertySetter<T> builderPropertySetter = new ClassPropertySetter<T>(ValueSetter.extractAvailableProperties(classToGenerate.wrap(builder
                     .getReturnType())));
 
             Method valueBuilderMethod = null;

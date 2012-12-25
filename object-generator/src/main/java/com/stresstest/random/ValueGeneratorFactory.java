@@ -5,9 +5,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 
-import com.stresstest.random.impl.ClassConstructor;
-import com.stresstest.random.impl.ClassPropertySetter;
-import com.stresstest.random.impl.ClassValueGenerator;
 import com.stresstest.utils.ReflectionUtils;
 
 /**
@@ -86,7 +83,7 @@ public class ValueGeneratorFactory {
         if (objectConstructor == null)
             return null;
         // Step 2. Selecting list of applicable specific selectors from specific properties
-        Collection<PropertySetter<?>> propertySetters = PropertySetter.extractAvailableProperties(classToGenerate);
+        Collection<ValueSetter<?>> propertySetters = ValueSetter.extractAvailableProperties(classToGenerate);
         ClassPropertySetter<T> classPropertySetter = new ClassPropertySetter<T>(propertySetters);
         // Step 3. Generating final ClassGenerator for the type
         return new ClassValueGenerator<T>(objectConstructor, classPropertySetter);
