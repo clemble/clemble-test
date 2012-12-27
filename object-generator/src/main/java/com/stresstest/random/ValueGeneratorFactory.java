@@ -83,7 +83,7 @@ public class ValueGeneratorFactory {
         if (objectConstructor == null)
             return null;
         // Step 2. Selecting list of applicable specific selectors from specific properties
-        Collection<ValueSetter<?>> propertySetters = ValueSetter.extractAvailableProperties(classToGenerate);
+        Collection<PropertySetter<?>> propertySetters = PropertySetter.extractAvailableProperties(classToGenerate);
         ClassPropertySetter<T> classPropertySetter = new ClassPropertySetter<T>(propertySetters);
         // Step 3. Generating final ClassGenerator for the type
         return new ClassValueGenerator<T>(objectConstructor, classPropertySetter);

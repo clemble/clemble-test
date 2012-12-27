@@ -1,5 +1,7 @@
 package com.stresstest.random.construction;
 
+import java.util.Collection;
+
 import junit.framework.Assert;
 
 import org.junit.Test;
@@ -165,20 +167,62 @@ public class ConstructionBuilderStructureTest {
             return data;
         }
         
-        public static class PublicBuilderBasedClassBuilder {
+        public static class UnconstructableBuilderBasedClassBuilder {
             private boolean value;
+            private Collection<Integer> integer;
+            private void setValue(int value) {
+                throw new IllegalAccessError();
+            }
+            private void addInteger(int newInteger) {
+                throw new IllegalAccessError();
+            }
             public UnconstructableBuilderBasedClass build(){
-                return new UnconstructableBuilderBasedClass(value);
+                throw new IllegalAccessError();
             }
         }
         
-        private static PublicBuilderBasedClassBuilder newBuilder() {
-            throw new IllegalAccessError();
+        private static UnconstructableBuilderBasedClassBuilder newBuilder() {
+            return new UnconstructableBuilderBasedClassBuilder();
         }
     }
     
     @Test(expected = RuntimeException.class)
     public void testUnconstructableInitiation() {
         UnconstructableBuilderBasedClass result = ObjectGenerator.generate(UnconstructableBuilderBasedClass.class);
+    }
+    
+    public static class UnconstructableBuilderBasedClass2 {
+        final private boolean data;
+
+        private UnconstructableBuilderBasedClass2(boolean dataValue) {
+            this.data = dataValue;
+        }
+
+        public boolean getData() {
+            return data;
+        }
+        
+        public static class UnconstructableBuilderBasedClassBuilder2 {
+            private boolean value;
+            private Collection<Integer> integer;
+            private void setValue(int value) {
+                throw new IllegalAccessError();
+            }
+            private void addInteger(int newInteger) {
+                throw new IllegalAccessError();
+            }
+            public UnconstructableBuilderBasedClass2 build(){
+                throw new IllegalAccessError();
+            }
+        }
+        
+        private static UnconstructableBuilderBasedClassBuilder2 newBuilder() {
+            throw new IllegalAccessError();
+        }
+    }
+    
+    @Test(expected = RuntimeException.class)
+    public void testUnconstructableInitiation2() {
+        UnconstructableBuilderBasedClass2 result = ObjectGenerator.generate(UnconstructableBuilderBasedClass2.class);
     }
 }

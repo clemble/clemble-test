@@ -6,7 +6,7 @@ import java.util.List;
 import com.google.common.collect.ImmutableList;
 
 /**
- * Combination of {@link ValueSetter} for specified {@link Class}.
+ * Combination of {@link PropertySetter} for specified {@link Class}.
  * 
  * @author Anton Oparin
  *
@@ -15,17 +15,17 @@ import com.google.common.collect.ImmutableList;
 public class ClassPropertySetter<T> {
 
     /**
-     * Source {@link Colleciton} of {@link ValueSetter}.
+     * Source {@link Colleciton} of {@link PropertySetter}.
      */
-    final private Collection<ValueSetter<?>> propertySetters;
+    final private Collection<PropertySetter<?>> propertySetters;
 
     /**
      * Default constructor
      * 
-     * @param propertySetters source {@link Collection} of {@link ValueSetter}.
+     * @param propertySetters source {@link Collection} of {@link PropertySetter}.
      */
-    public ClassPropertySetter(final Collection<ValueSetter<?>> propertySetters) {
-        this.propertySetters = ImmutableList.<ValueSetter<?>>copyOf(propertySetters);
+    public ClassPropertySetter(final Collection<PropertySetter<?>> propertySetters) {
+        this.propertySetters = ImmutableList.<PropertySetter<?>>copyOf(propertySetters);
     }
 
     /**
@@ -35,7 +35,7 @@ public class ClassPropertySetter<T> {
      */
     public void setProperties(Object generatedObject) {
         // Step 1. Call set methods for collections
-        for(ValueSetter<?> propertySetter: propertySetters) {
+        for(PropertySetter<?> propertySetter: propertySetters) {
             propertySetter.setValue(generatedObject);
         }
     }

@@ -21,6 +21,7 @@ import com.google.common.collect.ImmutableList;
  * @param <T>
  *            parameterized {@link Class}.
  */
+@SuppressWarnings({ "rawtypes", "unchecked" })
 abstract public class ClassConstructor<T> {
 
     /**
@@ -272,7 +273,7 @@ abstract public class ClassConstructor<T> {
                 Object builder = builderFactoryMethod.create();
                 classPropertySetter.setProperties(builder);
                 valueBuilderMethod.setAccessible(true);
-                return (T) valueBuilderMethod.invoke(builder, null);
+                return ((T) valueBuilderMethod.invoke(builder, null));
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
@@ -321,7 +322,7 @@ abstract public class ClassConstructor<T> {
             // Step 4. Selecting most factory method based
             FactoryMethodBasedConstructor<T> builderMethod = new FactoryMethodBasedConstructor<T>(builder, valueGeneratorFactory.getValueGenerators(builder
                     .getParameterTypes()));
-            ClassPropertySetter<T> builderPropertySetter = new ClassPropertySetter<T>(ValueSetter.extractAvailableProperties(classToGenerate.wrap(builder
+            ClassPropertySetter<T> builderPropertySetter = new ClassPropertySetter<T>(PropertySetter.extractAvailableProperties(classToGenerate.wrap(builder
                     .getReturnType())));
 
             Method valueBuilderMethod = null;
