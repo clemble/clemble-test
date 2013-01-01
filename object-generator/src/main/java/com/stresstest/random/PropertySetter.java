@@ -5,7 +5,6 @@ import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -294,9 +293,9 @@ abstract public class PropertySetter<T> {
      *            name of the field.
      * @return Field or null if not found.
      */
-    private static Field findField(final Class searchClass, final String fieldName) {
+    private static Field findField(final ClassReflectionAccessWrapper searchClass, final String fieldName) {
         // Step 1. Filter all field's with specified name
-        Collection<Field> fieldCandidates = Collections2.filter(Arrays.asList(searchClass.getDeclaredFields()), new Predicate<Field>() {
+        Collection<Field> fieldCandidates = Collections2.filter(searchClass.getFields(), new Predicate<Field>() {
             @Override
             public boolean apply(Field field) {
                 return fieldName.equals(EXTRACT_FIELD_NAME.apply(field));
@@ -315,9 +314,9 @@ abstract public class PropertySetter<T> {
      *            name of the Method
      * @return possible set method for specified field name.
      */
-    private static Method findSetMethod(final Class searchClass, final String methodName) {
+    private static Method findSetMethod(final ClassReflectionAccessWrapper searchClass, final String methodName) {
         // Step 1. Filter method candidates
-        Collection<Method> methodCandidates = Collections2.filter(Arrays.asList(searchClass.getMethods()), new Predicate<Method>() {
+        Collection<Method> methodCandidates = Collections2.filter(searchClass.getMethods(), new Predicate<Method>() {
             @Override
             public boolean apply(Method method) {
                 return method.getParameterTypes().length == 1 && method.getName().toLowerCase().startsWith("set")
@@ -337,9 +336,9 @@ abstract public class PropertySetter<T> {
      *            name of the method.
      * @return possible add method for specified field name.
      */
-    private static Method findAddMethod(final Class searchClass, final String methodName) {
+    private static Method findAddMethod(final ClassReflectionAccessWrapper searchClass, final String methodName) {
         // Step 1. Filter method candidates
-        Collection<Method> methodCandidates = Collections2.filter(Arrays.asList(searchClass.getMethods()), new Predicate<Method>() {
+        Collection<Method> methodCandidates = Collections2.filter(searchClass.getMethods(), new Predicate<Method>() {
             @Override
             public boolean apply(Method method) {
                 return method.getParameterTypes().length == 1 && method.getName().toLowerCase().startsWith("add")
@@ -354,45 +353,21 @@ abstract public class PropertySetter<T> {
      * Builds property setter for the specified field.
      * 
      * @param field
-     *            target field.
-     * @return PropertySetter for specified Field.
-     */
-    public static <T> PropertySetter<T> createFieldSetter(final Field field) {
-        // Step 1. Construct appropriate PropertySetter for specified field
-        return (PropertySetter<T>) createFieldSetter(field, ObjectGenerator.getValueGenerator(field.getType()));
-    }
-
-    /**
-     * Builds property setter for the specified field.
-     * 
-     * @param field
      *            field to set
      * @param valueGenerator
      *            {@link ValueGenerator} to use.
      * @return PropertySetter for the provided field.
      */
-    public static <T> PropertySetter<T> createFieldSetter(final Field field, final ValueGenerator<T> valueGenerator) {
+    private static <T> PropertySetter<T> createFieldSetter(final ClassReflectionAccessWrapper sourceClass, final Field field, final ValueGenerator<T> valueGenerator) {
         // Step 1. Sanity check
         if (field == null)
             throw new IllegalArgumentException();
         if(valueGenerator == null)
             throw new IllegalArgumentException();
         // Step 2. Retrieve possible set name for the field
-        Method possibleMethods = findSetMethod(field.getDeclaringClass(), EXTRACT_FIELD_NAME.apply(field));
+        Method possibleMethods = findSetMethod(sourceClass, EXTRACT_FIELD_NAME.apply(field));
         // Step 3. Create possible field setter.
-        return create(field, possibleMethods, valueGenerator);
-    }
-
-    /**
-     * Constructs property setter based on provided Method.
-     * 
-     * @param method target method
-     * @return constructed PropertySetter for the method, or <code>null</code> if such PropertySetter can't be created.
-     */
-    public static <T> PropertySetter<T> createMethodSetter(final Method method) {
-        if (method.getParameterTypes().length != 1)
-            return null;
-        return (PropertySetter<T>) createMethodSetter(method, ObjectGenerator.getValueGenerator(method.getParameterTypes()[0]));
+        return create(sourceClass, field, possibleMethods, valueGenerator);
     }
 
     /**
@@ -402,15 +377,15 @@ abstract public class PropertySetter<T> {
      * @param valueGenerator {@link ValueGenerator} to use.
      * @return constructed PropertySetter for the method, or <code>null</code> if such PropertySetter can't be created.
      */
-    public static <T> PropertySetter<T> createMethodSetter(final Method method, final ValueGenerator<T> valueGenerator) {
+    public static <T> PropertySetter<T> createMethodSetter(final ClassReflectionAccessWrapper sourceClass, final Method method, final ValueGenerator<T> valueGenerator) {
         if (method == null)
             throw new IllegalArgumentException();
         if(valueGenerator == null)
             throw new IllegalArgumentException();
         if (method.getParameterTypes().length != 1)
             return null;
-        Field possibleField = findField(method.getDeclaringClass(), EXTRACT_MEMBER_NAME.apply(method));
-        return create(possibleField, method, valueGenerator);
+        Field possibleField = findField(sourceClass, EXTRACT_MEMBER_NAME.apply(method));
+        return create(sourceClass, possibleField, method, valueGenerator);
     }
 
     /**
@@ -421,10 +396,10 @@ abstract public class PropertySetter<T> {
      * @param valueGenerator {@link ValueGenerator} to use.
      * @return constructed PropertySetter.
      */
-    public static <T> PropertySetter<T> create(final Field field, final Method method, final ValueGenerator<T> valueGenerator) {
+    public static <T> PropertySetter<T> create(final ClassReflectionAccessWrapper<?> sourceClass, final Field field, final Method method, final ValueGenerator<T> valueGenerator) {
         if (field != null && Collection.class.isAssignableFrom(field.getType())) {
-            Method addMethod = findAddMethod(field.getDeclaringClass(), EXTRACT_FIELD_NAME.apply(field));
-            Method setMethod = findSetMethod(field.getDeclaringClass(), EXTRACT_FIELD_NAME.apply(field));
+            Method addMethod = findAddMethod(sourceClass, EXTRACT_FIELD_NAME.apply(field));
+            Method setMethod = findSetMethod(sourceClass, EXTRACT_FIELD_NAME.apply(field));
             SimplePropertySetter<T> collectionValueInitializer = new SimplePropertySetter<T>(field, setMethod,
                     (ValueGenerator<T>) ObjectGenerator.getValueGenerator(field.getType()));
             return new CollectionValueSetter<T>(collectionValueInitializer, addMethod, valueGenerator);
@@ -444,11 +419,13 @@ abstract public class PropertySetter<T> {
         final Collection<PropertySetter<?>> propertySetters = new TreeSet<PropertySetter<?>>(COMPARE_STRING_PRESENTATION);
         propertySetters.addAll(SELECTOR_MANAGER.getApplicableProperties(searchClass));
         for (Field field : searchClass.getFields()) {
-            propertySetters.add(createFieldSetter(field));
+            propertySetters.add(createFieldSetter(searchClass, field, ObjectGenerator.getValueGenerator(field.getType())));
         }
         // Step 2. Create Collection of method setters
         for (Method method : Collections2.filter(searchClass.getMethods(), FILTER_APPLICABLE_METHODS)) {
-            PropertySetter<?> propertySetter = createMethodSetter(method);
+            if(method.getParameterTypes().length != 1)
+                continue;
+            PropertySetter<?> propertySetter = createMethodSetter(searchClass, method, ObjectGenerator.getValueGenerator(method.getParameterTypes()[0]));
             if (propertySetter != null) {
                 propertySetters.add(propertySetter);
             }
@@ -471,9 +448,10 @@ abstract public class PropertySetter<T> {
      */
     public static <T> void register(final Class<?> searchClass, final String name, final ValueGenerator<T> valueGenerator) {
         final String possibleName = name.toLowerCase();
-        final Field possibleField = findField(searchClass, possibleName);
-        final Method possibleMethod = findSetMethod(searchClass, possibleName);
-        PropertySetter<T> propertySetter = create(possibleField, possibleMethod, valueGenerator);
+        final ClassReflectionAccessWrapper wrapper = ClassReflectionAccessWrapper.createAllMethodsAccessor(searchClass);
+        final Field possibleField = findField(wrapper, possibleName);
+        final Method possibleMethod = findSetMethod(wrapper, possibleName);
+        PropertySetter<T> propertySetter = create(wrapper, possibleField, possibleMethod, valueGenerator);
         SELECTOR_MANAGER.addSpecificProperties(propertySetter);
     }
 
