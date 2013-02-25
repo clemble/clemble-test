@@ -293,7 +293,7 @@ abstract public class PropertySetter<T> {
      *            name of the field.
      * @return Field or null if not found.
      */
-    private static Field findField(final ClassReflectionAccessWrapper searchClass, final String fieldName) {
+    private static Field findField(final ClassReflectionAccessWrapper<?> searchClass, final String fieldName) {
         // Step 1. Filter all field's with specified name
         Collection<Field> fieldCandidates = Collections2.filter(searchClass.getFields(), new Predicate<Field>() {
             @Override
@@ -314,7 +314,7 @@ abstract public class PropertySetter<T> {
      *            name of the Method
      * @return possible set method for specified field name.
      */
-    private static Method findSetMethod(final ClassReflectionAccessWrapper searchClass, final String methodName) {
+    private static Method findSetMethod(final ClassReflectionAccessWrapper<?> searchClass, final String methodName) {
         // Step 1. Filter method candidates
         Collection<Method> methodCandidates = Collections2.filter(searchClass.getMethods(), new Predicate<Method>() {
             @Override
@@ -336,7 +336,7 @@ abstract public class PropertySetter<T> {
      *            name of the method.
      * @return possible add method for specified field name.
      */
-    private static Method findAddMethod(final ClassReflectionAccessWrapper searchClass, final String methodName) {
+    private static Method findAddMethod(final ClassReflectionAccessWrapper<?> searchClass, final String methodName) {
         // Step 1. Filter method candidates
         Collection<Method> methodCandidates = Collections2.filter(searchClass.getMethods(), new Predicate<Method>() {
             @Override
@@ -358,7 +358,7 @@ abstract public class PropertySetter<T> {
      *            {@link ValueGenerator} to use.
      * @return PropertySetter for the provided field.
      */
-    private static <T> PropertySetter<T> createFieldSetter(final ClassReflectionAccessWrapper sourceClass, final Field field, final ValueGenerator<T> valueGenerator) {
+    private static <T> PropertySetter<T> createFieldSetter(final ClassReflectionAccessWrapper<?> sourceClass, final Field field, final ValueGenerator<T> valueGenerator) {
         // Step 1. Sanity check
         if (field == null)
             throw new IllegalArgumentException();
@@ -377,7 +377,7 @@ abstract public class PropertySetter<T> {
      * @param valueGenerator {@link ValueGenerator} to use.
      * @return constructed PropertySetter for the method, or <code>null</code> if such PropertySetter can't be created.
      */
-    public static <T> PropertySetter<T> createMethodSetter(final ClassReflectionAccessWrapper sourceClass, final Method method, final ValueGenerator<T> valueGenerator) {
+    public static <T> PropertySetter<T> createMethodSetter(final ClassReflectionAccessWrapper<?> sourceClass, final Method method, final ValueGenerator<T> valueGenerator) {
         if (method == null)
             throw new IllegalArgumentException();
         if(valueGenerator == null)
@@ -396,6 +396,7 @@ abstract public class PropertySetter<T> {
      * @param valueGenerator {@link ValueGenerator} to use.
      * @return constructed PropertySetter.
      */
+    @SuppressWarnings("unchecked")
     public static <T> PropertySetter<T> create(final ClassReflectionAccessWrapper<?> sourceClass, final Field field, final Method method, final ValueGenerator<T> valueGenerator) {
         if (field != null && Collection.class.isAssignableFrom(field.getType())) {
             Method addMethod = findAddMethod(sourceClass, EXTRACT_FIELD_NAME.apply(field));
@@ -448,7 +449,7 @@ abstract public class PropertySetter<T> {
      */
     public static <T> void register(final Class<?> searchClass, final String name, final ValueGenerator<T> valueGenerator) {
         final String possibleName = name.toLowerCase();
-        final ClassReflectionAccessWrapper wrapper = ClassReflectionAccessWrapper.createAllMethodsAccessor(searchClass);
+        final ClassReflectionAccessWrapper<?> wrapper = ClassReflectionAccessWrapper.createAllMethodsAccessor(searchClass);
         final Field possibleField = findField(wrapper, possibleName);
         final Method possibleMethod = findSetMethod(wrapper, possibleName);
         PropertySetter<T> propertySetter = create(wrapper, possibleField, possibleMethod, valueGenerator);

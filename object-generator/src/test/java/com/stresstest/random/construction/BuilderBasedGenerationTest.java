@@ -134,6 +134,6 @@ public class BuilderBasedGenerationTest {
 
     @Test(expected = RuntimeException.class)
     public void testUnconstructableInitiation() {
-        UnconstractableInterface result = ObjectGenerator.generate(UnconstractableInterface.class);
+        ObjectGenerator.generate(UnconstractableInterface.class);
     }
 }

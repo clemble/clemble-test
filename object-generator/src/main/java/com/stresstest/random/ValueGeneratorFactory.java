@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 
-import com.stresstest.utils.ReflectionUtils;
+import com.stresstest.reflection.ReflectionUtils;
 
 /**
  * 
@@ -57,7 +57,7 @@ public class ValueGeneratorFactory {
         if (valueGenerator != null)
             return valueGenerator;
         // Step 3.1 Trying to initialize sub classes
-        Collection<Class<? extends T>> subClasses = ReflectionUtils.getPossibleImplementations(sourceClass.getSourceClass());
+        Collection<Class<? extends T>> subClasses = ReflectionUtils.findPossibleImplementations(sourceClass.getSourceClass());
         // Step 3.2 Checking extended list of candidates
         for (Class<?> subClass : subClasses) {
             valueGenerator = (ValueGenerator<T>) tryConstruct(sourceClass.wrap(subClass));

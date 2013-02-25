@@ -12,6 +12,8 @@ import com.stresstest.random.ValueGenerator;
 import com.stresstest.random.ValueGeneratorFactory;
 import com.stresstest.random.ClassConstructor.BuilderBasedConstructor;
 
+
+@SuppressWarnings("unused")
 public class ConstructionBuilderStructureTest {
 
     final private ValueGeneratorFactory valueGeneratorFactory = new ValueGeneratorFactory();
@@ -26,10 +28,11 @@ public class ConstructionBuilderStructureTest {
         private boolean getData() {
             return data;
         }
-        
+
         private static class PrivateBuilderBasedClassBuilder {
             private boolean value;
-            public PrivateBuilderBasedClass build(){
+
+            public PrivateBuilderBasedClass build() {
                 return new PrivateBuilderBasedClass(value);
             }
         }
@@ -37,8 +40,8 @@ public class ConstructionBuilderStructureTest {
         private static PrivateBuilderBasedClass create(boolean value) {
             return new PrivateBuilderBasedClass(value);
         }
-       
-        public static PrivateBuilderBasedClassBuilder newBuilder(){
+
+        public static PrivateBuilderBasedClassBuilder newBuilder() {
             return new PrivateBuilderBasedClassBuilder();
         }
     }
@@ -64,15 +67,16 @@ public class ConstructionBuilderStructureTest {
 
         protected static class ProtectedBuilderBasedClassBuilder {
             protected boolean value;
-            public ProtectedBuilderBasedClass build(){
+
+            public ProtectedBuilderBasedClass build() {
                 return new ProtectedBuilderBasedClass(value);
             }
         }
-        
+
         private static ProtectedBuilderBasedClass create(boolean value) {
             return new ProtectedBuilderBasedClass(value);
         }
-        
+
         public static ProtectedBuilderBasedClassBuilder newBuilder() {
             return new ProtectedBuilderBasedClassBuilder();
         }
@@ -99,15 +103,16 @@ public class ConstructionBuilderStructureTest {
 
         static class DefaultBuilderBasedClassBuilder {
             protected boolean value;
-            public DefaultBuilderBasedClass build(){
+
+            public DefaultBuilderBasedClass build() {
                 return new DefaultBuilderBasedClass(value);
             }
         }
-        
+
         private static DefaultBuilderBasedClass create(boolean value) {
             return new DefaultBuilderBasedClass(value);
         }
-        
+
         public static DefaultBuilderBasedClassBuilder newBuilder() {
             return new DefaultBuilderBasedClassBuilder();
         }
@@ -131,10 +136,11 @@ public class ConstructionBuilderStructureTest {
         public boolean getData() {
             return data;
         }
-        
+
         public static class PublicBuilderBasedClassBuilder {
             private boolean value;
-            public PublicBuilderBasedClass build(){
+
+            public PublicBuilderBasedClass build() {
                 return new PublicBuilderBasedClass(value);
             }
         }
@@ -142,7 +148,7 @@ public class ConstructionBuilderStructureTest {
         private static PublicBuilderBasedClass create(boolean value) {
             return new PublicBuilderBasedClass(value);
         }
-        
+
         public static PublicBuilderBasedClassBuilder newBuilder() {
             return new PublicBuilderBasedClassBuilder();
         }
@@ -166,31 +172,34 @@ public class ConstructionBuilderStructureTest {
         public boolean getData() {
             return data;
         }
-        
+
         public static class UnconstructableBuilderBasedClassBuilder {
             private boolean value;
             private Collection<Integer> integer;
+
             private void setValue(int value) {
                 throw new IllegalAccessError();
             }
+
             private void addInteger(int newInteger) {
                 throw new IllegalAccessError();
             }
-            public UnconstructableBuilderBasedClass build(){
+
+            public UnconstructableBuilderBasedClass build() {
                 throw new IllegalAccessError();
             }
         }
-        
+
         private static UnconstructableBuilderBasedClassBuilder newBuilder() {
             return new UnconstructableBuilderBasedClassBuilder();
         }
     }
-    
+
     @Test(expected = RuntimeException.class)
     public void testUnconstructableInitiation() {
         UnconstructableBuilderBasedClass result = ObjectGenerator.generate(UnconstructableBuilderBasedClass.class);
     }
-    
+
     public static class UnconstructableBuilderBasedClass2 {
         final private boolean data;
 
@@ -201,26 +210,29 @@ public class ConstructionBuilderStructureTest {
         public boolean getData() {
             return data;
         }
-        
+
         public static class UnconstructableBuilderBasedClassBuilder2 {
             private boolean value;
             private Collection<Integer> integer;
+
             private void setValue(int value) {
                 throw new IllegalAccessError();
             }
+
             private void addInteger(int newInteger) {
                 throw new IllegalAccessError();
             }
-            public UnconstructableBuilderBasedClass2 build(){
+
+            public UnconstructableBuilderBasedClass2 build() {
                 throw new IllegalAccessError();
             }
         }
-        
+
         private static UnconstructableBuilderBasedClassBuilder2 newBuilder() {
             throw new IllegalAccessError();
         }
     }
-    
+
     @Test(expected = RuntimeException.class)
     public void testUnconstructableInitiation2() {
         UnconstructableBuilderBasedClass2 result = ObjectGenerator.generate(UnconstructableBuilderBasedClass2.class);

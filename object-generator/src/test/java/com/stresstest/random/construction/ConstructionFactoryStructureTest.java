@@ -10,6 +10,7 @@ import com.stresstest.random.ValueGeneratorFactory;
 import com.stresstest.random.ClassConstructor.ConstructorBasedConstructor;
 import com.stresstest.random.ClassConstructor.FactoryMethodBasedConstructor;
 
+@SuppressWarnings("unused")
 public class ConstructionFactoryStructureTest {
 
     final private ValueGeneratorFactory valueGeneratorFactory = new ValueGeneratorFactory();

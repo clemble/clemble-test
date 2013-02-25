@@ -1,6 +1,5 @@
 package com.stresstest.random.construction.external;
 
-
 public class PrivateBuilderBasedClass {
     final private boolean data;
 
@@ -14,15 +13,18 @@ public class PrivateBuilderBasedClass {
 
     static class PrivateBuilderBasedClassBuilder {
         protected boolean value;
-        public PrivateBuilderBasedClass build(){
+
+        public PrivateBuilderBasedClass build() {
             return new PrivateBuilderBasedClass(value);
         }
     }
-    
+
+    @SuppressWarnings("unused")
     private static PrivateBuilderBasedClassBuilder newBuilder() {
         return new PrivateBuilderBasedClassBuilder();
     }
-    
+
+    @SuppressWarnings("unused")
     private static PrivateBuilderBasedClassBuilder newBuilder(PrivateBuilderBasedClass builderBasedClass) {
         PrivateBuilderBasedClassBuilder builder = new PrivateBuilderBasedClassBuilder();
         builder.value = builderBasedClass.data;

@@ -19,6 +19,7 @@ class DefaultBuilderBasedClass {
         }
     }
     
+    @SuppressWarnings("unused")
     private static DefaultBuilderBasedClass create(boolean value) {
         return new DefaultBuilderBasedClass(value);
     }

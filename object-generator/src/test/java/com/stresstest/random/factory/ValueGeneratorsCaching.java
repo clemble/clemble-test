@@ -7,6 +7,7 @@ import com.stresstest.random.CachedValueGeneratorFactory;
 import com.stresstest.random.ValueGenerator;
 import com.stresstest.random.ValueGeneratorFactory;
 
+@SuppressWarnings("all")
 public class ValueGeneratorsCaching {
 
     final private ValueGeneratorFactory simpleValueGeneratorFactory = new ValueGeneratorFactory();

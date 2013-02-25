@@ -273,7 +273,7 @@ abstract public class ClassConstructor<T> {
                 Object builder = builderFactoryMethod.create();
                 classPropertySetter.setProperties(builder);
                 valueBuilderMethod.setAccessible(true);
-                return ((T) valueBuilderMethod.invoke(builder, null));
+                return ((T) valueBuilderMethod.invoke(builder, (Object[]) null));
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }

@@ -5,6 +5,7 @@ import org.junit.Test;
 
 import com.stresstest.random.ObjectGenerator;
 
+@SuppressWarnings("unused")
 public class FactoryMethodBasedGenerationTest {
 
     public abstract static class PublicAbstractFactoryMethodBasedClass {
@@ -38,7 +39,6 @@ public class FactoryMethodBasedGenerationTest {
     private abstract static class PrivateAbstractFactoryMethodBasedClass {
         abstract public Boolean getData();
 
-        @SuppressWarnings("unused")
         private static PrivateAbstractFactoryMethodBasedClass create(final boolean value) {
             return new PrivateAbstractFactoryMethodBasedClass() {
                 @Override

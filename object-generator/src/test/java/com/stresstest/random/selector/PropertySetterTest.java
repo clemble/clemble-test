@@ -13,6 +13,7 @@ import com.stresstest.random.PropertySetter;
 import com.stresstest.random.ValueGenerator;
 import com.stresstest.random.ClassConstructor.ConstructorBasedConstructor;
 
+@SuppressWarnings("all")
 public class PropertySetterTest {
     @Before
     public void setUp() {
@@ -52,7 +53,7 @@ public class PropertySetterTest {
 
         PropertySetter.register(B.class, "doubleValue", ValueGenerator.constantValueGenerator(40.0));
         PropertySetter.register(D.class, "doubleValue", ValueGenerator.constantValueGenerator(50.0));
-        
+
         A randomAValue = ObjectGenerator.generate(A.class);
         B randomBValue = ObjectGenerator.generate(B.class);
         C randomCValue = ObjectGenerator.generate(C.class);
@@ -72,7 +73,7 @@ public class PropertySetterTest {
 
         PropertySetter.register(B.class, "doubleValue", ValueGenerator.constantValueGenerator(90.0));
         PropertySetter.register(D.class, "doubleValue", ValueGenerator.constantValueGenerator(100.0));
-        
+
         randomAValue = ObjectGenerator.generate(A.class);
         randomBValue = ObjectGenerator.generate(B.class);
         randomCValue = ObjectGenerator.generate(C.class);

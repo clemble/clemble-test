@@ -9,6 +9,7 @@ import org.junit.Test;
 
 import com.stresstest.random.ObjectGenerator;
 
+@SuppressWarnings("all")
 public class ObjectGeneratorTest {
 
     private class A {

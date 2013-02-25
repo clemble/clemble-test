@@ -1,14 +1,30 @@
-package com.stresstest.runners.utils;
+package com.stresstest.concurrent;
 
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
 
+/**
+ * ThreadLocal Map, that wraps Map implementation for every invocation.
+ * 
+ * @author Anton Oparin
+ *
+ * @param <K> key Class
+ * @param <V> value Class
+ */
 public class ThreadLocalMap<K, V> implements Map<K, V> {
     
+    /**
+     * ThreadLocalFactory for Map reference keeping.
+     */
     final private ThreadLocalFactory<Map<K, V>> realMap;
     
+    /**
+     * Default constructor.
+     * 
+     * @param valueFactory source ValueFactory for empty Map generation.
+     */
     public ThreadLocalMap(ValueFactory<Map<K,V>> valueFactory) {
         realMap = new ThreadLocalFactory<Map<K,V>>(valueFactory);
     }

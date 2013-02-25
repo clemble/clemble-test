@@ -6,6 +6,8 @@ import junit.framework.Assert;
 
 import com.stresstest.random.ObjectGenerator;
 
+
+@SuppressWarnings("unused")
 public class MultiLevelConstructionTest {
 
     interface A {

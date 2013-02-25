@@ -2,7 +2,7 @@ package com.stresstest.runners;
 
 import java.lang.reflect.Method;
 
-import com.stresstest.utils.ReflectionUtils;
+import com.stresstest.reflection.ReflectionUtils;
 
 
 public class FrequencyConfigurations {
@@ -15,7 +15,7 @@ public class FrequencyConfigurations {
     final private int numThreads;
     
     public FrequencyConfigurations(Class<?> klass) {
-        this(ReflectionUtils.getAnnotation(klass, RunTimes.class), ReflectionUtils.getAnnotation(klass, RunInParallel.class));
+        this(ReflectionUtils.findAnnotation(klass, RunTimes.class), ReflectionUtils.findAnnotation(klass, RunInParallel.class));
     }
 
     public FrequencyConfigurations(Method method) {
