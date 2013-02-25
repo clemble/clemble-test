@@ -8,11 +8,11 @@ import org.springframework.core.convert.ConversionService;
 
 import com.stresstest.jbehave.context.StoryContext;
 
-public class StoryContextConverter implements ParameterConverter  {
-    
+public class StoryContextConverter implements ParameterConverter {
+
     @Autowired
     public StoryContext testContext;
-    
+
     @Autowired
     public ConversionService conversionService;
 
@@ -23,8 +23,14 @@ public class StoryContextConverter implements ParameterConverter  {
 
     @Override
     public Object convertValue(String source, Type type) {
-        if(conversionService.canConvert(String.class, type.getClass()))
-            return conversionService.convert(source, type.getClass());
-        return testContext.get(source, type.getClass());
+        if (type instanceof Class) {
+            if (type.equals(String.class))
+                return source;
+            if (conversionService.canConvert(String.class, (Class<?>) type))
+                return conversionService.convert(source, type.getClass());
+            return testContext.get(source, type.getClass());
+        } else {
+            throw new IllegalArgumentException("Expecting type to allways be Class");
+        }
     }
 }
