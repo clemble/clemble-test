@@ -17,6 +17,8 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.EnableLoadTimeWeaving;
+import org.springframework.context.annotation.EnableLoadTimeWeaving.AspectJWeaving;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -31,6 +33,7 @@ import com.stresstest.jbehave.test.TestScenario.TestScenarioConfiguration;
 public class TestScenario extends JUnitStory {
 
     @org.springframework.context.annotation.Configuration
+    @EnableLoadTimeWeaving(aspectjWeaving = AspectJWeaving.DISABLED)
     public static class TestScenarioConfiguration extends StoryContextBaseConfiguration {
 
         @Bean
