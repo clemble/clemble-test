@@ -49,8 +49,10 @@ public class TestScenario extends JUnitStory {
     public Configuration configuration() {
         StoryLoader storyLoader = new LoadFromRelativeFile(getClass().getResource("/"));
 
-        StoryReporterBuilder storyReporterBuilder = new StoryReporterBuilder().withFailureTrace(true).withFailureTraceCompression(true)
-                .withReporters(new ConsoleOutput());
+        StoryReporterBuilder storyReporterBuilder = new StoryReporterBuilder()
+            .withFailureTrace(true)
+            .withFailureTraceCompression(true)
+            .withReporters(new ConsoleOutput());
 
         return new MostUsefulConfiguration()
             .usePendingStepStrategy(new FailingUponPendingStep())
