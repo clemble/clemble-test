@@ -28,7 +28,7 @@ public class StoryContext {
     public Object get(String name, Class<?> targetClass) {
         Object value = internalGet(name, targetClass);
         if (value != null)
-            StoryContextReflection.setName(value, name);
+            value = StoryContextReflection.setName(value, name);
         return value;
     }
 

@@ -1,12 +1,40 @@
 package com.stresstest.jbehave.context;
 
-import java.lang.reflect.Field;
-
-import javassist.ClassPool;
-import javassist.CtClass;
-import javassist.CtField;
+import org.aopalliance.intercept.MethodInterceptor;
+import org.aopalliance.intercept.MethodInvocation;
+import org.springframework.aop.framework.ProxyFactory;
 
 public class StoryContextReflection {
+   public static String getName(Object bean) {
+      return String.valueOf(bean);
+   }
+
+   @SuppressWarnings("unchecked")
+   public static<T> T setName(T bean, String name) {
+       ProxyFactory proxyFactory = new ProxyFactory(bean);
+       proxyFactory.addAdvice(new ToString(name));
+       return (T) proxyFactory.getProxy(bean.getClass().getClassLoader());
+    }
+
+    public static class ToString implements MethodInterceptor {
+        final private String stringPresentation;
+
+        public ToString(String toString) {
+         this.stringPresentation = toString;
+      }
+
+      @Override
+      public Object invoke(MethodInvocation invocation) throws Throwable {
+         if (invocation.getMethod().getName().equals("toString"))
+            return stringPresentation;
+         return invocation.proceed();
+      }
+
+   }
+
+}
+
+/*
     final private static String FIELD_NAME = "_storyContextId";
 
     public static String getName(Object bean) {
@@ -45,5 +73,4 @@ public class StoryContextReflection {
             throw new RuntimeException(exception);
         }
     }
-
-}
+**/

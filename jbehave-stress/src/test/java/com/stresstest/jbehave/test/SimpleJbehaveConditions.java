@@ -7,38 +7,41 @@ import org.junit.Assert;
 
 public class SimpleJbehaveConditions {
 
-    public static class InternalObject {
-        final private String internalObject;
+   public static class InternalObject {
+      private String internalObject;
 
-        public InternalObject(String internalObject) {
-            this.internalObject = internalObject;
-        }
+      public InternalObject() {
+      }
 
-        public String getInternalObject() {
-            return internalObject;
-        }
+      public InternalObject(String internalObject) {
+         this.internalObject = internalObject;
+      }
 
-        public String toString() {
-            return internalObject;
-        }
-    }
+      public String getInternalObject() {
+         return internalObject;
+      }
 
-    public static class InternalError {
-    }
+      public String toString() {
+         return internalObject;
+      }
+   }
 
-    @Given("$A")
-    public InternalObject given(String name) {
-        return new InternalObject("testMe");
-    }
+   public static class InternalError {
+   }
 
-    @When("$A validated")
-    public InternalError validate(InternalObject internalObject) {
-        Assert.assertEquals(internalObject.getInternalObject(), "testMe");
-        return internalObject != null ? new InternalError() : null;
-    }
+   @Given("$A")
+   public InternalObject given(String name) {
+      return new InternalObject("testMe");
+   }
 
-    @Then("$A validation fails")
-    public void fail(InternalError internalError) {
-        Assert.assertNotNull(internalError);
-    }
+   @When("$A validated")
+   public InternalError validate(InternalObject internalObject) {
+      Assert.assertEquals(internalObject.getInternalObject(), "testMe");
+      return internalObject != null ? new InternalError() : null;
+   }
+
+   @Then("$A validation fails")
+   public void fail(InternalError internalError) {
+      Assert.assertNotNull(internalError);
+   }
 }
