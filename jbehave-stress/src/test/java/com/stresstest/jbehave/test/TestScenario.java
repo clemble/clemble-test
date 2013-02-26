@@ -51,7 +51,6 @@ public class TestScenario extends JUnitStory {
 
         StoryReporterBuilder storyReporterBuilder = new StoryReporterBuilder()
             .withFailureTrace(true)
-            .withFailureTraceCompression(true)
             .withReporters(new ConsoleOutput());
 
         return new MostUsefulConfiguration()

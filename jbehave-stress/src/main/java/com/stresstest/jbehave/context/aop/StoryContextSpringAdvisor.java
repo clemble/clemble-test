@@ -40,7 +40,7 @@ public class StoryContextSpringAdvisor extends ProxyConfig implements BeanPostPr
             Object result = invocation.proceed();
             // Step 2.1. Adding value to the Map
             if (arguments != null && arguments.length == 1)
-                testContext.put(String.valueOf(arguments[0]), result);
+                testContext.put(arguments[0], result);
             // Step 2.3. Returning result
             return result;
         }
