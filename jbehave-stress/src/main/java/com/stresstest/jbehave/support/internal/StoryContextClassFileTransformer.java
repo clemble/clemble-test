@@ -14,19 +14,24 @@ import javassist.CtNewMethod;
 
 public class StoryContextClassFileTransformer implements ClassFileTransformer {
 
-	public static ClassFileTransformer INSTANCE = new StoryContextClassFileTransformer();
+	final private String[] trackedPackages;
 
-	final private String[] exludedPackages = new String[] { "javassist", "org/junit", "org/spring", "java", "net", "sun" };
+	public StoryContextClassFileTransformer(final String[] packages) {
+		this.trackedPackages = packages;
+	}
 
 	@Override
 	public byte[] transform(ClassLoader loader, String className, Class<?> classBeingRedefined,
 			ProtectionDomain protectionDomain, byte[] classfileBuffer) throws IllegalClassFormatException {
+		boolean trackable = false;
+		for (String packageName : trackedPackages)
+			if (className.startsWith(packageName))
+				trackable = true;
+		if (!trackable)
+			return classfileBuffer;
+
 		ClassPool pool = ClassPool.getDefault();
 		CtClass cl = null;
-		
-		for(String packageName: exludedPackages)
-			if(className.startsWith(packageName))
-				return classfileBuffer;
 
 		try {
 			cl = pool.makeClass(new java.io.ByteArrayInputStream(classfileBuffer));

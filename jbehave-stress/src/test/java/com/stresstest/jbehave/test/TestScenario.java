@@ -33,7 +33,7 @@ import com.stresstest.jbehave.test.TestScenario.TestScenarioConfiguration;
 public class TestScenario extends JUnitStory {
 
     @org.springframework.context.annotation.Configuration
-    @EnableStoryContext
+    @EnableStoryContext(packages = {"com.stresstest.jbehave.test"})
     public static class TestScenarioConfiguration {
 
         @Bean
