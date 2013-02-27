@@ -18,37 +18,36 @@ import com.stresstest.jbehave.support.internal.startup.Startup;
 
 @Configuration
 public class StoryContextBaseConfiguration implements ImportAware {
-	protected AnnotationAttributes enableStoryContext;
+    protected AnnotationAttributes enableStoryContext;
 
-	@PostConstruct
-	public void initializeClassFileListenere() {
-		if (enableStoryContext != null && enableStoryContext.getStringArray("packages").length > 0)
-			Startup.register(new StoryContextClassFileTransformer(enableStoryContext.getStringArray("packages")));
-	}
+    @PostConstruct
+    public void initializeClassFileListenere() {
+        if (enableStoryContext != null && enableStoryContext.getStringArray("packages").length > 0)
+            Startup.register(new StoryContextClassFileTransformer(enableStoryContext.getStringArray("packages")));
+    }
 
-	@Bean
-	public StoryContextSpringAdvisor storyContextSpringAdvisor() {
-		return new StoryContextSpringAdvisor();
-	}
+    @Bean
+    public StoryContextSpringAdvisor storyContextSpringAdvisor() {
+        return new StoryContextSpringAdvisor();
+    }
 
-	@Bean
-	public StoryContext storyContext() {
-		return new StoryContext();
-	}
+    @Bean
+    public StoryContext storyContext() {
+        return new StoryContext();
+    }
 
-	@Bean
-	public StoryContextConverter storyContextConverter() {
-		return new StoryContextConverter();
-	}
+    @Bean
+    public StoryContextConverter storyContextConverter() {
+        return new StoryContextConverter();
+    }
 
-	@Bean
-	public ConversionService conversionService() {
-		return new DefaultConversionService();
-	}
+    @Bean
+    public ConversionService conversionService() {
+        return new DefaultConversionService();
+    }
 
-	@Override
-	public void setImportMetadata(AnnotationMetadata importMetadata) {
-		this.enableStoryContext = AnnotationAttributes.fromMap(importMetadata.getAnnotationAttributes(
-				EnableStoryContext.class.getName(), false));
-	}
+    @Override
+    public void setImportMetadata(AnnotationMetadata importMetadata) {
+        this.enableStoryContext = AnnotationAttributes.fromMap(importMetadata.getAnnotationAttributes(EnableStoryContext.class.getName(), false));
+    }
 }

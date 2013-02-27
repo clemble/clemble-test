@@ -23,9 +23,9 @@ public class BasicAnnotationAdvisor extends AbstractPointcutAdvisor {
     private static final long serialVersionUID = -5960130626158352051L;
 
     private Advice interceptor;
-    
+
     private Class<? extends Annotation> targetClass;
-    
+
     protected BasicAnnotationAdvisor(Class<? extends Annotation> targetClass, Advice advice) {
         this.targetClass = targetClass;
         this.interceptor = advice;
@@ -55,7 +55,8 @@ public class BasicAnnotationAdvisor extends AbstractPointcutAdvisor {
          * Create a new MetaAnnotationMatchingPointcut for the given annotation type.
          * 
          * @param classAnnotationType the annotation type to look for at the class level
-         * @param checkInherited whether to explicitly check the superclasses and interfaces for the annotation type as well (even if the annotation type is not marked as inherited itself)
+         * @param checkInherited whether to explicitly check the superclasses and interfaces for the annotation type as well (even if the annotation type is not
+         *            marked as inherited itself)
          */
         private MetaAnnotationMatchingPointcut(Class<? extends Annotation> classAnnotationType, boolean checkInherited) {
             this.classFilter = new AnnotationClassFilter(classAnnotationType, checkInherited);
@@ -70,7 +71,8 @@ public class BasicAnnotationAdvisor extends AbstractPointcutAdvisor {
          */
         private MetaAnnotationMatchingPointcut(Class<? extends Annotation> classAnnotationType, Class<? extends Annotation> methodAnnotationType) {
 
-            Assert.isTrue((classAnnotationType != null || methodAnnotationType != null), "Either Class annotation type or Method annotation type needs to be specified (or both)");
+            Assert.isTrue((classAnnotationType != null || methodAnnotationType != null),
+                    "Either Class annotation type or Method annotation type needs to be specified (or both)");
 
             if (classAnnotationType != null) {
                 this.classFilter = new AnnotationClassFilter(classAnnotationType);

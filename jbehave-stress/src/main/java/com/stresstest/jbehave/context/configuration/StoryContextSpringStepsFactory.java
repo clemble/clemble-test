@@ -33,7 +33,7 @@ public class StoryContextSpringStepsFactory extends AbstractStepsFactory {
         }
         return types;
     }
-    
+
     public Class<?> fetchTargetClass(Object bean) {
         Class<?> targetClass = bean.getClass();
         try {

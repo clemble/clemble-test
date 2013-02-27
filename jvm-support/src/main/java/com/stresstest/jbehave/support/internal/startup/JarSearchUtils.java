@@ -9,7 +9,7 @@ public class JarSearchUtils {
         Pattern pattern = Pattern.compile(nameRegExp);
         // Step 1. Checking classpath
         String jarFilePath = searchInClasspath(pattern);
-        if(jarFilePath != null)
+        if (jarFilePath != null)
             return jarFilePath;
 
         throw new IllegalStateException("No jar file with name " + nameRegExp + " found in the classpath");

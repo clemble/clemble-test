@@ -45,9 +45,9 @@ public class StoryContextSpringAdvisor extends ProxyConfig implements BeanPostPr
             if (arguments.length == 1)
                 testContext.put(arguments[0], value);
             Annotation[][] annotations = invocation.getMethod().getParameterAnnotations();
-            for(int i = 0; i < annotations.length; i++) {
-                for(Annotation annotation: annotations[i]) {
-                    if(annotation instanceof StoryParam) {
+            for (int i = 0; i < annotations.length; i++) {
+                for (Annotation annotation : annotations[i]) {
+                    if (annotation instanceof StoryParam) {
                         testContext.put(arguments[i], value);
                         break;
                     }

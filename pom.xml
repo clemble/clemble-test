@@ -34,7 +34,7 @@
     </developers>
 
     <modules>
-        <module>stresstest-jvm-support</module>
+        <module>jvm-support</module>
         <module>common</module>
         <module>runners</module>
         <module>spring-runners</module>
@@ -79,7 +79,7 @@
             </dependency>
             <dependency>
                 <groupId>com.stresstest</groupId>
-                <artifactId>stresstest-jvm-support</artifactId>
+                <artifactId>jvm-support</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

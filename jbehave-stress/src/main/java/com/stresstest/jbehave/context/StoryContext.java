@@ -21,7 +21,7 @@ public class StoryContext {
         String keyString = StoryContextReflection.getName(key);
 
         Map<String, Map<Class<?>, Object>> objectMap = implementation.get();
-        if(objectMap.get(keyString) == null)
+        if (objectMap.get(keyString) == null)
             objectMap.put(keyString, new HashMap<Class<?>, Object>());
         objectMap.get(keyString).put(value.getClass(), value);
     }

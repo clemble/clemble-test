@@ -50,9 +50,7 @@ public class SolarisVirtualMachine extends HotSpotVirtualMachine {
     /**
      * Attaches to the target VM
      */
-    public SolarisVirtualMachine(AttachProvider provider, String vmid)
-        throws AttachNotSupportedException, IOException
-    {
+    public SolarisVirtualMachine(AttachProvider provider, String vmid) throws AttachNotSupportedException, IOException {
         super(provider, vmid);
         // This provider only understands process-ids (pids).
         int pid;
@@ -77,20 +75,20 @@ public class SolarisVirtualMachine extends HotSpotVirtualMachine {
                 // give the target VM time to start the attach mechanism
                 int i = 0;
                 long delay = 200;
-                int retries = (int)(attachTimeout() / delay);
+                int retries = (int) (attachTimeout() / delay);
                 do {
                     try {
                         Thread.sleep(delay);
-                    } catch (InterruptedException x) { }
+                    } catch (InterruptedException x) {
+                    }
                     try {
                         fd = openDoor(pid);
-                    } catch (FileNotFoundException fnf2) { }
+                    } catch (FileNotFoundException fnf2) {
+                    }
                     i++;
                 } while (i <= retries && fd == -1);
                 if (fd == -1) {
-                    throw new AttachNotSupportedException(
-                        "Unable to open door: target process not responding or " +
-                        "HotSpot VM not loaded");
+                    throw new AttachNotSupportedException("Unable to open door: target process not responding or " + "HotSpot VM not loaded");
                 }
             } finally {
                 f.delete();
@@ -114,7 +112,7 @@ public class SolarisVirtualMachine extends HotSpotVirtualMachine {
     /**
      * Execute the given command in the target VM.
      */
-    InputStream execute(String cmd, Object ... args) throws AgentLoadException, IOException {
+    InputStream execute(String cmd, Object... args) throws AgentLoadException, IOException {
         assert args.length <= 3;                // includes null
 
         // first check that we are still attached
@@ -177,8 +175,7 @@ public class SolarisVirtualMachine extends HotSpotVirtualMachine {
         }
 
         public synchronized int read(byte[] bs, int off, int len) throws IOException {
-            if ((off < 0) || (off > bs.length) || (len < 0) ||
-                ((off + len) > bs.length) || ((off + len) < 0)) {
+            if ((off < 0) || (off > bs.length) || (len < 0) || ((off + len) > bs.length) || ((off + len) < 0)) {
                 throw new IndexOutOfBoundsException();
             } else if (len == 0)
                 return 0;
@@ -193,7 +190,8 @@ public class SolarisVirtualMachine extends HotSpotVirtualMachine {
 
     // The door is attached to .java_pid<pid> in the temporary directory.
     private int openDoor(int pid) throws IOException {
-        String path = tmpdir + "/.java_pid" + pid;;
+        String path = tmpdir + "/.java_pid" + pid;
+        ;
         fd = open(path);
 
         // Check that the file owner/permission to avoid attaching to
@@ -224,7 +222,7 @@ public class SolarisVirtualMachine extends HotSpotVirtualMachine {
         return f;
     }
 
-    //-- native methods
+    // -- native methods
 
     static native int open(String path) throws IOException;
 
@@ -237,8 +235,7 @@ public class SolarisVirtualMachine extends HotSpotVirtualMachine {
     static native void sigquit(int pid) throws IOException;
 
     // enqueue a command (and arguments) to the given door
-    static native int enqueue(int fd, String cmd, Object ... args)
-        throws IOException;
+    static native int enqueue(int fd, String cmd, Object... args) throws IOException;
 
     static {
         System.loadLibrary("attach");

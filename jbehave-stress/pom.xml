@@ -14,7 +14,7 @@
         </dependency>
         <dependency>
             <groupId>com.stresstest</groupId>
-            <artifactId>stresstest-jvm-support</artifactId>
+            <artifactId>jvm-support</artifactId>
         </dependency>
         <dependency>
             <groupId>cglib</groupId>
@@ -53,4 +53,15 @@
             <systemPath>${java.home}/../lib/tools.jar</systemPath>
         </dependency>
     </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <argLine>-javaagent:${settings.localRepository}/com/stresstest/jvm-support/${project.version}/jvm-support-${project.version}.jar</argLine>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

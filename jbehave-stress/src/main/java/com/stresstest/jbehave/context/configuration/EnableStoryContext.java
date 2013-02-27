@@ -16,5 +16,5 @@ import org.springframework.context.annotation.Import;
 @Import(StoryContextBaseConfiguration.class)
 public @interface EnableStoryContext {
 
-	String[] packages() default {};
+    String[] packages() default {};
 }
