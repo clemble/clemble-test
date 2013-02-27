@@ -2,46 +2,34 @@ package com.stresstest.jbehave.test;
 
 import org.jbehave.core.annotations.Given;
 import org.jbehave.core.annotations.Then;
-import org.jbehave.core.annotations.When;
 import org.junit.Assert;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.stresstest.jbehave.context.StoryContext;
+import com.stresstest.jbehave.context.StoryParam;
 
 public class SimpleJbehaveConditions {
 
-   public static class InternalObject {
-      private String internalObject;
+    @Autowired
+    private StoryContext storyContext;
 
-      public InternalObject() {
-      }
+    @Given("$A add int $S to context")
+    public int addIntToContext(@StoryParam String name, int valueToAdd) {
+        return valueToAdd;
+    }
+    
+    @Given("$A add short $S to context")
+    public short addShortToContext(@StoryParam String name, short value) {
+        return value;
+    }
+    
+    @Given("$A add long $S to context")
+    public long addLongToContext(@StoryParam String name, Long value) {
+        return value;
+    }
 
-      public InternalObject(String internalObject) {
-         this.internalObject = internalObject;
-      }
-
-      public String getInternalObject() {
-         return internalObject;
-      }
-
-      public String toString() {
-         return internalObject;
-      }
-   }
-
-   public static class InternalError {
-   }
-
-   @Given("$A")
-   public InternalObject given(String name) {
-      return new InternalObject("testMe");
-   }
-
-   @When("$A validated")
-   public InternalError validate(InternalObject internalObject) {
-      Assert.assertEquals(internalObject.getInternalObject(), "testMe");
-      return internalObject != null ? new InternalError() : null;
-   }
-
-   @Then("$A validation fails")
-   public void fail(InternalError internalError) {
-      Assert.assertNotNull(internalError);
-   }
+    @Then("$A context size $S")
+    public void fail(String name, int size) {
+        Assert.assertEquals(storyContext.get(name).size(), size);
+    }
 }

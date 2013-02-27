@@ -1,4 +1,4 @@
-package com.stresstest.jbehave.spring;
+package com.stresstest.jbehave.context.configuration;
 
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;

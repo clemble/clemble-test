@@ -1,4 +1,4 @@
-package com.stresstest.jbehave.spring;
+package com.stresstest.jbehave.context.configuration;
 
 import org.springframework.test.context.TestContext;
 import org.springframework.test.context.TestExecutionListener;

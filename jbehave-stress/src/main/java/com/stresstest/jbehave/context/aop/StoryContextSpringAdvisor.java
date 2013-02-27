@@ -1,5 +1,7 @@
 package com.stresstest.jbehave.context.aop;
 
+import java.lang.annotation.Annotation;
+
 import org.aopalliance.aop.Advice;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
@@ -21,6 +23,7 @@ import org.springframework.core.Ordered;
 import org.springframework.util.ClassUtils;
 
 import com.stresstest.jbehave.context.StoryContext;
+import com.stresstest.jbehave.context.StoryParam;
 
 public class StoryContextSpringAdvisor extends ProxyConfig implements BeanPostProcessor, BeanClassLoaderAware, BeanFactoryAware, InitializingBean, Ordered {
 
@@ -37,12 +40,21 @@ public class StoryContextSpringAdvisor extends ProxyConfig implements BeanPostPr
             // Step 1. Checking this was applied to appropriate
             Object[] arguments = invocation.getArguments();
             // Step 2. Invoking underlying class
-            Object result = invocation.proceed();
+            Object value = invocation.proceed();
             // Step 2.1. Adding value to the Map
-            if (arguments != null && arguments.length == 1)
-                testContext.put(arguments[0], result);
+            if (arguments.length == 1)
+                testContext.put(arguments[0], value);
+            Annotation[][] annotations = invocation.getMethod().getParameterAnnotations();
+            for(int i = 0; i < annotations.length; i++) {
+                for(Annotation annotation: annotations[i]) {
+                    if(annotation instanceof StoryParam) {
+                        testContext.put(arguments[i], value);
+                        break;
+                    }
+                }
+            }
             // Step 2.3. Returning result
-            return result;
+            return value;
         }
     };
 

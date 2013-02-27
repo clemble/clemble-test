@@ -13,8 +13,8 @@ import org.springframework.test.context.support.DirtiesContextTestExecutionListe
 import com.stresstest.jbehave.context.StoryContext;
 import com.stresstest.jbehave.context.aop.StoryContextConverter;
 import com.stresstest.jbehave.context.aop.StoryContextSpringAdvisor;
-import com.stresstest.jbehave.spring.StoryContextBaseConfiguration;
-import com.stresstest.jbehave.spring.StoryContextTestExecutionListener;
+import com.stresstest.jbehave.context.configuration.StoryContextBaseConfiguration;
+import com.stresstest.jbehave.context.configuration.StoryContextTestExecutionListener;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = StoryContextBaseConfiguration.class)

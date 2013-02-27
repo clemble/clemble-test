@@ -13,6 +13,10 @@
             <artifactId>common</artifactId>
         </dependency>
         <dependency>
+            <groupId>com.stresstest</groupId>
+            <artifactId>stresstest-jvm-support</artifactId>
+        </dependency>
+        <dependency>
             <groupId>cglib</groupId>
             <artifactId>cglib-nodep</artifactId>
             <scope>provided</scope>
@@ -40,6 +44,13 @@
             <groupId>org.jbehave</groupId>
             <artifactId>jbehave-spring</artifactId>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.sun</groupId>
+            <artifactId>tools</artifactId>
+            <version>1.6.0</version>
+            <scope>system</scope>
+            <systemPath>${java.home}/../lib/tools.jar</systemPath>
         </dependency>
     </dependencies>
 </project>

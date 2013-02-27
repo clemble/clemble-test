@@ -15,14 +15,15 @@ public class StoryContext {
     public StoryContext() {
     }
 
-    public void put(Object key, Object message) {
-        if (message == null || key == null || message.getClass() == Void.class)
+    public void put(Object key, Object value) {
+        if (value == null || key == null || value.getClass() == Void.class)
             return;
         String keyString = StoryContextReflection.getName(key);
 
         Map<String, Map<Class<?>, Object>> objectMap = implementation.get();
-        objectMap.put(keyString, new HashMap<Class<?>, Object>());
-        objectMap.get(keyString).put(message.getClass(), message);
+        if(objectMap.get(keyString) == null)
+            objectMap.put(keyString, new HashMap<Class<?>, Object>());
+        objectMap.get(keyString).put(value.getClass(), value);
     }
 
     public Object get(String name, Class<?> targetClass) {
@@ -30,6 +31,10 @@ public class StoryContext {
         if (value != null)
             value = StoryContextReflection.setName(value, name);
         return value;
+    }
+
+    public Map<Class<?>, Object> get(String name) {
+        return implementation.get().get(name);
     }
 
     private Object internalGet(String name, Class<?> targetClass) {
