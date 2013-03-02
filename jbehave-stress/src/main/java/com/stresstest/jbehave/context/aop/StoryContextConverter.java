@@ -1,9 +1,6 @@
 package com.stresstest.jbehave.context.aop;
 
-import java.lang.reflect.Method;
 import java.lang.reflect.Type;
-
-import net.sf.cglib.proxy.MethodProxy;
 
 import org.jbehave.core.steps.ParameterConverters.ParameterConverter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,19 +35,4 @@ public class StoryContextConverter implements ParameterConverter {
         throw new IllegalArgumentException("Can't find " + type + " for context " + source);
     }
 
-    public static class ToStringInterceptor implements net.sf.cglib.proxy.MethodInterceptor {
-        final private String stringPresentation;
-
-        public ToStringInterceptor(final String name) {
-            this.stringPresentation = name;
-        }
-
-        @Override
-        public Object intercept(Object obj, Method method, Object[] args, MethodProxy proxy) throws Throwable {
-            if (method.getName().equals("toString"))
-                return stringPresentation;
-            return proxy.invokeSuper(obj, args);
-        }
-
-    }
 }

@@ -59,7 +59,7 @@ public final class Startup {
         if (newClassFileTransformer == null)
             return true;
         if (instrumentation == null) {
-            String jarFilePath = JarSearchUtils.discoverPathToJarFile(".*stresstest-jvm-support[-.\\d]*.jar");
+            String jarFilePath = JarSearchUtils.discoverPathToJarFile(".*jvm-support[-.\\d]*.jar");
 
             if (javaSpecVersion >= 1.6) {
                 new JDK6AgentLoader(jarFilePath).loadAgent();

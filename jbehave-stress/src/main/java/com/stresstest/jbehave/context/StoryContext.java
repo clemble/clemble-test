@@ -23,7 +23,7 @@ public class StoryContext {
         Map<String, Map<Class<?>, Object>> objectMap = implementation.get();
         if (objectMap.get(keyString) == null)
             objectMap.put(keyString, new HashMap<Class<?>, Object>());
-        objectMap.get(keyString).put(value.getClass(), value);
+        objectMap.get(keyString).put(normalize(value.getClass()), value);
     }
 
     public Object get(String name, Class<?> targetClass) {
@@ -38,6 +38,8 @@ public class StoryContext {
     }
 
     private Object internalGet(String name, Class<?> targetClass) {
+        targetClass = normalize(targetClass);
+
         Map<Class<?>, Object> valueMap = implementation.get().get(name);
         if (valueMap == null)
             return null;
@@ -46,9 +48,8 @@ public class StoryContext {
         }
 
         for (Class<?> keyClass : valueMap.keySet()) {
-            if (targetClass.isAssignableFrom(keyClass)) {
+            if (targetClass.isAssignableFrom(keyClass))
                 return valueMap.get(keyClass);
-            }
         }
 
         return null;
@@ -56,6 +57,26 @@ public class StoryContext {
 
     public void clear() {
         implementation.get().clear();
+    }
+
+    private Class<?> normalize(Class<?> targetClass) {
+        if (targetClass == byte.class)
+            return Byte.class;
+        if (targetClass == char.class)
+            return Character.class;
+        if (targetClass == short.class)
+            return Short.class;
+        if (targetClass == int.class)
+            return Integer.class;
+        if (targetClass == long.class)
+            return Long.class;
+        if (targetClass == double.class)
+            return Double.class;
+        if (targetClass == float.class)
+            return Float.class;
+        if (targetClass == boolean.class)
+            return Boolean.class;
+        return targetClass;
     }
 
 }

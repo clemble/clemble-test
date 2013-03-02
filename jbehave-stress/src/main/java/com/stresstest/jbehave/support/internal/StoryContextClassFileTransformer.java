@@ -37,7 +37,6 @@ public class StoryContextClassFileTransformer implements ClassFileTransformer {
             cl = pool.makeClass(new java.io.ByteArrayInputStream(classfileBuffer));
 
             if (!cl.isInterface()) {
-
                 CtField field = CtField.make("public String _storyContext;", cl);
                 cl.addField(field);
 
