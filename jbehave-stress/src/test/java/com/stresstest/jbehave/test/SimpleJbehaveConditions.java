@@ -59,6 +59,11 @@ public class SimpleJbehaveConditions {
     public byte addByteToContext(@StoryParam String name, byte value) {
         return value;
     }
+    
+    @Given("add char $S to context")
+    public char contextCharToContext(@StoryParam String name, char value) {
+        return value;
+    }
 
     @Given("$A add char $S to context")
     public char addCharToContext(@StoryParam String name, char value) {
