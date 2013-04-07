@@ -10,37 +10,33 @@ import com.google.common.cache.LoadingCache;
  * @author Anton Oparin
  * 
  */
-public class CachedValueGeneratorFactory extends ValueGeneratorFactory {
+public class CachedValueGeneratorFactory extends AbstractValueGeneratorFactory {
 
-    /**
-     * Google LoadingCache that is used as a primary cache implementation.
-     */
-    final private LoadingCache<Class<?>, ValueGenerator<?>> cachedValueGenerators = CacheBuilder.newBuilder().build(
-            new CacheLoader<Class<?>, ValueGenerator<?>>() {
-                @Override
-                public ValueGenerator<?> load(Class<?> key) throws Exception {
-                    return getParentValueGenerator(key);
-                }
-            });
+	final private ValueGeneratorFactory valueGeneratorFactory;
+	
+	/**
+	 * Google LoadingCache that is used as a primary cache implementation.
+	 */
+	final private LoadingCache<Class<?>, ValueGenerator<?>> cachedValueGenerators = CacheBuilder.newBuilder().build(
+			new CacheLoader<Class<?>, ValueGenerator<?>>() {
+				@Override
+				public ValueGenerator<?> load(Class<?> klass) throws Exception {
+					return valueGeneratorFactory.getValueGenerator(klass);
+				}
+			});
+	
+	public CachedValueGeneratorFactory(ValueGeneratorFactory newValueGeneratorFactory) {
+		this.valueGeneratorFactory = newValueGeneratorFactory == null ? new RandomValueGeneratorFactory() : newValueGeneratorFactory;
+	}
 
-    @Override
-    @SuppressWarnings("unchecked")
-    public <T> ValueGenerator<T> getValueGenerator(Class<T> klass) {
-        try {
-            return (ValueGenerator<T>) cachedValueGenerators.get(klass);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    /**
-     * Returns parent implementation.
-     * 
-     * @param klass {@link Class} source.
-     * @return {@link ValueGenerator} from parent implementation.
-     */
-    private <T> ValueGenerator<T> getParentValueGenerator(Class<T> klass) {
-        return super.getValueGenerator(klass);
-    }
+	@Override
+	@SuppressWarnings("unchecked")
+	public <T> ValueGenerator<T> getValueGenerator(Class<T> klass) {
+		try {
+			return (ValueGenerator<T>) cachedValueGenerators.get(klass);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
 
 }

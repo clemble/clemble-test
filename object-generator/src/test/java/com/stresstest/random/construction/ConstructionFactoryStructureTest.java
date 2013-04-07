@@ -5,6 +5,7 @@ import junit.framework.Assert;
 import org.junit.Test;
 
 import com.stresstest.random.ClassValueGenerator;
+import com.stresstest.random.RandomValueGeneratorFactory;
 import com.stresstest.random.ValueGenerator;
 import com.stresstest.random.ValueGeneratorFactory;
 import com.stresstest.random.ClassConstructor.ConstructorBasedConstructor;
@@ -13,7 +14,7 @@ import com.stresstest.random.ClassConstructor.FactoryMethodBasedConstructor;
 @SuppressWarnings("unused")
 public class ConstructionFactoryStructureTest {
 
-    final private ValueGeneratorFactory valueGeneratorFactory = new ValueGeneratorFactory();
+    final private ValueGeneratorFactory valueGeneratorFactory = new RandomValueGeneratorFactory();
 
     private static class PrivateFactoryMethodClass {
         final private boolean data;

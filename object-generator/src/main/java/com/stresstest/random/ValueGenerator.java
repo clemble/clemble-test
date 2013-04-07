@@ -9,10 +9,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
-import java.util.Random;
 import java.util.Set;
-
-import org.apache.commons.lang3.RandomStringUtils;
 
 import com.google.common.collect.ImmutableMap;
 
@@ -26,98 +23,13 @@ import com.google.common.collect.ImmutableMap;
  */
 public abstract class ValueGenerator<T> {
 
-    /**
-     * Generic source of randomness in all value generators (shared for performance reasons).
-     */
-    final public static Random RANDOM_UTILS = new Random();
-
-    /**
-     * Generates random T value.
-     * 
-     * @return random T value
-     */
-    abstract public T generate();
-
-    /**
-     * {@link Boolean} random value generator.
-     */
-    final public static ValueGenerator<Boolean> BOOLEAN_VALUE_GENERATOR = new ValueGenerator<Boolean>() {
-        @Override
-        public Boolean generate() {
-            return RANDOM_UTILS.nextBoolean();
-        }
-    };
-
-    /**
-     * {@link Byte} random value generator.
-     */
-    final public static ValueGenerator<Byte> BYTE_VALUE_GENERATOR = new ValueGenerator<Byte>() {
-        @Override
-        public Byte generate() {
-            return (byte) RANDOM_UTILS.nextInt();
-        }
-    };
-
-    /**
-     * {@link Character} random value generator.
-     */
-    final public static ValueGenerator<Character> CHAR_VALUE_GENERATOR = new ValueGenerator<Character>() {
-        @Override
-        public Character generate() {
-            return (char) RANDOM_UTILS.nextInt((int) Character.MAX_VALUE);
-        }
-    };
-
-    /**
-     * {@link Integer} random value generator.
-     */
-    final public static ValueGenerator<Integer> INTEGER_VALUE_GENERATOR = new ValueGenerator<Integer>() {
-        @Override
-        public Integer generate() {
-            return RANDOM_UTILS.nextInt();
-        }
-    };
-
-    /**
-     * {@link Short} random value generator.
-     */
-    final public static ValueGenerator<Short> SHORT_VALUE_GENERATOR = new ValueGenerator<Short>() {
-        @Override
-        public Short generate() {
-            return (short) RANDOM_UTILS.nextInt();
-        }
-    };
-
-    /**
-     * {@link Long} random value generator.
-     */
-    final public static ValueGenerator<Long> LONG_VALUE_GENERATOR = new ValueGenerator<Long>() {
-        @Override
-        public Long generate() {
-            return RANDOM_UTILS.nextLong();
-        }
-    };
-
-    /**
-     * {@link Float} random value generator.
-     */
-    final public static ValueGenerator<Float> FLOAT_VALUE_GENERATOR = new ValueGenerator<Float>() {
-        @Override
-        public Float generate() {
-            return RANDOM_UTILS.nextFloat();
-        }
-    };
-
-    /**
-     * {@link Double} random value generator.
-     */
-    final public static ValueGenerator<Double> DOUBLE_VALUE_GENERATOR = new ValueGenerator<Double>() {
-        @Override
-        public Double generate() {
-            return RANDOM_UTILS.nextDouble();
-        }
-    };
-
+	/**
+	 * Generates random T value.
+	 * 
+	 * @return random T value
+	 */
+	abstract public T generate();
+	
     /**
      * {@link Collection} random value generator, as a result empty {@link ArrayList} returned.
      */
@@ -183,19 +95,7 @@ public abstract class ValueGenerator<T> {
             return new HashMap();
         }
     };
-
-    /**
-     * {@link String} generates random String of 10 characters long.
-     */
-    final public static ValueGenerator<String> STRING_VALUE_GENERATOR = new ValueGenerator<String>() {
-        final private static int DEFAULT_GENERATOR_SIZE = 10;
-
-        @Override
-        public String generate() {
-            return RandomStringUtils.random(DEFAULT_GENERATOR_SIZE);
-        }
-    };
-
+    
     /**
      * Generates constant value generator, which brings no randomness in generation.
      * 
@@ -204,14 +104,14 @@ public abstract class ValueGenerator<T> {
      * @return ValueGenerator that returns constant value for each call.
      */
     final public static <T> ValueGenerator<T> constantValueGenerator(final T constant) {
-        return new ValueGenerator<T>() {
+        return new RandomValueGenerator<T>() {
             @Override
             public T generate() {
                 return constant;
             }
         };
     }
-
+    
     /**
      * Generates random selection from list of elements
      * 
@@ -220,87 +120,7 @@ public abstract class ValueGenerator<T> {
      * @return ValueGenerator that returns one of the elements of original {@link Iterable}.
      */
     final public static <T> ValueGenerator<T> randomValueGenerator(final Iterable<T> iterable) {
-        final List<T> randomValues = new ArrayList<T>();
-        for (T value : iterable)
-            randomValues.add(value);
-        return new ValueGenerator<T>() {
-            @Override
-            public T generate() {
-                return randomValues.get(RANDOM_UTILS.nextInt(randomValues.size()));
-            }
-        };
-    }
-
-    /**
-     * Generates random {@link String} generator, that produces random {@link String} of defined length.
-     * 
-     * @param length
-     *            size of the {@link String} to generate.
-     * @return random String.
-     */
-    final public static ValueGenerator<String> randomString(final int length) {
-        if (length <= 0)
-            throw new IllegalArgumentException("Length must be possitive");
-        return new ValueGenerator<String>() {
-            @Override
-            public String generate() {
-                return RandomStringUtils.random(length);
-            }
-        };
-    }
-
-    /**
-     * Generates random alphabetic {@link String} generator, that produces random alphabetic {@link String} of defined length.
-     * 
-     * @param length
-     *            size of the {@link String} to generate.
-     * @return random alphabetic {@link String}.
-     */
-    final public static ValueGenerator<String> randomAlphabeticString(final int length) {
-        if (length <= 0)
-            throw new IllegalArgumentException("Length must be possitive");
-        return new ValueGenerator<String>() {
-            @Override
-            public String generate() {
-                return RandomStringUtils.randomAlphabetic(length);
-            }
-        };
-    }
-
-    /**
-     * Generates random alphanumeric {@link String} generator, that produces random alphanumeric {@link String} of defined length.
-     * 
-     * @param length
-     *            size of the {@link String} to generate.
-     * @return random alphanumeric {@link String}.
-     */
-    final public static ValueGenerator<String> randomAlphanumericString(final int length) {
-        if (length <= 0)
-            throw new IllegalArgumentException("Length must be possitive");
-        return new ValueGenerator<String>() {
-            @Override
-            public String generate() {
-                return RandomStringUtils.randomAlphanumeric(length);
-            }
-        };
-    }
-
-    /**
-     * Generates random ASCII {@link String} generator, that produces random ASCII {@link String} of defined length.
-     * 
-     * @param length
-     *            size of the {@link String} to generate.
-     * @return random ASCII {@link String}.
-     */
-    final public static ValueGenerator<String> randomAsciiString(final int length) {
-        if (length <= 0)
-            throw new IllegalArgumentException("Length must be possitive");
-        return new ValueGenerator<String>() {
-            @Override
-            public String generate() {
-                return RandomStringUtils.randomAscii(length);
-            }
-        };
+        return RandomValueGenerator.valueGenerator(iterable);
     }
 
     /**
@@ -309,26 +129,26 @@ public abstract class ValueGenerator<T> {
     final public static Map<Class<?>, ValueGenerator<?>> DEFAULT_GENERATORS;
     static {
         Map<Class<?>, ValueGenerator<?>> standardValueGenerators = new HashMap<Class<?>, ValueGenerator<?>>();
-        standardValueGenerators.put(String.class, STRING_VALUE_GENERATOR);
+        standardValueGenerators.put(String.class, RandomValueGenerator.STRING_VALUE_GENERATOR);
 
-        standardValueGenerators.put(Boolean.class, BOOLEAN_VALUE_GENERATOR);
-        standardValueGenerators.put(boolean.class, BOOLEAN_VALUE_GENERATOR);
+        standardValueGenerators.put(Boolean.class, RandomValueGenerator.BOOLEAN_VALUE_GENERATOR);
+        standardValueGenerators.put(boolean.class, RandomValueGenerator.BOOLEAN_VALUE_GENERATOR);
 
-        standardValueGenerators.put(Byte.class, BYTE_VALUE_GENERATOR);
-        standardValueGenerators.put(byte.class, BYTE_VALUE_GENERATOR);
-        standardValueGenerators.put(Character.class, CHAR_VALUE_GENERATOR);
-        standardValueGenerators.put(char.class, CHAR_VALUE_GENERATOR);
-        standardValueGenerators.put(Short.class, SHORT_VALUE_GENERATOR);
-        standardValueGenerators.put(short.class, SHORT_VALUE_GENERATOR);
-        standardValueGenerators.put(Integer.class, INTEGER_VALUE_GENERATOR);
-        standardValueGenerators.put(int.class, INTEGER_VALUE_GENERATOR);
-        standardValueGenerators.put(Long.class, LONG_VALUE_GENERATOR);
-        standardValueGenerators.put(long.class, LONG_VALUE_GENERATOR);
+        standardValueGenerators.put(Byte.class, RandomValueGenerator.BYTE_VALUE_GENERATOR);
+        standardValueGenerators.put(byte.class, RandomValueGenerator.BYTE_VALUE_GENERATOR);
+        standardValueGenerators.put(Character.class, RandomValueGenerator.CHAR_VALUE_GENERATOR);
+        standardValueGenerators.put(char.class, RandomValueGenerator.CHAR_VALUE_GENERATOR);
+        standardValueGenerators.put(Short.class, RandomValueGenerator.SHORT_VALUE_GENERATOR);
+        standardValueGenerators.put(short.class, RandomValueGenerator.SHORT_VALUE_GENERATOR);
+        standardValueGenerators.put(Integer.class, RandomValueGenerator.INTEGER_VALUE_GENERATOR);
+        standardValueGenerators.put(int.class, RandomValueGenerator.INTEGER_VALUE_GENERATOR);
+        standardValueGenerators.put(Long.class, RandomValueGenerator.LONG_VALUE_GENERATOR);
+        standardValueGenerators.put(long.class, RandomValueGenerator.LONG_VALUE_GENERATOR);
 
-        standardValueGenerators.put(Float.class, FLOAT_VALUE_GENERATOR);
-        standardValueGenerators.put(float.class, FLOAT_VALUE_GENERATOR);
-        standardValueGenerators.put(Double.class, DOUBLE_VALUE_GENERATOR);
-        standardValueGenerators.put(double.class, DOUBLE_VALUE_GENERATOR);
+        standardValueGenerators.put(Float.class, RandomValueGenerator.FLOAT_VALUE_GENERATOR);
+        standardValueGenerators.put(float.class, RandomValueGenerator.FLOAT_VALUE_GENERATOR);
+        standardValueGenerators.put(Double.class, RandomValueGenerator.DOUBLE_VALUE_GENERATOR);
+        standardValueGenerators.put(double.class, RandomValueGenerator.DOUBLE_VALUE_GENERATOR);
 
         standardValueGenerators.put(Collection.class, COLLECTION_VALUE_GENERATOR);
         standardValueGenerators.put(List.class, LIST_VALUE_GENERATOR);

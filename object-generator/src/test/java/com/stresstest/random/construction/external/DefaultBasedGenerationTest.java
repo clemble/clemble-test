@@ -6,13 +6,14 @@ import org.junit.Test;
 
 import com.stresstest.random.ClassValueGenerator;
 import com.stresstest.random.ObjectGenerator;
+import com.stresstest.random.RandomValueGeneratorFactory;
 import com.stresstest.random.ValueGenerator;
 import com.stresstest.random.ValueGeneratorFactory;
 import com.stresstest.random.ClassConstructor.BuilderBasedConstructor;
 
 public class DefaultBasedGenerationTest {
 
-    final private ValueGeneratorFactory valueGeneratorFactory = new ValueGeneratorFactory();
+    final private ValueGeneratorFactory valueGeneratorFactory = new RandomValueGeneratorFactory();
 
     @Test
     public void testDefaultInterfaceCreation() {

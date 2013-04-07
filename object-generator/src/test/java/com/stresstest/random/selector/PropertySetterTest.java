@@ -10,6 +10,7 @@ import com.stresstest.random.ClassPropertySetter;
 import com.stresstest.random.ClassValueGenerator;
 import com.stresstest.random.ObjectGenerator;
 import com.stresstest.random.PropertySetter;
+import com.stresstest.random.RandomValueGenerator;
 import com.stresstest.random.ValueGenerator;
 import com.stresstest.random.ClassConstructor.ConstructorBasedConstructor;
 
@@ -27,9 +28,9 @@ public class PropertySetterTest {
 
     @Test
     public void testRandomGeneration() {
-        PropertySetter.register(A.class, "intValue", ValueGenerator.INTEGER_VALUE_GENERATOR);
-        PropertySetter.register(C.class, "intValue", ValueGenerator.INTEGER_VALUE_GENERATOR);
-        PropertySetter.register(D.class, "intValue", ValueGenerator.INTEGER_VALUE_GENERATOR);
+        PropertySetter.register(A.class, "intValue", RandomValueGenerator.INTEGER_VALUE_GENERATOR);
+        PropertySetter.register(C.class, "intValue", RandomValueGenerator.INTEGER_VALUE_GENERATOR);
+        PropertySetter.register(D.class, "intValue", RandomValueGenerator.INTEGER_VALUE_GENERATOR);
 
         D randomValue = ObjectGenerator.generate(D.class);
         Assert.assertNotSame(randomValue.getIntValue(), ((C) randomValue).getIntValue());

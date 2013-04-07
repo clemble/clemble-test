@@ -1,5 +1,6 @@
 package com.stresstest.jbehave.test;
 
+import org.jbehave.core.annotations.Alias;
 import org.jbehave.core.annotations.Aliases;
 import org.jbehave.core.annotations.Given;
 import org.jbehave.core.annotations.Then;
@@ -15,6 +16,7 @@ public class SimpleJbehaveConditions {
     private StoryContext storyContext;
 
     @Given("$A add int $S to context")
+    @Alias("add int $S to context")
     public int addIntToContext(@StoryParam String name, int valueToAdd) {
         return valueToAdd;
     }
