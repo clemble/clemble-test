@@ -20,6 +20,7 @@ build
 **/target
 **/build
 **/bin
+**/*.xml.versionsBackup
 # Non related objects #
 .gradle
 .DS_Store
