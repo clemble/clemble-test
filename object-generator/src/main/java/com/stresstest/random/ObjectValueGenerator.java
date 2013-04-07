@@ -3,21 +3,22 @@ package com.stresstest.random;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 
+
 /**
- * Generates random valure of specified Class.
+ * Generates random value of specified Class.
  * 
  * @author Anton Oparin
  *
  * @param <T> parameterized {@link Class}.
  */
-public class ClassValueGenerator<T> extends ValueGenerator<T> {
+public class ObjectValueGenerator<T> extends ValueGenerator<T> {
 
     /**
      * {@link ClassConstructor} used for value construction.
      */
     final private ClassConstructor<T> objectConstructor;
     /**
-     * {@link ClassPropertySetter} used for properties population.
+     * {@link CombinedClassPropertySetter} used for properties population.
      */
     final private ClassPropertySetter<T> propertySetter;
 
@@ -25,9 +26,9 @@ public class ClassValueGenerator<T> extends ValueGenerator<T> {
      * Default constructor.
      * 
      * @param objectConstructor {@link ClassConstructor} to use.
-     * @param propertySetter {@link ClassPropertySetter} to use.
+     * @param propertySetter {@link CombinedClassPropertySetter} to use.
      */
-    public ClassValueGenerator(final ClassConstructor<T> objectConstructor, final ClassPropertySetter<T> propertySetter) {
+    public ObjectValueGenerator(final ClassConstructor<T> objectConstructor, final ClassPropertySetter<T> propertySetter) {
         this.objectConstructor = checkNotNull(objectConstructor);
         this.propertySetter = checkNotNull(propertySetter);
     }
@@ -36,7 +37,7 @@ public class ClassValueGenerator<T> extends ValueGenerator<T> {
     @SuppressWarnings({ "unchecked" })
     public T generate() {
         // Step 1. Generating random Object
-        Object generatedObject = objectConstructor.create();
+        Object generatedObject = objectConstructor.construct();
         // Step 2. Setting properties to the Object
         propertySetter.setProperties(generatedObject);
         // Step 3. Generated Object can be used
@@ -53,9 +54,9 @@ public class ClassValueGenerator<T> extends ValueGenerator<T> {
     }
 
     /**
-     * Returns associated {@link ClassPropertySetter}.
+     * Returns associated {@link CombinedClassPropertySetter}.
      * 
-     * @return associated {@link ClassPropertySetter}.
+     * @return associated {@link CombinedClassPropertySetter}.
      */
     public ClassPropertySetter<T> getPropertySetter() {
         return propertySetter;

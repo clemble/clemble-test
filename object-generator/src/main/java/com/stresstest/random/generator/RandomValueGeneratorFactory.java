@@ -1,8 +1,13 @@
-package com.stresstest.random;
+package com.stresstest.random.generator;
 
 import java.lang.reflect.Modifier;
 import java.util.Collection;
 
+import com.stresstest.random.ClassConstructor;
+import com.stresstest.random.ClassPropertySetter;
+import com.stresstest.random.ClassReflectionAccessWrapper;
+import com.stresstest.random.ObjectValueGenerator;
+import com.stresstest.random.ValueGenerator;
 import com.stresstest.reflection.ReflectionUtils;
 
 public class RandomValueGeneratorFactory extends AbstractValueGeneratorFactory {
@@ -74,10 +79,10 @@ public class RandomValueGeneratorFactory extends AbstractValueGeneratorFactory {
         if (objectConstructor == null)
             return null;
         // Step 2. Selecting list of applicable specific selectors from specific properties
-        Collection<PropertySetter<?>> propertySetters = PropertySetter.extractAvailableProperties(classToGenerate);
-        ClassPropertySetter<T> classPropertySetter = new ClassPropertySetter<T>(propertySetters);
+        Collection<ClassPropertySetter<?>> propertySetters = ClassPropertySetter.extractAvailableProperties(classToGenerate);
+        ClassPropertySetter<T> classPropertySetter = ClassPropertySetter.constructPropertySetter(classToGenerate);
         // Step 3. Generating final ClassGenerator for the type
-        return new ClassValueGenerator<T>(objectConstructor, classPropertySetter);
+        return new ObjectValueGenerator<T>(objectConstructor, classPropertySetter);
     }
 
 }

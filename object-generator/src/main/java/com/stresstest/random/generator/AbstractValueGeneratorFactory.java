@@ -1,8 +1,11 @@
-package com.stresstest.random;
+package com.stresstest.random.generator;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+
+import com.stresstest.random.ValueGenerator;
+
 
 abstract public class AbstractValueGeneratorFactory implements ValueGeneratorFactory {
 

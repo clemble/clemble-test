@@ -23,7 +23,7 @@ abstract public class ClassReflectionAccessWrapper<T> {
      * 
      * @return target {@link Class}.
      */
-    abstract protected Class<T> getSourceClass();
+    abstract public Class<T> getSourceClass();
 
     /**
      * Wrapper for {@link Class.getModifiers()} method.
@@ -186,7 +186,7 @@ abstract public class ClassReflectionAccessWrapper<T> {
         }
 
         @Override
-        protected Class<T> getSourceClass() {
+        public Class<T> getSourceClass() {
             return sourceClass;
         }
 

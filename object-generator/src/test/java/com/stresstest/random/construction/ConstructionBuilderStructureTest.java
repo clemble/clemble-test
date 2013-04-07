@@ -6,12 +6,12 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-import com.stresstest.random.ClassValueGenerator;
+import com.stresstest.random.ObjectValueGenerator;
 import com.stresstest.random.ObjectGenerator;
-import com.stresstest.random.RandomValueGeneratorFactory;
 import com.stresstest.random.ValueGenerator;
-import com.stresstest.random.ValueGeneratorFactory;
 import com.stresstest.random.ClassConstructor.BuilderBasedConstructor;
+import com.stresstest.random.generator.RandomValueGeneratorFactory;
+import com.stresstest.random.generator.ValueGeneratorFactory;
 
 
 @SuppressWarnings("unused")
@@ -50,7 +50,7 @@ public class ConstructionBuilderStructureTest {
     @Test
     public void testPrivateBuilderConstructorUsed() {
         ValueGenerator<PrivateBuilderBasedClass> factoryGenerator = valueGeneratorFactory.getValueGenerator(PrivateBuilderBasedClass.class);
-        ClassValueGenerator<PrivateBuilderBasedClass> classValueGenerator = (ClassValueGenerator<PrivateBuilderBasedClass>) factoryGenerator;
+        ObjectValueGenerator<PrivateBuilderBasedClass> classValueGenerator = (ObjectValueGenerator<PrivateBuilderBasedClass>) factoryGenerator;
         Assert.assertTrue(classValueGenerator.getObjectConstructor() instanceof BuilderBasedConstructor);
         Assert.assertNotNull(classValueGenerator.getPropertySetter());
     }
@@ -86,7 +86,7 @@ public class ConstructionBuilderStructureTest {
     @Test
     public void testProtectedBuilderConstructorUsed() {
         ValueGenerator<ProtectedBuilderBasedClass> factoryGenerator = valueGeneratorFactory.getValueGenerator(ProtectedBuilderBasedClass.class);
-        ClassValueGenerator<ProtectedBuilderBasedClass> classValueGenerator = (ClassValueGenerator<ProtectedBuilderBasedClass>) factoryGenerator;
+        ObjectValueGenerator<ProtectedBuilderBasedClass> classValueGenerator = (ObjectValueGenerator<ProtectedBuilderBasedClass>) factoryGenerator;
         Assert.assertTrue(classValueGenerator.getObjectConstructor() instanceof BuilderBasedConstructor);
         Assert.assertNotNull(classValueGenerator.getPropertySetter());
     }
@@ -122,7 +122,7 @@ public class ConstructionBuilderStructureTest {
     @Test
     public void testDefaultBuilderConstructorUsed() {
         ValueGenerator<DefaultBuilderBasedClass> factoryGenerator = valueGeneratorFactory.getValueGenerator(DefaultBuilderBasedClass.class);
-        ClassValueGenerator<DefaultBuilderBasedClass> classValueGenerator = (ClassValueGenerator<DefaultBuilderBasedClass>) factoryGenerator;
+        ObjectValueGenerator<DefaultBuilderBasedClass> classValueGenerator = (ObjectValueGenerator<DefaultBuilderBasedClass>) factoryGenerator;
         Assert.assertTrue(classValueGenerator.getObjectConstructor() instanceof BuilderBasedConstructor);
         Assert.assertNotNull(classValueGenerator.getPropertySetter());
     }
@@ -158,7 +158,7 @@ public class ConstructionBuilderStructureTest {
     @Test
     public void testPublicBuilderConstructorUsed() {
         ValueGenerator<PublicBuilderBasedClass> factoryGenerator = valueGeneratorFactory.getValueGenerator(PublicBuilderBasedClass.class);
-        ClassValueGenerator<PublicBuilderBasedClass> classValueGenerator = (ClassValueGenerator<PublicBuilderBasedClass>) factoryGenerator;
+        ObjectValueGenerator<PublicBuilderBasedClass> classValueGenerator = (ObjectValueGenerator<PublicBuilderBasedClass>) factoryGenerator;
         Assert.assertTrue(classValueGenerator.getObjectConstructor() instanceof BuilderBasedConstructor);
         Assert.assertNotNull(classValueGenerator.getPropertySetter());
     }

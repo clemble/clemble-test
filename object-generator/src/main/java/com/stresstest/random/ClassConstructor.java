@@ -12,9 +12,10 @@ import java.util.Collection;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.ImmutableList;
+import com.stresstest.random.generator.ValueGeneratorFactory;
 
 /**
- * Constructor of empty Objects, for {@link ClassValueGenerator}.
+ * Constructor of empty Objects, for {@link ObjectValueGenerator}.
  * 
  * @author Anton Oparin
  * 
@@ -29,7 +30,7 @@ abstract public class ClassConstructor<T> {
      * 
      * @return empty {@link Object} of defined type.
      */
-    abstract public T create();
+    abstract public T construct();
 
     /**
      * Generates new {@link Object}, based on constructor.
@@ -81,7 +82,7 @@ abstract public class ClassConstructor<T> {
         }
 
         @Override
-        public T create() {
+        public T construct() {
             // Step 1. Generate value for Constructor
             Collection values = new ArrayList();
             for (ValueGenerator<?> valueGenerator : getConstructorValueGenerators())
@@ -173,7 +174,7 @@ abstract public class ClassConstructor<T> {
         }
 
         @Override
-        public T create() {
+        public T construct() {
             // Step 1. Generate value for Constructor
             Collection values = new ArrayList();
             for (ValueGenerator<?> valueGenerator : constructorValueGenerators)
@@ -241,7 +242,7 @@ abstract public class ClassConstructor<T> {
          */
         final private FactoryMethodBasedConstructor<?> builderFactoryMethod;
         /**
-         * {@link ClassPropertySetter} to use in builder class.
+         * {@link CombinedClassPropertySetter} to use in builder class.
          */
         final private ClassPropertySetter<?> classPropertySetter;
         /**
@@ -268,9 +269,9 @@ abstract public class ClassConstructor<T> {
         }
 
         @Override
-        public T create() {
+        public T construct() {
             try {
-                Object builder = builderFactoryMethod.create();
+                Object builder = builderFactoryMethod.construct();
                 classPropertySetter.setProperties(builder);
                 valueBuilderMethod.setAccessible(true);
                 return ((T) valueBuilderMethod.invoke(builder, (Object[]) null));
@@ -322,8 +323,7 @@ abstract public class ClassConstructor<T> {
             // Step 4. Selecting most factory method based
             FactoryMethodBasedConstructor<T> builderMethod = new FactoryMethodBasedConstructor<T>(builder, valueGeneratorFactory.getValueGenerators(builder
                     .getParameterTypes()));
-            ClassPropertySetter<T> builderPropertySetter = new ClassPropertySetter<T>(PropertySetter.extractAvailableProperties(classToGenerate.wrap(builder
-                    .getReturnType())));
+            ClassPropertySetter<T> builderPropertySetter = (ClassPropertySetter<T>) ClassPropertySetter.constructPropertySetter(classToGenerate.wrap(builder.getReturnType()));
 
             Method valueBuilderMethod = null;
             for (Method constructorMethod : builder.getReturnType().getDeclaredMethods()) {

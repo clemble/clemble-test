@@ -1,6 +1,8 @@
-package com.stresstest.random;
+package com.stresstest.random.generator;
 
 import java.util.Collection;
+
+import com.stresstest.random.ValueGenerator;
 
 /**
  * 

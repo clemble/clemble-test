@@ -12,6 +12,7 @@ import java.util.Queue;
 import java.util.Set;
 
 import com.google.common.collect.ImmutableMap;
+import com.stresstest.random.generator.RandomValueGenerator;
 
 /**
  * Value generator abstraction generates random T value.

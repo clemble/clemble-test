@@ -4,7 +4,7 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-import com.stresstest.random.RandomValueGenerator;
+import com.stresstest.random.generator.RandomValueGenerator;
 
 public class RandomValueGeneratorTest {
 

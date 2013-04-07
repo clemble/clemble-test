@@ -4,12 +4,12 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-import com.stresstest.random.ClassValueGenerator;
-import com.stresstest.random.RandomValueGeneratorFactory;
+import com.stresstest.random.ObjectValueGenerator;
 import com.stresstest.random.ValueGenerator;
-import com.stresstest.random.ValueGeneratorFactory;
 import com.stresstest.random.ClassConstructor.ConstructorBasedConstructor;
 import com.stresstest.random.ClassConstructor.FactoryMethodBasedConstructor;
+import com.stresstest.random.generator.RandomValueGeneratorFactory;
+import com.stresstest.random.generator.ValueGeneratorFactory;
 
 @SuppressWarnings("unused")
 public class ConstructionFactoryStructureTest {
@@ -51,7 +51,7 @@ public class ConstructionFactoryStructureTest {
     @Test
     public void testPrivateFactoryConstructorUsed() {
         ValueGenerator<PrivateFactoryMethodClass> factoryGenerator = valueGeneratorFactory.getValueGenerator(PrivateFactoryMethodClass.class);
-        ClassValueGenerator<PrivateFactoryMethodClass> classValueGenerator = (ClassValueGenerator<PrivateFactoryMethodClass>) factoryGenerator;
+        ObjectValueGenerator<PrivateFactoryMethodClass> classValueGenerator = (ObjectValueGenerator<PrivateFactoryMethodClass>) factoryGenerator;
         Assert.assertTrue(classValueGenerator.getObjectConstructor() instanceof FactoryMethodBasedConstructor);
     }
 
@@ -90,7 +90,7 @@ public class ConstructionFactoryStructureTest {
     @Test
     public void testProtectedFactoryConstructorUsed() {
         ValueGenerator<ProtectedFactoryMethodClass> factoryGenerator = valueGeneratorFactory.getValueGenerator(ProtectedFactoryMethodClass.class);
-        ClassValueGenerator<ProtectedFactoryMethodClass> classValueGenerator = (ClassValueGenerator<ProtectedFactoryMethodClass>) factoryGenerator;
+        ObjectValueGenerator<ProtectedFactoryMethodClass> classValueGenerator = (ObjectValueGenerator<ProtectedFactoryMethodClass>) factoryGenerator;
         Assert.assertTrue(classValueGenerator.getObjectConstructor() instanceof FactoryMethodBasedConstructor);
     }
 
@@ -129,7 +129,7 @@ public class ConstructionFactoryStructureTest {
     @Test
     public void testDefaultFactoryConstructorUsed() {
         ValueGenerator<DefaultFactoryMethodClass> factoryGenerator = valueGeneratorFactory.getValueGenerator(DefaultFactoryMethodClass.class);
-        ClassValueGenerator<DefaultFactoryMethodClass> classValueGenerator = (ClassValueGenerator<DefaultFactoryMethodClass>) factoryGenerator;
+        ObjectValueGenerator<DefaultFactoryMethodClass> classValueGenerator = (ObjectValueGenerator<DefaultFactoryMethodClass>) factoryGenerator;
         Assert.assertTrue(classValueGenerator.getObjectConstructor() instanceof FactoryMethodBasedConstructor);
     }
 
@@ -168,7 +168,7 @@ public class ConstructionFactoryStructureTest {
     @Test
     public void testPublicFactoryConstructorUsed() {
         ValueGenerator<PublicFactoryMethodClass> factoryGenerator = valueGeneratorFactory.getValueGenerator(PublicFactoryMethodClass.class);
-        ClassValueGenerator<PublicFactoryMethodClass> classValueGenerator = (ClassValueGenerator<PublicFactoryMethodClass>) factoryGenerator;
+        ObjectValueGenerator<PublicFactoryMethodClass> classValueGenerator = (ObjectValueGenerator<PublicFactoryMethodClass>) factoryGenerator;
         Assert.assertTrue(classValueGenerator.getObjectConstructor() instanceof FactoryMethodBasedConstructor);
     }
 
@@ -194,7 +194,7 @@ public class ConstructionFactoryStructureTest {
     @Test
     public void testMostParametersUsed() {
         ValueGenerator<TwoParametersClass> factoryGenerator = valueGeneratorFactory.getValueGenerator(TwoParametersClass.class);
-        ClassValueGenerator<TwoParametersClass> classValueGenerator = (ClassValueGenerator<TwoParametersClass>) factoryGenerator;
+        ObjectValueGenerator<TwoParametersClass> classValueGenerator = (ObjectValueGenerator<TwoParametersClass>) factoryGenerator;
         Assert.assertTrue(classValueGenerator.getObjectConstructor() instanceof ConstructorBasedConstructor);
         Assert.assertNotNull(factoryGenerator.generate());
         ConstructorBasedConstructor<?> constructor = (ConstructorBasedConstructor<?>) classValueGenerator.getObjectConstructor();

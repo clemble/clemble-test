@@ -1,5 +1,9 @@
 package com.stresstest.random;
 
+import com.stresstest.random.generator.CachedValueGeneratorFactory;
+import com.stresstest.random.generator.RandomValueGeneratorFactory;
+import com.stresstest.random.generator.ValueGeneratorFactory;
+
 public class ObjectGenerator {
 
     final private static ValueGeneratorFactory STANDARD_VALUE_GENERATOR = new RandomValueGeneratorFactory();

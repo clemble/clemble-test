@@ -4,7 +4,7 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-import com.stresstest.random.ClassValueGenerator;
+import com.stresstest.random.ObjectValueGenerator;
 import com.stresstest.random.ObjectGenerator;
 import com.stresstest.random.ValueGenerator;
 import com.stresstest.random.ClassConstructor.BuilderBasedConstructor;
@@ -55,7 +55,7 @@ public class ExternalPublicBasedGenerationTest {
     @Test
     public void testPrivateBuilderBasedClassCreation() {
         ValueGenerator<PrivateBuilderBasedClass> valueGenerator = ObjectGenerator.getValueGenerator(PrivateBuilderBasedClass.class);
-        ClassValueGenerator<PrivateBuilderBasedClass> classValueGenerator = (ClassValueGenerator<PrivateBuilderBasedClass>) valueGenerator;
+        ObjectValueGenerator<PrivateBuilderBasedClass> classValueGenerator = (ObjectValueGenerator<PrivateBuilderBasedClass>) valueGenerator;
         Assert.assertTrue(classValueGenerator.getObjectConstructor() instanceof BuilderBasedConstructor);
         Assert.assertNotNull(valueGenerator.generate());
     }

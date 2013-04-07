@@ -1,4 +1,4 @@
-package com.stresstest.random;
+package com.stresstest.random.generator;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -6,6 +6,9 @@ import java.util.List;
 import java.util.Random;
 
 import org.apache.commons.lang3.RandomStringUtils;
+
+import com.stresstest.random.ValueGenerator;
+
 
 public abstract class RandomValueGenerator<T> extends ValueGenerator<T> {
 
