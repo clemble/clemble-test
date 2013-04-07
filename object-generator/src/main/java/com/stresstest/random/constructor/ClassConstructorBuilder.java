@@ -107,7 +107,7 @@ public class ClassConstructorBuilder<T> extends ClassConstructor<T> {
         // Step 4. Selecting most factory method based
         ClassConstructorFactory<T> builderMethod = new ClassConstructorFactory<T>(builder, valueGeneratorFactory.getValueGenerators(builder
                 .getParameterTypes()));
-        ClassPropertySetter<T> builderPropertySetter = (ClassPropertySetter<T>) ClassPropertySetter.constructPropertySetter(classToGenerate.wrap(builder.getReturnType()));
+        ClassPropertySetter<T> builderPropertySetter = (ClassPropertySetter<T>) ClassPropertySetter.constructPropertySetter(classToGenerate.wrap(builder.getReturnType()), valueGeneratorFactory);
 
         Method valueBuilderMethod = null;
         for (Method constructorMethod : builder.getReturnType().getDeclaredMethods()) {

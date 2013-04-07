@@ -8,7 +8,7 @@ import org.junit.Test;
 
 import com.stresstest.random.ObjectGenerator;
 import com.stresstest.random.ValueGenerator;
-import com.stresstest.random.constructor.ClassPropertySetter;
+import com.stresstest.random.constructor.PropertySetterManager;
 
 public class IndirrectSetTest {
 
@@ -47,7 +47,7 @@ public class IndirrectSetTest {
     @Test
     public void testWithPredefinedSetter() {
         ObjectGenerator.disableCaching();
-        ClassPropertySetter.register(A.class, "data", ValueGenerator.constantValueGenerator(10));
+        ObjectGenerator.register(A.class, "data", ValueGenerator.constantValueGenerator(10));
         A generatedObject = ObjectGenerator.generate(A.class);
         Assert.assertTrue(generatedObject.getValue() == 10);
     }

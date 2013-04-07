@@ -14,6 +14,7 @@ import java.util.Set;
 
 import com.google.common.collect.ImmutableMap;
 import com.stresstest.random.ValueGenerator;
+import com.stresstest.random.constructor.PropertySetterManager;
 
 
 abstract public class AbstractValueGeneratorFactory implements ValueGeneratorFactory {
@@ -102,6 +103,16 @@ abstract public class AbstractValueGeneratorFactory implements ValueGeneratorFac
 		return (ValueGenerator<T>) EMPTY_COLLECTION_GENERATORS.get(targetClass);
 	}
 	
+	final private PropertySetterManager propertySetterManager;
+
+	public AbstractValueGeneratorFactory() {
+		this.propertySetterManager = new PropertySetterManager();
+	}
+	
+	public AbstractValueGeneratorFactory(PropertySetterManager setterManager) {
+		this.propertySetterManager = setterManager != null ? setterManager : new PropertySetterManager();
+	}
+	
 	@Override
 	final public Collection<ValueGenerator<?>> getValueGenerators(Class<?>[] parameters) {
 		// Step 1. Sanity check
@@ -114,6 +125,11 @@ abstract public class AbstractValueGeneratorFactory implements ValueGeneratorFac
 				resultGenerators.add(getValueGenerator(parameter));
 		}
 		return resultGenerators;
+	}
+	
+	@Override
+	final public PropertySetterManager getPropertySetterManager() {
+		return propertySetterManager;
 	}
 
 }

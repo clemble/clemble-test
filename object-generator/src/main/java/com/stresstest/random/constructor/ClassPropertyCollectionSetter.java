@@ -53,8 +53,8 @@ final class ClassPropertyCollectionSetter<T> extends ClassPropertySetter<T> {
 	 */
 	@SuppressWarnings("unchecked")
 	ClassPropertyCollectionSetter(final ClassAccessWrapper<?> sourceClass, final Field field) {
-		Method addMethod = findAddMethod(sourceClass, ClassPropertySetter.EXTRACT_FIELD_NAME.apply(field));
-		Method setMethod = findSetMethod(sourceClass, ClassPropertySetter.EXTRACT_FIELD_NAME.apply(field));
+		Method addMethod = findAddMethod(sourceClass, ClassPropertySetter.extractFieldName(field));
+		Method setMethod = findSetMethod(sourceClass, ClassPropertySetter.extractFieldName(field));
 		
 		
 		this.initialPropertySetter = new ClassPropertySimpleSetter<T>(field, setMethod, (ValueGenerator<T>) ObjectGenerator.getValueGenerator(field.getType()));;
@@ -68,6 +68,7 @@ final class ClassPropertyCollectionSetter<T> extends ClassPropertySetter<T> {
 		}
 	}
 	
+	@SuppressWarnings("unchecked")
 	ClassPropertyCollectionSetter(final ClassAccessWrapper<?> sourceClass, final Method setMethod) {
 		Method addMethod = findAddMethod(sourceClass, setMethod.getName().substring(3));
 		

@@ -3,6 +3,7 @@ package com.stresstest.random.generator;
 import java.util.Collection;
 
 import com.stresstest.random.ValueGenerator;
+import com.stresstest.random.constructor.PropertySetterManager;
 
 /**
  * 
@@ -30,5 +31,7 @@ public interface ValueGeneratorFactory {
 	 * @return {@link Collection} of {@link ValueGenerator} to use.
 	 */
 	public Collection<ValueGenerator<?>> getValueGenerators(Class<?>[] parameters);
+	
+	public PropertySetterManager getPropertySetterManager();
 
 }

@@ -119,7 +119,7 @@ abstract public class ClassAccessWrapper<T> {
      *
      * @param {@link Class} parameter.
      */
-    private static class PublicMethodReflectionAccessWrapper<T> extends ClassAccessWrapper<T> {
+    private static class PublicClassAccessWrapper<T> extends ClassAccessWrapper<T> {
 
         /**
          * Source {@link Class}.
@@ -131,7 +131,7 @@ abstract public class ClassAccessWrapper<T> {
          * 
          * @param targetClass source {@link Class}.
          */
-        public PublicMethodReflectionAccessWrapper(Class<T> targetClass) {
+        public PublicClassAccessWrapper(Class<T> targetClass) {
             this.sourceClass = checkNotNull(targetClass);
         }
 
@@ -157,7 +157,7 @@ abstract public class ClassAccessWrapper<T> {
 
         @Override
         public <S> ClassAccessWrapper<S> wrap(Class<S> forClass) {
-            return new PublicMethodReflectionAccessWrapper<S>(forClass);
+            return new PublicClassAccessWrapper<S>(forClass);
         }
 
     }
@@ -169,7 +169,7 @@ abstract public class ClassAccessWrapper<T> {
      *
      * @param <T> {@link Class} parameter.
      */
-    private static class AllMethodReflectionAccessWrapper<T> extends ClassAccessWrapper<T> {
+    private static class FullClassAccessWrapper<T> extends ClassAccessWrapper<T> {
 
         /**
          * Source {@link Class}.
@@ -181,7 +181,7 @@ abstract public class ClassAccessWrapper<T> {
          * 
          * @param targetClass source {@link Class}
          */
-        public AllMethodReflectionAccessWrapper(Class<T> targetClass) {
+        public FullClassAccessWrapper(Class<T> targetClass) {
             this.sourceClass = checkNotNull(targetClass);
         }
 
@@ -207,7 +207,7 @@ abstract public class ClassAccessWrapper<T> {
 
         @Override
         public <S> ClassAccessWrapper<S> wrap(Class<S> forClass) {
-            return new AllMethodReflectionAccessWrapper<S>(forClass);
+            return new FullClassAccessWrapper<S>(forClass);
         }
 
     }
@@ -219,7 +219,7 @@ abstract public class ClassAccessWrapper<T> {
      * @return {@link ClassAccessWrapper} with only publicly available access.
      */
     static public <T> ClassAccessWrapper<T> createPublicAccessor(final Class<T> classToWrap) {
-        return new PublicMethodReflectionAccessWrapper<T>(classToWrap);
+        return new PublicClassAccessWrapper<T>(classToWrap);
     }
 
     /**
@@ -229,7 +229,7 @@ abstract public class ClassAccessWrapper<T> {
      * @return {@link ClassAccessWrapper} with only publicly available access.
      */
     static public <T> ClassAccessWrapper<T> createAllMethodsAccessor(final Class<T> classToWrap) {
-        return new AllMethodReflectionAccessWrapper<T>(classToWrap);
+        return new FullClassAccessWrapper<T>(classToWrap);
     }
 
 }

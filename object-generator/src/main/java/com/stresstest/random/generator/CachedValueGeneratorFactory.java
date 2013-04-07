@@ -14,7 +14,7 @@ import com.stresstest.random.ValueGenerator;
 public class CachedValueGeneratorFactory extends AbstractValueGeneratorFactory {
 
 	final private ValueGeneratorFactory valueGeneratorFactory;
-	
+
 	/**
 	 * Google LoadingCache that is used as a primary cache implementation.
 	 */
@@ -25,9 +25,10 @@ public class CachedValueGeneratorFactory extends AbstractValueGeneratorFactory {
 					return valueGeneratorFactory.getValueGenerator(klass);
 				}
 			});
-	
+
 	public CachedValueGeneratorFactory(ValueGeneratorFactory newValueGeneratorFactory) {
-		this.valueGeneratorFactory = newValueGeneratorFactory == null ? new RandomValueGeneratorFactory() : newValueGeneratorFactory;
+		super(newValueGeneratorFactory.getPropertySetterManager());
+		this.valueGeneratorFactory = newValueGeneratorFactory;
 	}
 
 	@Override

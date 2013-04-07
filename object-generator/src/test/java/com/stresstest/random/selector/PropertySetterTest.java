@@ -11,6 +11,7 @@ import com.stresstest.random.ObjectValueGenerator;
 import com.stresstest.random.ValueGenerator;
 import com.stresstest.random.constructor.ClassPropertySetter;
 import com.stresstest.random.constructor.ClassConstructorSimple;
+import com.stresstest.random.constructor.PropertySetterManager;
 import com.stresstest.random.generator.RandomValueGenerator;
 
 @SuppressWarnings("all")
@@ -27,9 +28,9 @@ public class PropertySetterTest {
 
     @Test
     public void testRandomGeneration() {
-        ClassPropertySetter.register(A.class, "intValue", RandomValueGenerator.INTEGER_VALUE_GENERATOR);
-        ClassPropertySetter.register(C.class, "intValue", RandomValueGenerator.INTEGER_VALUE_GENERATOR);
-        ClassPropertySetter.register(D.class, "intValue", RandomValueGenerator.INTEGER_VALUE_GENERATOR);
+    	ObjectGenerator.register(A.class, "intValue", RandomValueGenerator.INTEGER_VALUE_GENERATOR);
+    	ObjectGenerator.register(C.class, "intValue", RandomValueGenerator.INTEGER_VALUE_GENERATOR);
+    	ObjectGenerator.register(D.class, "intValue", RandomValueGenerator.INTEGER_VALUE_GENERATOR);
 
         D randomValue = ObjectGenerator.generate(D.class);
         Assert.assertNotSame(randomValue.getIntValue(), ((C) randomValue).getIntValue());
@@ -47,12 +48,12 @@ public class PropertySetterTest {
 
     @Test
     public void testFixedValueGeneration() {
-        ClassPropertySetter.register(A.class, "intValue", ValueGenerator.constantValueGenerator(10));
-        ClassPropertySetter.register(C.class, "intValue", ValueGenerator.constantValueGenerator(20));
-        ClassPropertySetter.register(D.class, "intValue", ValueGenerator.constantValueGenerator(30));
+    	ObjectGenerator.register(A.class, "intValue", ValueGenerator.constantValueGenerator(10));
+    	ObjectGenerator.register(C.class, "intValue", ValueGenerator.constantValueGenerator(20));
+    	ObjectGenerator.register(D.class, "intValue", ValueGenerator.constantValueGenerator(30));
 
-        ClassPropertySetter.register(B.class, "doubleValue", ValueGenerator.constantValueGenerator(40.0));
-        ClassPropertySetter.register(D.class, "doubleValue", ValueGenerator.constantValueGenerator(50.0));
+    	ObjectGenerator.register(B.class, "doubleValue", ValueGenerator.constantValueGenerator(40.0));
+    	ObjectGenerator.register(D.class, "doubleValue", ValueGenerator.constantValueGenerator(50.0));
 
         A randomAValue = ObjectGenerator.generate(A.class);
         B randomBValue = ObjectGenerator.generate(B.class);
@@ -67,12 +68,12 @@ public class PropertySetterTest {
         Assert.assertEquals("D integer did not match", randomDValue.getIntValue(), 30);
         Assert.assertEquals("D double did not match", randomDValue.getDoubleValue(), 50.0);
 
-        ClassPropertySetter.register(A.class, "intValue", ValueGenerator.constantValueGenerator(60));
-        ClassPropertySetter.register(C.class, "intValue", ValueGenerator.constantValueGenerator(70));
-        ClassPropertySetter.register(D.class, "intValue", ValueGenerator.constantValueGenerator(80));
+        ObjectGenerator.register(A.class, "intValue", ValueGenerator.constantValueGenerator(60));
+        ObjectGenerator.register(C.class, "intValue", ValueGenerator.constantValueGenerator(70));
+        ObjectGenerator.register(D.class, "intValue", ValueGenerator.constantValueGenerator(80));
 
-        ClassPropertySetter.register(B.class, "doubleValue", ValueGenerator.constantValueGenerator(90.0));
-        ClassPropertySetter.register(D.class, "doubleValue", ValueGenerator.constantValueGenerator(100.0));
+        ObjectGenerator.register(B.class, "doubleValue", ValueGenerator.constantValueGenerator(90.0));
+        ObjectGenerator.register(D.class, "doubleValue", ValueGenerator.constantValueGenerator(100.0));
 
         randomAValue = ObjectGenerator.generate(A.class);
         randomBValue = ObjectGenerator.generate(B.class);
