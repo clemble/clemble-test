@@ -2,11 +2,14 @@ package com.stresstest.random.generator;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import org.apache.commons.lang3.RandomStringUtils;
 
+import com.google.common.collect.ImmutableMap;
 import com.stresstest.random.ValueGenerator;
 
 
@@ -118,7 +121,7 @@ public abstract class RandomValueGenerator<T> extends ValueGenerator<T> {
     final public static <T> ValueGenerator<T> enumValueGenerator(final Class<T> enumClass) {
     	if(!enumClass.isEnum())
     		throw new IllegalArgumentException("Class must be of type enum");
-        return randomValueGenerator(Arrays.asList(enumClass.getEnumConstants()));
+        return valueGenerator(Arrays.asList(enumClass.getEnumConstants()));
     }
 
     /**
@@ -211,6 +214,36 @@ public abstract class RandomValueGenerator<T> extends ValueGenerator<T> {
             }
         };
     }
+    
+	/**
+	 * Collection of standard value generators, which must be used by default
+	 */
+	final public static Map<Class<?>, ValueGenerator<?>> DEFAULT_GENERATORS;
+	static {
+		Map<Class<?>, ValueGenerator<?>> valueGenerators = new HashMap<Class<?>, ValueGenerator<?>>();
+		valueGenerators.put(String.class, RandomValueGenerator.STRING_VALUE_GENERATOR);
+
+		valueGenerators.put(Boolean.class, RandomValueGenerator.BOOLEAN_VALUE_GENERATOR);
+		valueGenerators.put(boolean.class, RandomValueGenerator.BOOLEAN_VALUE_GENERATOR);
+
+		valueGenerators.put(Byte.class, RandomValueGenerator.BYTE_VALUE_GENERATOR);
+		valueGenerators.put(byte.class, RandomValueGenerator.BYTE_VALUE_GENERATOR);
+		valueGenerators.put(Character.class, RandomValueGenerator.CHAR_VALUE_GENERATOR);
+		valueGenerators.put(char.class, RandomValueGenerator.CHAR_VALUE_GENERATOR);
+		valueGenerators.put(Short.class, RandomValueGenerator.SHORT_VALUE_GENERATOR);
+		valueGenerators.put(short.class, RandomValueGenerator.SHORT_VALUE_GENERATOR);
+		valueGenerators.put(Integer.class, RandomValueGenerator.INTEGER_VALUE_GENERATOR);
+		valueGenerators.put(int.class, RandomValueGenerator.INTEGER_VALUE_GENERATOR);
+		valueGenerators.put(Long.class, RandomValueGenerator.LONG_VALUE_GENERATOR);
+		valueGenerators.put(long.class, RandomValueGenerator.LONG_VALUE_GENERATOR);
+
+		valueGenerators.put(Float.class, RandomValueGenerator.FLOAT_VALUE_GENERATOR);
+		valueGenerators.put(float.class, RandomValueGenerator.FLOAT_VALUE_GENERATOR);
+		valueGenerators.put(Double.class, RandomValueGenerator.DOUBLE_VALUE_GENERATOR);
+		valueGenerators.put(double.class, RandomValueGenerator.DOUBLE_VALUE_GENERATOR);
+
+		DEFAULT_GENERATORS = ImmutableMap.<Class<?>, ValueGenerator<?>>copyOf(valueGenerators);
+	}
 
 }
 

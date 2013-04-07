@@ -1,4 +1,4 @@
-package com.stresstest.random;
+package com.stresstest.random.constructor;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Member;
@@ -15,7 +15,9 @@ import java.util.TreeSet;
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
-import com.google.common.collect.ImmutableList;
+import com.stresstest.random.ObjectGenerator;
+import com.stresstest.random.ObjectValueGenerator;
+import com.stresstest.random.ValueGenerator;
 
 /**
  * Abstraction of object property.
@@ -41,192 +43,6 @@ abstract public class ClassPropertySetter<T> {
 	 * @return affected {@link Class}.
 	 */
 	abstract protected Class<?> getAffectedClass();
-
-	/**
-	 * Combination of {@link ClassPropertySetter} for specified {@link Class}.
-	 * 
-	 * @author Anton Oparin
-	 * 
-	 * @param <T>
-	 *            parameterized {@link Class}.
-	 */
-	final private static class CombinedClassPropertySetter<T> extends ClassPropertySetter<T> {
-
-		/**
-		 * Source {@link Colleciton} of {@link ClassPropertySetter}.
-		 */
-		final private Collection<ClassPropertySetter<?>> propertySetters;
-
-		/**
-		 * Default constructor
-		 * 
-		 * @param propertySetters
-		 *            source {@link Collection} of {@link ClassPropertySetter}.
-		 */
-		public CombinedClassPropertySetter(final Collection<ClassPropertySetter<?>> propertySetters) {
-			this.propertySetters = ImmutableList.<ClassPropertySetter<?>> copyOf(propertySetters);
-		}
-
-		@Override
-		public void setProperties(Object generatedObject) {
-			// Step 1. Call set methods for collections
-			for (ClassPropertySetter<?> propertySetter : propertySetters) {
-				propertySetter.setProperties(generatedObject);
-			}
-		}
-
-		@Override
-		protected Class<?> getAffectedClass() {
-			throw new UnsupportedOperationException();
-		}
-
-	}
-
-	/**
-	 * Property setter implementation for a plain field.
-	 * 
-	 * @author Anton Oparin
-	 * 
-	 * @param <T>
-	 *            parameterized {@link Class}.
-	 */
-	final private static class SimplePropertySetter<T> extends ClassPropertySetter<T> {
-
-		/**
-		 * Field to reference.
-		 */
-		final private Field field;
-		/**
-		 * Method assuming java bean naming, or field naming.
-		 */
-		final private Method method;
-		/**
-		 * Value Generator to use to set the value property
-		 */
-		final private ValueGenerator<T> valueGenerator;
-
-		/**
-		 * Default constructor.
-		 * 
-		 * @param field
-		 *            field to use as reference.
-		 * @param method
-		 *            method to use as reference.
-		 * @param valueGenerator
-		 *            ValueGenerator to use.
-		 */
-		private SimplePropertySetter(final Field field, final Method method, final ValueGenerator<T> valueGenerator) {
-			this.field = field;
-			this.method = method;
-			this.valueGenerator = valueGenerator;
-		}
-
-		@Override
-		public void setProperties(final Object target) {
-			Object valueToSet = valueGenerator.generate();
-			// Step 1. Setting value, preferring method over field
-			try {
-				if (method != null) {
-					method.invoke(target, valueToSet);
-				} else {
-					field.set(target, valueToSet);
-				}
-			} catch (Exception methodSetException) {
-				// Step 3. Changing access level and making another attempt
-				try {
-					if (method != null) {
-						method.setAccessible(true);
-						method.invoke(target, valueToSet);
-					} else {
-						field.setAccessible(true);
-						field.set(target, valueToSet);
-					}
-				} catch (Exception anotherMethodSetException) {
-				}
-			}
-		}
-
-		@Override
-		protected Class<?> getAffectedClass() {
-			return field != null ? field.getDeclaringClass() : method.getDeclaringClass();
-		}
-
-		@Override
-		public String toString() {
-			// DO NOT CHANGE !!! This is import, it will be used for comparison.
-			return (field != null ? field.getName() : "-") + " / " + (method != null ? method.getName() : "-");
-		}
-
-	}
-
-	/**
-	 * Property Setter for Collection fields.
-	 * 
-	 * @author Anton Oparin
-	 * 
-	 * @param <T>
-	 *            parameterized {@link Class}
-	 */
-	final private static class CollectionValueSetter<T> extends ClassPropertySetter<T> {
-
-		/**
-		 * SimplePropertySetter to initialize field with empty Collection.
-		 */
-		final private SimplePropertySetter<T> initialPropertySetter;
-		/**
-		 * Add method if there is one for the field (It is impossible to identify collection type in runtime),
-		 */
-		final private Method method;
-		/**
-		 * ValueGenerator to use for additional value generation.
-		 */
-		final private ValueGenerator<T> valueGenerator;
-
-		/**
-		 * Default constructor.
-		 * 
-		 * @param initialPropertySetter
-		 *            default constructor for the field.
-		 * @param method
-		 *            add method to use
-		 * @param valueGenerator
-		 *            value generator to add something to Collection.
-		 */
-		private CollectionValueSetter(final SimplePropertySetter<T> initialPropertySetter, final Method method,
-				final ValueGenerator<T> valueGenerator) {
-			this.initialPropertySetter = initialPropertySetter;
-			this.method = method;
-			this.valueGenerator = valueGenerator;
-		}
-
-		@Override
-		public void setProperties(Object target) {
-			// Step 1. Generating initial empty Collection
-			initialPropertySetter.setProperties(target);
-			Object valueToSet = valueGenerator.generate();
-			// Step 2. Setting method as a regular expression
-			try {
-				if (method != null)
-					method.invoke(target, valueToSet);
-			} catch (Exception methodSetException) {
-				try {
-					method.setAccessible(true);
-					method.invoke(target, valueToSet);
-				} catch (Exception exception) {
-				}
-			}
-		}
-
-		@Override
-		protected Class<?> getAffectedClass() {
-			return initialPropertySetter.getAffectedClass();
-		}
-
-		@Override
-		public String toString() {
-			return initialPropertySetter.toString();
-		}
-	}
 
 	/**
 	 * Filter for applicable methods, uses only set and add methods
@@ -266,7 +82,7 @@ abstract public class ClassPropertySetter<T> {
 	/**
 	 * Extracts and normalizes field name.
 	 */
-	final private static Function<Member, String> EXTRACT_FIELD_NAME = new Function<Member, String>() {
+	final public static Function<Member, String> EXTRACT_FIELD_NAME = new Function<Member, String>() {
 		@Override
 		public String apply(Member field) {
 			return field.getName().toLowerCase();
@@ -289,35 +105,35 @@ abstract public class ClassPropertySetter<T> {
 	final private static Comparator<ClassPropertySetter<?>> COMPARE_PRESENTATION_TYPE = new Comparator<ClassPropertySetter<?>>() {
 		@Override
 		public int compare(final ClassPropertySetter<?> firstPropertySetter, final ClassPropertySetter<?> secondPropertySetter) {
-			boolean firstSimpleProperty = firstPropertySetter instanceof SimplePropertySetter;
-			boolean secondSimpleProperty = secondPropertySetter instanceof SimplePropertySetter;
+			boolean firstSimpleProperty = firstPropertySetter instanceof ClassPropertySimpleSetter;
+			boolean secondSimpleProperty = secondPropertySetter instanceof ClassPropertySimpleSetter;
 			if (firstSimpleProperty && secondSimpleProperty) {
 				// Step 1. Check field names
-				Field firstField = ((SimplePropertySetter<?>) firstPropertySetter).field;
-				Field secondField = ((SimplePropertySetter<?>) secondPropertySetter).field;
+				Field firstField = ((ClassPropertySimpleSetter<?>) firstPropertySetter).field;
+				Field secondField = ((ClassPropertySimpleSetter<?>) secondPropertySetter).field;
 				if (firstField != null && secondField != null) {
 					int comparison = secondField.getName().compareTo(firstField.getName());
 					if (comparison != 0)
 						return comparison;
 				}
 				// Step 2. Check method names
-				Method firstMethod = ((SimplePropertySetter<?>) firstPropertySetter).method;
-				Method secondMethod = ((SimplePropertySetter<?>) secondPropertySetter).method;
+				Method firstMethod = ((ClassPropertySimpleSetter<?>) firstPropertySetter).method;
+				Method secondMethod = ((ClassPropertySimpleSetter<?>) secondPropertySetter).method;
 				if (firstMethod != null && secondMethod != null) {
 					int comparison = secondMethod.getName().compareTo(firstMethod.getName());
 					if (comparison != 0)
 						return comparison;
 				}
 				// Step 2. Check classes
-				Class<?> firstClass = ((SimplePropertySetter<?>) firstPropertySetter).getAffectedClass();
-				Class<?> secondClass = ((SimplePropertySetter<?>) secondPropertySetter).getAffectedClass();
+				Class<?> firstClass = ((ClassPropertySimpleSetter<?>) firstPropertySetter).getAffectedClass();
+				Class<?> secondClass = ((ClassPropertySimpleSetter<?>) secondPropertySetter).getAffectedClass();
 				if (firstClass != secondClass) {
 					return firstClass.isAssignableFrom(secondClass) ? 1 : -1;
 				}
 			} else if (!firstSimpleProperty && !secondSimpleProperty) {
 				// Comparison of Collections is equivalent to comparison of the types
-				return compare(((CollectionValueSetter<?>) firstPropertySetter).initialPropertySetter,
-						((CollectionValueSetter<?>) secondPropertySetter).initialPropertySetter);
+				return compare(((ClassPropertyCollectionSetter<?>) firstPropertySetter).initialPropertySetter,
+						((ClassPropertyCollectionSetter<?>) secondPropertySetter).initialPropertySetter);
 			} else if (firstSimpleProperty) {
 				return 1;
 			} else if (secondSimpleProperty) {
@@ -336,7 +152,7 @@ abstract public class ClassPropertySetter<T> {
 	 *            name of the field.
 	 * @return Field or null if not found.
 	 */
-	private static Field findField(final ClassReflectionAccessWrapper<?> searchClass, final String fieldName) {
+	private static Field findField(final ClassAccessWrapper<?> searchClass, final String fieldName) {
 		// Step 1. Filter all field's with specified name
 		Collection<Field> fieldCandidates = Collections2.filter(searchClass.getFields(), new Predicate<Field>() {
 			@Override
@@ -357,7 +173,7 @@ abstract public class ClassPropertySetter<T> {
 	 *            name of the Method
 	 * @return possible set method for specified field name.
 	 */
-	private static Method findSetMethod(final ClassReflectionAccessWrapper<?> searchClass, final String methodName) {
+	public static Method findSetMethod(final ClassAccessWrapper<?> searchClass, final String methodName) {
 		// Step 1. Filter method candidates
 		Collection<Method> methodCandidates = Collections2.filter(searchClass.getMethods(), new Predicate<Method>() {
 			@Override
@@ -379,7 +195,7 @@ abstract public class ClassPropertySetter<T> {
 	 *            name of the method.
 	 * @return possible add method for specified field name.
 	 */
-	private static Method findAddMethod(final ClassReflectionAccessWrapper<?> searchClass, final String methodName) {
+	public static Method findAddMethod(final ClassAccessWrapper<?> searchClass, final String methodName) {
 		// Step 1. Filter method candidates
 		Collection<Method> methodCandidates = Collections2.filter(searchClass.getMethods(), new Predicate<Method>() {
 			@Override
@@ -401,17 +217,15 @@ abstract public class ClassPropertySetter<T> {
 	 *            {@link ValueGenerator} to use.
 	 * @return PropertySetter for the provided field.
 	 */
-	private static <T> ClassPropertySetter<T> createFieldSetter(final ClassReflectionAccessWrapper<?> sourceClass,
-			final Field field, final ValueGenerator<T> valueGenerator) {
+	private static <T> ClassPropertySetter<T> createFieldSetter(final ClassAccessWrapper<?> sourceClass,
+			final Field field) {
 		// Step 1. Sanity check
 		if (field == null)
-			throw new IllegalArgumentException();
-		if (valueGenerator == null)
 			throw new IllegalArgumentException();
 		// Step 2. Retrieve possible set name for the field
 		Method possibleMethods = findSetMethod(sourceClass, EXTRACT_FIELD_NAME.apply(field));
 		// Step 3. Create possible field setter.
-		return create(sourceClass, field, possibleMethods, valueGenerator);
+		return create(sourceClass, field, possibleMethods);
 	}
 
 	/**
@@ -423,16 +237,13 @@ abstract public class ClassPropertySetter<T> {
 	 *            {@link ValueGenerator} to use.
 	 * @return constructed PropertySetter for the method, or <code>null</code> if such PropertySetter can't be created.
 	 */
-	public static <T> ClassPropertySetter<T> createMethodSetter(final ClassReflectionAccessWrapper<?> sourceClass,
-			final Method method, final ValueGenerator<T> valueGenerator) {
+	public static <T> ClassPropertySetter<T> createMethodSetter(final ClassAccessWrapper<?> sourceClass, final Method method) {
 		if (method == null)
-			throw new IllegalArgumentException();
-		if (valueGenerator == null)
 			throw new IllegalArgumentException();
 		if (method.getParameterTypes().length != 1)
 			return null;
 		Field possibleField = findField(sourceClass, EXTRACT_MEMBER_NAME.apply(method));
-		return create(sourceClass, possibleField, method, valueGenerator);
+		return create(sourceClass, possibleField, method);
 	}
 
 	/**
@@ -447,41 +258,50 @@ abstract public class ClassPropertySetter<T> {
 	 * @return constructed PropertySetter.
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> ClassPropertySetter<T> create(final ClassReflectionAccessWrapper<?> sourceClass, final Field field,
-			final Method method, final ValueGenerator<T> valueGenerator) {
-		if (field != null && Collection.class.isAssignableFrom(field.getType())) {
-			Method addMethod = findAddMethod(sourceClass, EXTRACT_FIELD_NAME.apply(field));
-			Method setMethod = findSetMethod(sourceClass, EXTRACT_FIELD_NAME.apply(field));
-			SimplePropertySetter<T> collectionValueInitializer = new SimplePropertySetter<T>(field, setMethod,
-					(ValueGenerator<T>) ObjectGenerator.getValueGenerator(field.getType()));
-			return new CollectionValueSetter<T>(collectionValueInitializer, addMethod, valueGenerator);
-		} else {
-			return new SimplePropertySetter<T>(field, method, valueGenerator);
+	public static <T> ClassPropertySetter<T> create(final ClassAccessWrapper<?> sourceClass, final Field field,
+			final Method method) {
+		return create(sourceClass, field, method, null);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static <T> ClassPropertySetter<T> create(final ClassAccessWrapper<?> sourceClass, final Field field,
+			final Method method, ValueGenerator<T> valueGenerator) {
+		Class<T> targetClass = (Class<T>) (field != null ? field.getType() : method.getParameterTypes()[0]);
+		if(valueGenerator == null) {
+			if (Collection.class.isAssignableFrom(targetClass)) {
+				if(field != null)
+					return new ClassPropertyCollectionSetter<T>(sourceClass, field);
+				else if(method != null)
+					return new ClassPropertyCollectionSetter<T>(sourceClass, method);
+			} else {
+				valueGenerator = ObjectGenerator.getValueGenerator(targetClass);
+			}
 		}
+		
+		return new ClassPropertySimpleSetter<T>(field, method, valueGenerator);
 	}
 
 	/**
 	 * Extracts all possible PropertySetters with specified access level.
 	 * 
 	 * @param searchClass
-	 *            {@link ClassReflectionAccessWrapper} access wrapper to generate properties for.
+	 *            {@link ClassAccessWrapper} access wrapper to generate properties for.
 	 * @return list of all PropertySetter it can set, ussing specified field.
 	 */
 	public static <T> Collection<ClassPropertySetter<?>> extractAvailableProperties(
-			final ClassReflectionAccessWrapper<T> searchClass) {
+			final ClassAccessWrapper<T> searchClass) {
 		// Step 1. Create Collection field setters
 		final Collection<ClassPropertySetter<?>> propertySetters = new TreeSet<ClassPropertySetter<?>>(
 				COMPARE_STRING_PRESENTATION);
 		propertySetters.addAll(SELECTOR_MANAGER.getApplicableProperties(searchClass));
 		for (Field field : searchClass.getFields()) {
-			propertySetters.add(createFieldSetter(searchClass, field, ObjectGenerator.getValueGenerator(field.getType())));
+			propertySetters.add(createFieldSetter(searchClass, field));
 		}
 		// Step 2. Create Collection of method setters
 		for (Method method : Collections2.filter(searchClass.getMethods(), FILTER_APPLICABLE_METHODS)) {
 			if (method.getParameterTypes().length != 1)
 				continue;
-			ClassPropertySetter<?> propertySetter = createMethodSetter(searchClass, method,
-					ObjectGenerator.getValueGenerator(method.getParameterTypes()[0]));
+			ClassPropertySetter<?> propertySetter = createMethodSetter(searchClass, method);
 			if (propertySetter != null) {
 				propertySetters.add(propertySetter);
 			}
@@ -493,8 +313,8 @@ abstract public class ClassPropertySetter<T> {
 		return resultSetters;
 	}
 	
-	public static <T> ClassPropertySetter<T> constructPropertySetter(final ClassReflectionAccessWrapper<T> searchClass) {
-		return new CombinedClassPropertySetter<T>(extractAvailableProperties(searchClass));
+	public static <T> ClassPropertySetter<T> constructPropertySetter(final ClassAccessWrapper<T> searchClass) {
+		return new ClassPropertyCombinedSetter<T>(extractAvailableProperties(searchClass));
 	}
 
 	final private static PropertySetterManager SELECTOR_MANAGER = new PropertySetterManager();
@@ -511,7 +331,7 @@ abstract public class ClassPropertySetter<T> {
 	 */
 	public static <T> void register(final Class<?> searchClass, final String name, final ValueGenerator<T> valueGenerator) {
 		final String possibleName = name.toLowerCase();
-		final ClassReflectionAccessWrapper<?> wrapper = ClassReflectionAccessWrapper.createAllMethodsAccessor(searchClass);
+		final ClassAccessWrapper<?> wrapper = ClassAccessWrapper.createAllMethodsAccessor(searchClass);
 		final Field possibleField = findField(wrapper, possibleName);
 		final Method possibleMethod = findSetMethod(wrapper, possibleName);
 		ClassPropertySetter<T> propertySetter = create(wrapper, possibleField, possibleMethod, valueGenerator);
@@ -550,7 +370,7 @@ abstract public class ClassPropertySetter<T> {
 		 *            Class on which register happens.
 		 * @return Collection of PropertySetters applicable to the provided Class.
 		 */
-		public Collection<ClassPropertySetter<?>> getApplicableProperties(final ClassReflectionAccessWrapper<?> applicableClass) {
+		public Collection<ClassPropertySetter<?>> getApplicableProperties(final ClassAccessWrapper<?> applicableClass) {
 			// Step 1. Filter all properties
 			Collection<ClassPropertySetter<?>> applicableSelectors = Collections2.filter(propertySelectors,
 					new Predicate<ClassPropertySetter<?>>() {

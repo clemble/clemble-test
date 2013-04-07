@@ -7,7 +7,6 @@ import org.junit.Test;
 import com.stresstest.random.ObjectValueGenerator;
 import com.stresstest.random.ObjectGenerator;
 import com.stresstest.random.ValueGenerator;
-import com.stresstest.random.ClassConstructor.BuilderBasedConstructor;
 import com.stresstest.random.construction.external.PrivateBuilderBasedClass;
 import com.stresstest.random.construction.external.PrivateClass;
 import com.stresstest.random.construction.external.PublicAbstractBuilderBasedClass;
@@ -19,6 +18,7 @@ import com.stresstest.random.construction.external.UncreatableInterface;
 import com.stresstest.random.construction.external.UncreatableObject;
 import com.stresstest.random.construction.external.impl.PublicAbstractClassImpl;
 import com.stresstest.random.construction.external.impl.PublicInterfaceImpl;
+import com.stresstest.random.constructor.ClassConstructorBuilder;
 
 public class ExternalPublicBasedGenerationTest {
 
@@ -56,7 +56,7 @@ public class ExternalPublicBasedGenerationTest {
     public void testPrivateBuilderBasedClassCreation() {
         ValueGenerator<PrivateBuilderBasedClass> valueGenerator = ObjectGenerator.getValueGenerator(PrivateBuilderBasedClass.class);
         ObjectValueGenerator<PrivateBuilderBasedClass> classValueGenerator = (ObjectValueGenerator<PrivateBuilderBasedClass>) valueGenerator;
-        Assert.assertTrue(classValueGenerator.getObjectConstructor() instanceof BuilderBasedConstructor);
+        Assert.assertTrue(classValueGenerator.getObjectConstructor() instanceof ClassConstructorBuilder);
         Assert.assertNotNull(valueGenerator.generate());
     }
 

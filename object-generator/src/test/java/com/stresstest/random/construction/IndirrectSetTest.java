@@ -7,8 +7,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.stresstest.random.ObjectGenerator;
-import com.stresstest.random.ClassPropertySetter;
 import com.stresstest.random.ValueGenerator;
+import com.stresstest.random.constructor.ClassPropertySetter;
 
 public class IndirrectSetTest {
 

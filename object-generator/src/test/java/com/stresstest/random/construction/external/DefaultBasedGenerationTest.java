@@ -7,7 +7,7 @@ import org.junit.Test;
 import com.stresstest.random.ObjectValueGenerator;
 import com.stresstest.random.ObjectGenerator;
 import com.stresstest.random.ValueGenerator;
-import com.stresstest.random.ClassConstructor.BuilderBasedConstructor;
+import com.stresstest.random.constructor.ClassConstructorBuilder;
 import com.stresstest.random.generator.RandomValueGeneratorFactory;
 import com.stresstest.random.generator.ValueGeneratorFactory;
 
@@ -43,7 +43,7 @@ public class DefaultBasedGenerationTest {
     public void testDefaultFactoryConstructorUsed() {
         ValueGenerator<DefaultBuilderBasedClass> factoryGenerator = valueGeneratorFactory.getValueGenerator(DefaultBuilderBasedClass.class);
         ObjectValueGenerator<DefaultBuilderBasedClass> classValueGenerator = (ObjectValueGenerator<DefaultBuilderBasedClass>) factoryGenerator;
-        Assert.assertTrue(classValueGenerator.getObjectConstructor() instanceof BuilderBasedConstructor);
+        Assert.assertTrue(classValueGenerator.getObjectConstructor() instanceof ClassConstructorBuilder);
     }
 
 }

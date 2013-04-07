@@ -2,6 +2,9 @@ package com.stresstest.random;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import com.stresstest.random.constructor.ClassConstructor;
+import com.stresstest.random.constructor.ClassPropertySetter;
+
 
 
 /**

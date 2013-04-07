@@ -6,11 +6,11 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.stresstest.random.ClassConstructor.ConstructorBasedConstructor;
-import com.stresstest.random.ClassPropertySetter;
 import com.stresstest.random.ObjectGenerator;
 import com.stresstest.random.ObjectValueGenerator;
 import com.stresstest.random.ValueGenerator;
+import com.stresstest.random.constructor.ClassPropertySetter;
+import com.stresstest.random.constructor.ClassConstructorSimple;
 import com.stresstest.random.generator.RandomValueGenerator;
 
 @SuppressWarnings("all")
@@ -41,7 +41,7 @@ public class PropertySetterTest {
 
         Assert.assertNotSame(randomValue.getLongValue(), ((C) randomValue).getLongValue());
         ObjectValueGenerator<D> classValueGenerator = (ObjectValueGenerator<D>) ObjectGenerator.getValueGenerator(D.class);
-        Assert.assertTrue(classValueGenerator.getObjectConstructor() instanceof ConstructorBasedConstructor);
+        Assert.assertTrue(classValueGenerator.getObjectConstructor() instanceof ClassConstructorSimple);
         ClassPropertySetter<D> propertySetter = classValueGenerator.getPropertySetter();
     }
 

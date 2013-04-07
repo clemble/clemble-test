@@ -1,4 +1,4 @@
-package com.stresstest.random;
+package com.stresstest.random.constructor;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -16,7 +16,7 @@ import java.util.Collection;
  *
  * @param <T> {@link Class} parameter.
  */
-abstract public class ClassReflectionAccessWrapper<T> {
+abstract public class ClassAccessWrapper<T> {
 
     /**
      * Get's source {@link Class} for transformation.
@@ -110,7 +110,7 @@ abstract public class ClassReflectionAccessWrapper<T> {
      * @param forClass {@link Class} to wrap.
      * @return wrapper of the {@link Class}, with the same level of access as original wrapper.
      */
-    abstract public <S> ClassReflectionAccessWrapper<S> wrap(Class<S> forClass);
+    abstract public <S> ClassAccessWrapper<S> wrap(Class<S> forClass);
 
     /**
      * Wrapper that provides access only to publicly available fields, methods and constructors.
@@ -119,7 +119,7 @@ abstract public class ClassReflectionAccessWrapper<T> {
      *
      * @param {@link Class} parameter.
      */
-    private static class PublicMethodReflectionAccessWrapper<T> extends ClassReflectionAccessWrapper<T> {
+    private static class PublicMethodReflectionAccessWrapper<T> extends ClassAccessWrapper<T> {
 
         /**
          * Source {@link Class}.
@@ -156,7 +156,7 @@ abstract public class ClassReflectionAccessWrapper<T> {
         }
 
         @Override
-        public <S> ClassReflectionAccessWrapper<S> wrap(Class<S> forClass) {
+        public <S> ClassAccessWrapper<S> wrap(Class<S> forClass) {
             return new PublicMethodReflectionAccessWrapper<S>(forClass);
         }
 
@@ -169,7 +169,7 @@ abstract public class ClassReflectionAccessWrapper<T> {
      *
      * @param <T> {@link Class} parameter.
      */
-    private static class AllMethodReflectionAccessWrapper<T> extends ClassReflectionAccessWrapper<T> {
+    private static class AllMethodReflectionAccessWrapper<T> extends ClassAccessWrapper<T> {
 
         /**
          * Source {@link Class}.
@@ -206,7 +206,7 @@ abstract public class ClassReflectionAccessWrapper<T> {
         }
 
         @Override
-        public <S> ClassReflectionAccessWrapper<S> wrap(Class<S> forClass) {
+        public <S> ClassAccessWrapper<S> wrap(Class<S> forClass) {
             return new AllMethodReflectionAccessWrapper<S>(forClass);
         }
 
@@ -216,9 +216,9 @@ abstract public class ClassReflectionAccessWrapper<T> {
      * Factory method, that creates wrapper with only public access to variables in Class.
      * 
      * @param classToWrap Class to wrap.
-     * @return {@link ClassReflectionAccessWrapper} with only publicly available access.
+     * @return {@link ClassAccessWrapper} with only publicly available access.
      */
-    static public <T> ClassReflectionAccessWrapper<T> createPublicAccessor(final Class<T> classToWrap) {
+    static public <T> ClassAccessWrapper<T> createPublicAccessor(final Class<T> classToWrap) {
         return new PublicMethodReflectionAccessWrapper<T>(classToWrap);
     }
 
@@ -226,9 +226,9 @@ abstract public class ClassReflectionAccessWrapper<T> {
      * Factory method, that creates wrapper with access to all variables in Class.
      * 
      * @param classToWrap Class to wrap.
-     * @return {@link ClassReflectionAccessWrapper} with only publicly available access.
+     * @return {@link ClassAccessWrapper} with only publicly available access.
      */
-    static public <T> ClassReflectionAccessWrapper<T> createAllMethodsAccessor(final Class<T> classToWrap) {
+    static public <T> ClassAccessWrapper<T> createAllMethodsAccessor(final Class<T> classToWrap) {
         return new AllMethodReflectionAccessWrapper<T>(classToWrap);
     }
 
