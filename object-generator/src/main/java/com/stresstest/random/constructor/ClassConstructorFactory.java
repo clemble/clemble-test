@@ -45,6 +45,7 @@ final public class ClassConstructorFactory<T> extends ClassConstructor<T> {
     }
 
     @Override
+	@SuppressWarnings({"rawtypes", "unchecked"})
     public T construct() {
         // Step 1. Generate value for Constructor
         Collection values = new ArrayList();
@@ -61,6 +62,11 @@ final public class ClassConstructorFactory<T> extends ClassConstructor<T> {
         return (T) generatedObject;
     }
 
+	@Override
+	public Collection<ValueGenerator<?>> getValueGenerators() {
+		return constructorValueGenerators;
+	}
+    
     /**
      * Tries to build {@link ClassConstructor} based on factory method.
      * 
@@ -96,4 +102,5 @@ final public class ClassConstructorFactory<T> extends ClassConstructor<T> {
         // Step 4. Creating factory method based
         return new ClassConstructorFactory(builder, valueGeneratorFactory.getValueGenerators(builder.getParameterTypes()));
     }
+
 }

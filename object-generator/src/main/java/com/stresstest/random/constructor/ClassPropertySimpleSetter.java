@@ -2,6 +2,8 @@ package com.stresstest.random.constructor;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.Collection;
+import java.util.Collections;
 
 import com.stresstest.random.ValueGenerator;
 
@@ -78,6 +80,12 @@ final class ClassPropertySimpleSetter<T> extends ClassPropertySetter<T> {
 	public String toString() {
 		// DO NOT CHANGE !!! This is import, it will be used for comparison.
 		return (field != null ? field.getName() : "-") + " / " + (method != null ? method.getName() : "-");
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public Collection<ValueGenerator<?>> getValueGenerators() {
+		return (Collection<ValueGenerator<?>>)(Collection<?>) Collections.singletonList(valueGenerator);
 	}
 
 }

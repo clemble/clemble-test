@@ -34,6 +34,8 @@ abstract public class ClassPropertySetter<T> {
 	 *            T value to update
 	 */
 	abstract public void setProperties(Object target);
+	
+	abstract public Collection<ValueGenerator<?>> getValueGenerators();
 
 	/**
 	 * Returns affected Class. Supposed to be used primerely inside invocation.

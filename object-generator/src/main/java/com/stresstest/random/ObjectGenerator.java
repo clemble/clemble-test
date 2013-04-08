@@ -1,5 +1,7 @@
 package com.stresstest.random;
 
+import java.util.Iterator;
+
 import com.stresstest.random.constructor.PropertySetterManager;
 import com.stresstest.random.generator.CachedValueGeneratorFactory;
 import com.stresstest.random.generator.RandomValueGeneratorFactory;
@@ -35,5 +37,15 @@ public class ObjectGenerator {
     
     public static <T, V> void register(final Class<T> searchClass, final String name, final ValueGenerator<V> valueGenerator){
     	SETTER_MANAGER.register(searchClass, name, valueGenerator);
+    }
+    
+    public static <T> Iterable<T> getPossibleValues(final Class<T> targetClass) {
+    	return new Iterable<T>() {
+
+			@Override
+			public Iterator<T> iterator() {
+				return null;
+			}
+		};
     }
 }

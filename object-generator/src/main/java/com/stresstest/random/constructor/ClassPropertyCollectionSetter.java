@@ -2,20 +2,10 @@ package com.stresstest.random.constructor;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.ArrayDeque;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Deque;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Queue;
-import java.util.Set;
+import java.util.Collections;
 
-import com.google.common.collect.ImmutableMap;
 import com.stresstest.random.ObjectGenerator;
-import com.stresstest.random.ObjectValueGenerator;
 import com.stresstest.random.ValueGenerator;
 
 /**
@@ -112,5 +102,11 @@ final class ClassPropertyCollectionSetter<T> extends ClassPropertySetter<T> {
 	@Override
 	public String toString() {
 		return initialPropertySetter.toString();
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public Collection<ValueGenerator<?>> getValueGenerators() {
+		return (Collection<ValueGenerator<?>>)(Collection<?>) Collections.singletonList(valueGenerator);
 	}
 }
