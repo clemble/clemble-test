@@ -6,22 +6,27 @@ import com.stresstest.random.constructor.ClassValueGenerator;
 
 public class PossibleValuesIterable<T> implements Iterable<T> {
 
-	final private ClassValueGenerator<T> classValueGenerator;
+	final private ValueGenerator<T> classValueGenerator;
 
 	final private int size;
 
-	public PossibleValuesIterable(ClassValueGenerator<T> classValueGenerator) {
-		this.classValueGenerator = (ClassValueGenerator<T>) classValueGenerator.clone();
-
-		int possibleValues = 1;
-		for (ValueGenerator<?> valueGenerator : classValueGenerator.getObjectConstructor().getValueGenerators()) {
-			possibleValues = possibleValues * valueGenerator.scope();
+	public PossibleValuesIterable(ValueGenerator<T> iValueGenerator) {
+		this.classValueGenerator = (ClassValueGenerator<T>) iValueGenerator.clone();
+		
+		if(classValueGenerator instanceof ClassValueGenerator) {
+			ClassValueGenerator<T> classValueGenerator = (ClassValueGenerator<T>) iValueGenerator;
+			int possibleValues = 1;
+			for (ValueGenerator<?> valueGenerator : classValueGenerator.getObjectConstructor().getValueGenerators()) {
+				possibleValues = possibleValues * (valueGenerator.scope() != 0 ? valueGenerator.scope() : 1);
+			}
+			for (ValueGenerator<?> valueGenerator : classValueGenerator.getPropertySetter().getValueGenerators()) {
+				possibleValues = possibleValues * (valueGenerator.scope() != 0 ? valueGenerator.scope() : 1);
+			}
+			
+			this.size = possibleValues;
+		} else {
+			this.size = iValueGenerator.scope();
 		}
-		for (ValueGenerator<?> valueGenerator : classValueGenerator.getPropertySetter().getValueGenerators()) {
-			possibleValues = possibleValues * valueGenerator.scope();
-		}
-
-		this.size = possibleValues;
 	}
 
 	@Override
@@ -29,7 +34,7 @@ public class PossibleValuesIterable<T> implements Iterable<T> {
 		return new Iterator<T>() {
 
 			private int currentPosition = 0;
-			private ClassValueGenerator<T> classValueGenerator = (ClassValueGenerator<T>) PossibleValuesIterable.this.classValueGenerator
+			private ClassValueGenerator<T> valueGenerator = (ClassValueGenerator<T>) PossibleValuesIterable.this.classValueGenerator
 					.clone();
 
 			@Override
@@ -41,7 +46,7 @@ public class PossibleValuesIterable<T> implements Iterable<T> {
 			public T next() {
 				if (hasNext()) {
 					currentPosition++;
-					return classValueGenerator.generate();
+					return valueGenerator.generate();
 				}
 				return null;
 			}

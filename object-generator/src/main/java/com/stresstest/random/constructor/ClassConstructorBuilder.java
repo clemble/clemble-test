@@ -5,6 +5,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Collection;
+import java.util.List;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
@@ -66,8 +67,12 @@ public class ClassConstructorBuilder<T> extends ClassConstructor<T> {
 	}
 
 	@Override
-	public Collection<ValueGenerator<?>> getValueGenerators() {
+	public List<ValueGenerator<?>> getValueGenerators() {
 		return classPropertySetter.getValueGenerators();
+	}
+	
+	public ClassConstructor<T> clone(List<ValueGenerator<?>> generatorsToUse) {
+		return new ClassConstructorBuilder<T>(builderFactoryMethod, classPropertySetter.clone(generatorsToUse), valueBuilderMethod);
 	}
 
 	/**
@@ -79,6 +84,7 @@ public class ClassConstructorBuilder<T> extends ClassConstructor<T> {
 	 *            {@link ValueGeneratorFactory} to use.
 	 * @return {@link ClassConstructor} if it is possible to generate one, <code>null</code> otherwise.
 	 */
+	@SuppressWarnings("unchecked")
 	public static <T> ClassConstructorBuilder<T> build(final ClassAccessWrapper<?> classToGenerate,
 			final ValueGeneratorFactory valueGeneratorFactory) {
 		// Step 1. Filter static methods, that return instance of the type as a result
@@ -113,8 +119,8 @@ public class ClassConstructorBuilder<T> extends ClassConstructor<T> {
 		// Step 4. Selecting most factory method based
 		ClassConstructorFactory<T> builderMethod = new ClassConstructorFactory<T>(builder,
 				valueGeneratorFactory.getValueGenerators(builder.getParameterTypes()));
-		ClassPropertySetter<T> builderPropertySetter = (ClassPropertySetter<T>) ClassPropertySetter.constructPropertySetter(
-				classToGenerate.wrap(builder.getReturnType()), valueGeneratorFactory);
+		ClassPropertySetter<T> builderPropertySetter = ((ClassPropertySetter<T>) ClassPropertySetter.constructPropertySetter(
+				classToGenerate.wrap(builder.getReturnType()), valueGeneratorFactory));
 
 		Method valueBuilderMethod = null;
 		for (Method constructorMethod : builder.getReturnType().getDeclaredMethods()) {
@@ -123,6 +129,6 @@ public class ClassConstructorBuilder<T> extends ClassConstructor<T> {
 			}
 		}
 
-		return new ClassConstructorBuilder(builderMethod, builderPropertySetter, valueBuilderMethod);
+		return new ClassConstructorBuilder<T>(builderMethod, builderPropertySetter, valueBuilderMethod);
 	}
 }

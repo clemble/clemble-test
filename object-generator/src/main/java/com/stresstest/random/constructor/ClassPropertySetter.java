@@ -36,6 +36,8 @@ abstract public class ClassPropertySetter<T> {
 	abstract public void setProperties(Object target);
 	
 	abstract public List<ValueGenerator<?>> getValueGenerators();
+	
+	abstract public ClassPropertySetter<T> clone(List<ValueGenerator<?>> generatorsToUse);
 
 	/**
 	 * Returns affected Class. Supposed to be used primerely inside invocation.

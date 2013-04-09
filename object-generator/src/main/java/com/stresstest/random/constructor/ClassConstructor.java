@@ -2,7 +2,7 @@ package com.stresstest.random.constructor;
 
 
 import java.lang.reflect.Modifier;
-import java.util.Collection;
+import java.util.List;
 
 import com.stresstest.random.ValueGenerator;
 import com.stresstest.random.ValueGeneratorFactory;
@@ -24,7 +24,9 @@ abstract public class ClassConstructor<T> {
      */
     abstract public T construct();
     
-    abstract public Collection<ValueGenerator<?>> getValueGenerators();
+    abstract public List<ValueGenerator<?>> getValueGenerators();
+    
+    abstract public ClassConstructor<T> clone(List<ValueGenerator<?>> generatorsToUse);
 
     /**
      * Generates {@link ClassConstructor}. It firstly checks Constructor, than FactoryMethod and the last is Builder based construction.

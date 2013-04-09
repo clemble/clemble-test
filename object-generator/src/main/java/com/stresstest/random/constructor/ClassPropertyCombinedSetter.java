@@ -53,4 +53,13 @@ final class ClassPropertyCombinedSetter<T> extends ClassPropertySetter<T> {
 		return valueGenerators;
 	}
 
+	@Override
+	public ClassPropertySetter<T> clone(List<ValueGenerator<?>> generatorsToUse) {
+		List<ClassPropertySetter<?>> newPropertySetters = new ArrayList<ClassPropertySetter<?>>();
+		for(ClassPropertySetter<?> propertySetter: propertySetters) {
+			newPropertySetters.add(propertySetter.clone(generatorsToUse));
+		}
+		return new ClassPropertyCombinedSetter<T>(newPropertySetters);
+	}
+
 }

@@ -6,9 +6,11 @@ import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
+import com.google.common.collect.ImmutableList;
 import com.stresstest.random.ValueGenerator;
 import com.stresstest.random.ValueGeneratorFactory;
 
@@ -28,7 +30,7 @@ public final class ClassConstructorSimple<T> extends ClassConstructor<T> {
 	/**
 	 * Set of values to generate parameters for the constructor.
 	 */
-	final private Collection<ValueGenerator<?>> constructorValueGenerators;
+	final private List<ValueGenerator<?>> constructorValueGenerators;
 
 	/**
 	 * Constructor based generation.
@@ -40,7 +42,7 @@ public final class ClassConstructorSimple<T> extends ClassConstructor<T> {
 	 */
 	public ClassConstructorSimple(final Constructor<T> constructor, final Collection<ValueGenerator<?>> constructorValueGenerators) {
 		this.constructor = checkNotNull(constructor);
-		this.constructorValueGenerators = checkNotNull(constructorValueGenerators);
+		this.constructorValueGenerators = ImmutableList.<ValueGenerator<?>>copyOf(checkNotNull(constructorValueGenerators));
 	}
 
 	/**
@@ -81,8 +83,13 @@ public final class ClassConstructorSimple<T> extends ClassConstructor<T> {
 	}
 
 	@Override
-	public Collection<ValueGenerator<?>> getValueGenerators() {
+	public List<ValueGenerator<?>> getValueGenerators() {
 		return constructorValueGenerators;
+	}
+	
+	@Override
+	public ClassConstructor<T> clone(List<ValueGenerator<?>> generatorsToUse) {
+		return new ClassConstructorSimple<T>(constructor, generatorsToUse);
 	}
 
 	/**
@@ -94,6 +101,7 @@ public final class ClassConstructorSimple<T> extends ClassConstructor<T> {
 	 *            {@link ValueGeneratorFactory} to use.
 	 * @return {@link ClassConstructor} if it is possible to generate one, <code>null</code> otherwise.
 	 */
+	@SuppressWarnings("unchecked")
 	public static <T, R extends T> ClassConstructorSimple<T> build(final ClassAccessWrapper<?> classToGenerate,
 			final ValueGeneratorFactory valueGeneratorFactory) {
 		Constructor<?>[] constructors = classToGenerate.getConstructors();

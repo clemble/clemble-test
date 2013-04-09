@@ -88,4 +88,10 @@ final class ClassPropertySimpleSetter<T> extends ClassPropertySetter<T> {
 		return (List<ValueGenerator<?>>)(List<?>) Collections.singletonList(valueGenerator);
 	}
 
+	@Override
+	@SuppressWarnings("unchecked")
+	public ClassPropertySetter<T> clone(List<ValueGenerator<?>> generatorsToUse) {
+		return new ClassPropertySimpleSetter<T>(field, method, (ValueGenerator<T>) generatorsToUse.remove(0));
+	}
+
 }

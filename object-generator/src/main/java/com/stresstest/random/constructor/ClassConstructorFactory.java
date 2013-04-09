@@ -6,6 +6,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
@@ -29,7 +30,7 @@ final public class ClassConstructorFactory<T> extends ClassConstructor<T> {
     /**
      * {@link Collection} of {@link ValueGenerator} to use in factory method.
      */
-    final private Collection<ValueGenerator<?>> constructorValueGenerators;
+    final private List<ValueGenerator<?>> constructorValueGenerators;
 
     /**
      * Default constructor.
@@ -41,7 +42,7 @@ final public class ClassConstructorFactory<T> extends ClassConstructor<T> {
      */
     public ClassConstructorFactory(Method builder, Collection<ValueGenerator<?>> constructorValueGenerators) {
         this.builder = checkNotNull(builder);
-        this.constructorValueGenerators = checkNotNull(constructorValueGenerators);
+        this.constructorValueGenerators = ImmutableList.<ValueGenerator<?>>copyOf(checkNotNull(constructorValueGenerators));
     }
 
     @Override
@@ -63,10 +64,15 @@ final public class ClassConstructorFactory<T> extends ClassConstructor<T> {
     }
 
 	@Override
-	public Collection<ValueGenerator<?>> getValueGenerators() {
+	public List<ValueGenerator<?>> getValueGenerators() {
 		return constructorValueGenerators;
 	}
-    
+
+	@Override
+	public ClassConstructor<T> clone(List<ValueGenerator<?>> generatorsToUse) {
+		return new ClassConstructorFactory<T>(builder, generatorsToUse);
+	}
+
     /**
      * Tries to build {@link ClassConstructor} based on factory method.
      * 
@@ -100,7 +106,7 @@ final public class ClassConstructorFactory<T> extends ClassConstructor<T> {
             if (builder == null || candidate.getParameterTypes().length > builder.getParameterTypes().length)
                 builder = candidate;
         // Step 4. Creating factory method based
-        return new ClassConstructorFactory(builder, valueGeneratorFactory.getValueGenerators(builder.getParameterTypes()));
+        return new ClassConstructorFactory<T>(builder, valueGeneratorFactory.getValueGenerators(builder.getParameterTypes()));
     }
-
+    
 }

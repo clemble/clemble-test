@@ -32,6 +32,12 @@ final class ClassPropertyCollectionSetter<T> extends ClassPropertySetter<T> {
 	 */
 	final private ValueGenerator<T> valueGenerator;
 
+	ClassPropertyCollectionSetter(final ClassPropertySimpleSetter<T> iInitialPropertySetter, final Method iMethod, final ValueGenerator<T> iValueGenerator) {
+		this.method = iMethod;
+		this.valueGenerator = iValueGenerator;
+		this.initialPropertySetter = iInitialPropertySetter;
+	}
+	
 	/**
 	 * Default constructor.
 	 * 
@@ -109,5 +115,11 @@ final class ClassPropertyCollectionSetter<T> extends ClassPropertySetter<T> {
 	@SuppressWarnings("unchecked")
 	public List<ValueGenerator<?>> getValueGenerators() {
 		return (List<ValueGenerator<?>>) (Collection<?>)Collections.singletonList(valueGenerator);
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public ClassPropertySetter<T> clone(List<ValueGenerator<?>> generatorsToUse) {
+		return new ClassPropertyCollectionSetter<T>(initialPropertySetter, method, (ValueGenerator<T>) generatorsToUse.remove(0));
 	}
 }

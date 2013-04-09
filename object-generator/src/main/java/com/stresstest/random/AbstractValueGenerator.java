@@ -6,6 +6,7 @@ abstract public class AbstractValueGenerator<T> implements ValueGenerator<T> {
 		return 1;
 	}
 
+	@SuppressWarnings("unchecked")
 	public ValueGenerator<T> clone() {
 		try {
 			return (ValueGenerator<T>) super.clone();
