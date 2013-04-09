@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 import com.stresstest.random.ObjectGenerator;
 import com.stresstest.random.ValueGenerator;
@@ -106,7 +107,7 @@ final class ClassPropertyCollectionSetter<T> extends ClassPropertySetter<T> {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public Collection<ValueGenerator<?>> getValueGenerators() {
-		return (Collection<ValueGenerator<?>>)(Collection<?>) Collections.singletonList(valueGenerator);
+	public List<ValueGenerator<?>> getValueGenerators() {
+		return (List<ValueGenerator<?>>) (Collection<?>)Collections.singletonList(valueGenerator);
 	}
 }

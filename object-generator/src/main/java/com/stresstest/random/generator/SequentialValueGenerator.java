@@ -7,9 +7,10 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.common.collect.ImmutableMap;
+import com.stresstest.random.AbstractValueGenerator;
 import com.stresstest.random.ValueGenerator;
 
-abstract public class SequentialValueGenerator<T> extends ValueGenerator<T>{
+abstract public class SequentialValueGenerator<T>  extends AbstractValueGenerator<T> {
 	
     /**
      * {@link Boolean} random value generator.
@@ -132,6 +133,15 @@ abstract public class SequentialValueGenerator<T> extends ValueGenerator<T>{
 			}
 		};
     }
+    
+	final public static <T> ValueGenerator<T> constantValueGenerator(final T constant) {
+		return new SequentialValueGenerator<T>() {
+			@Override
+			public T generate() {
+				return constant;
+			}
+		};
+	}
     
     /**
      * Generates random selection from list of enums

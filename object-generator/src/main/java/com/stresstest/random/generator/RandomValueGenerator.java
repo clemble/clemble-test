@@ -10,10 +10,11 @@ import java.util.Random;
 import org.apache.commons.lang3.RandomStringUtils;
 
 import com.google.common.collect.ImmutableMap;
+import com.stresstest.random.AbstractValueGenerator;
 import com.stresstest.random.ValueGenerator;
 
 
-public abstract class RandomValueGenerator<T> extends ValueGenerator<T> {
+public abstract class RandomValueGenerator<T>  extends AbstractValueGenerator<T> {
 
 	/**
 	 * Generic source of randomness in all value generators (shared for performance reasons).
@@ -139,6 +140,11 @@ public abstract class RandomValueGenerator<T> extends ValueGenerator<T> {
             @Override
             public T generate() {
                 return randomValues.get(RANDOM_UTILS.nextInt(randomValues.size()));
+            }
+
+            @Override
+            public int scope() {
+            	return randomValues.size();
             }
         };
     }

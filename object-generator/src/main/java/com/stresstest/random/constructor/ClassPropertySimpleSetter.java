@@ -2,8 +2,8 @@ package com.stresstest.random.constructor;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 import com.stresstest.random.ValueGenerator;
 
@@ -28,7 +28,7 @@ final class ClassPropertySimpleSetter<T> extends ClassPropertySetter<T> {
 	/**
 	 * Value Generator to use to set the value property
 	 */
-	final private ValueGenerator<T> valueGenerator;
+	final private ValueGenerator<?> valueGenerator;
 
 	/**
 	 * Default constructor.
@@ -82,10 +82,10 @@ final class ClassPropertySimpleSetter<T> extends ClassPropertySetter<T> {
 		return (field != null ? field.getName() : "-") + " / " + (method != null ? method.getName() : "-");
 	}
 
-	@Override
 	@SuppressWarnings("unchecked")
-	public Collection<ValueGenerator<?>> getValueGenerators() {
-		return (Collection<ValueGenerator<?>>)(Collection<?>) Collections.singletonList(valueGenerator);
+	@Override
+	public List<ValueGenerator<?>> getValueGenerators() {
+		return (List<ValueGenerator<?>>)(List<?>) Collections.singletonList(valueGenerator);
 	}
 
 }

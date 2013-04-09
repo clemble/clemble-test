@@ -18,7 +18,7 @@ import com.stresstest.random.ValueGenerator;
  * @author Anton Oparin
  * 
  */
-final public class PropertySetterManager {
+final public class ClassPropertySetterManager {
 
 	/**
 	 * Registered PropertySetters collection

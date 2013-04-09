@@ -15,7 +15,7 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 import com.stresstest.random.ObjectGenerator;
 import com.stresstest.random.ValueGenerator;
-import com.stresstest.random.generator.ValueGeneratorFactory;
+import com.stresstest.random.ValueGeneratorFactory;
 
 /**
  * Abstraction of object property.
@@ -35,7 +35,7 @@ abstract public class ClassPropertySetter<T> {
 	 */
 	abstract public void setProperties(Object target);
 	
-	abstract public Collection<ValueGenerator<?>> getValueGenerators();
+	abstract public List<ValueGenerator<?>> getValueGenerators();
 
 	/**
 	 * Returns affected Class. Supposed to be used primerely inside invocation.

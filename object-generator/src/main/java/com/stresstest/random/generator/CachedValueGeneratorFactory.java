@@ -3,7 +3,9 @@ package com.stresstest.random.generator;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
+import com.stresstest.random.AbstractValueGeneratorFactory;
 import com.stresstest.random.ValueGenerator;
+import com.stresstest.random.ValueGeneratorFactory;
 
 /**
  * {@link ValueGeneratorFactory} implementation that uses caching to optimize {@link ValueGenerator} production.

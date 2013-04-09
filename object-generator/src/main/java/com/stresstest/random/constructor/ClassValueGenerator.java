@@ -1,9 +1,8 @@
-package com.stresstest.random;
+package com.stresstest.random.constructor;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import com.stresstest.random.constructor.ClassConstructor;
-import com.stresstest.random.constructor.ClassPropertySetter;
+import com.stresstest.random.AbstractValueGenerator;
 
 
 
@@ -14,7 +13,7 @@ import com.stresstest.random.constructor.ClassPropertySetter;
  *
  * @param <T> parameterized {@link Class}.
  */
-public class ObjectValueGenerator<T> extends ValueGenerator<T> {
+public class ClassValueGenerator<T> extends AbstractValueGenerator<T> {
 
     /**
      * {@link ClassConstructor} used for value construction.
@@ -31,7 +30,7 @@ public class ObjectValueGenerator<T> extends ValueGenerator<T> {
      * @param objectConstructor {@link ClassConstructor} to use.
      * @param propertySetter {@link CombinedClassPropertySetter} to use.
      */
-    public ObjectValueGenerator(final ClassConstructor<T> objectConstructor, final ClassPropertySetter<T> propertySetter) {
+    public ClassValueGenerator(final ClassConstructor<T> objectConstructor, final ClassPropertySetter<T> propertySetter) {
         this.objectConstructor = checkNotNull(objectConstructor);
         this.propertySetter = checkNotNull(propertySetter);
     }
@@ -64,5 +63,5 @@ public class ObjectValueGenerator<T> extends ValueGenerator<T> {
     public ClassPropertySetter<T> getPropertySetter() {
         return propertySetter;
     }
-
+    
 }

@@ -2,14 +2,13 @@ package com.stresstest.random;
 
 import java.util.Iterator;
 
-import com.stresstest.random.constructor.PropertySetterManager;
+import com.stresstest.random.constructor.ClassPropertySetterManager;
 import com.stresstest.random.generator.CachedValueGeneratorFactory;
 import com.stresstest.random.generator.RandomValueGeneratorFactory;
-import com.stresstest.random.generator.ValueGeneratorFactory;
 
 public class ObjectGenerator {
 	
-	final private static PropertySetterManager SETTER_MANAGER = new PropertySetterManager();
+	final private static ClassPropertySetterManager SETTER_MANAGER = new ClassPropertySetterManager();
 	
     final private static ValueGeneratorFactory STANDARD_VALUE_GENERATOR = new RandomValueGeneratorFactory(SETTER_MANAGER);
 
@@ -18,14 +17,7 @@ public class ObjectGenerator {
     private ObjectGenerator(){
         throw new IllegalAccessError();
     }
-    
-    public static void enableCaching() {
-        valueGeneratorFactory = new CachedValueGeneratorFactory(STANDARD_VALUE_GENERATOR);
-    }
 
-    public static void disableCaching() {
-        valueGeneratorFactory = STANDARD_VALUE_GENERATOR;
-    }
 
     public static <T> T generate(Class<T> classToGenerate) {
         return getValueGenerator(classToGenerate).generate();
@@ -47,5 +39,13 @@ public class ObjectGenerator {
 				return null;
 			}
 		};
+    }
+    
+    public static void enableCaching() {
+    	valueGeneratorFactory = new CachedValueGeneratorFactory(STANDARD_VALUE_GENERATOR);
+    }
+    
+    public static void disableCaching() {
+    	valueGeneratorFactory = STANDARD_VALUE_GENERATOR;
     }
 }

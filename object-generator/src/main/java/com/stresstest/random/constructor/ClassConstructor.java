@@ -4,12 +4,11 @@ package com.stresstest.random.constructor;
 import java.lang.reflect.Modifier;
 import java.util.Collection;
 
-import com.stresstest.random.ObjectValueGenerator;
 import com.stresstest.random.ValueGenerator;
-import com.stresstest.random.generator.ValueGeneratorFactory;
+import com.stresstest.random.ValueGeneratorFactory;
 
 /**
- * Constructor of empty Objects, for {@link ObjectValueGenerator}.
+ * Constructor of empty Objects, for {@link ClassValueGenerator}.
  * 
  * @author Anton Oparin
  * 

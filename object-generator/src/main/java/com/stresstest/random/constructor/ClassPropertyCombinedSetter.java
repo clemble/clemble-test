@@ -2,6 +2,7 @@ package com.stresstest.random.constructor;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import com.google.common.collect.ImmutableList;
 import com.stresstest.random.ValueGenerator;
@@ -45,8 +46,8 @@ final class ClassPropertyCombinedSetter<T> extends ClassPropertySetter<T> {
 	}
 
 	@Override
-	public Collection<ValueGenerator<?>> getValueGenerators() {
-		Collection<ValueGenerator<?>> valueGenerators = new ArrayList<ValueGenerator<?>>();
+	public List<ValueGenerator<?>> getValueGenerators() {
+		List<ValueGenerator<?>> valueGenerators = new ArrayList<ValueGenerator<?>>();
 		for(ClassPropertySetter<?> propertySetter: propertySetters)
 			valueGenerators.addAll(propertySetter.getValueGenerators());
 		return valueGenerators;

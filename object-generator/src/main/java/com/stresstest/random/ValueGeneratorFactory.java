@@ -1,9 +1,8 @@
-package com.stresstest.random.generator;
+package com.stresstest.random;
 
 import java.util.Collection;
 
-import com.stresstest.random.ValueGenerator;
-import com.stresstest.random.constructor.PropertySetterManager;
+import com.stresstest.random.constructor.ClassPropertySetterManager;
 
 /**
  * 
@@ -32,6 +31,6 @@ public interface ValueGeneratorFactory {
 	 */
 	public Collection<ValueGenerator<?>> getValueGenerators(Class<?>[] parameters);
 	
-	public PropertySetterManager getPropertySetterManager();
+	public ClassPropertySetterManager getPropertySetterManager();
 
 }

@@ -10,7 +10,7 @@ import java.util.Collection;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 import com.stresstest.random.ValueGenerator;
-import com.stresstest.random.generator.ValueGeneratorFactory;
+import com.stresstest.random.ValueGeneratorFactory;
 
 /**
  * Generates new {@link Object}, based on constructor.

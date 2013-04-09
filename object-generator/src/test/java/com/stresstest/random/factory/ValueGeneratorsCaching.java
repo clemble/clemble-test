@@ -4,9 +4,9 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.stresstest.random.ValueGenerator;
+import com.stresstest.random.ValueGeneratorFactory;
 import com.stresstest.random.generator.CachedValueGeneratorFactory;
 import com.stresstest.random.generator.RandomValueGeneratorFactory;
-import com.stresstest.random.generator.ValueGeneratorFactory;
 
 @SuppressWarnings("all")
 public class ValueGeneratorsCaching {

@@ -1,0 +1,16 @@
+package com.stresstest.random;
+
+abstract public class AbstractValueGenerator<T> implements ValueGenerator<T> {
+	
+	public int scope() {
+		return 1;
+	}
+
+	public ValueGenerator<T> clone() {
+		try {
+			return (ValueGenerator<T>) super.clone();
+		} catch (CloneNotSupportedException e) {
+			throw new RuntimeException(e);
+		}
+	}
+}
