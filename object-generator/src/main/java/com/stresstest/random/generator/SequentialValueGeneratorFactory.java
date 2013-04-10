@@ -24,8 +24,17 @@ public class SequentialValueGeneratorFactory extends AbstractValueGeneratorFacto
 	}
 
 	public <T> ValueGenerator<T> replace(ValueGenerator<T> valueGeneratorToReplace) {
-		// TO DO
-		return valueGeneratorToReplace;
+		// Step 1. Sanity check
+		if(valueGeneratorToReplace == null || valueGeneratorToReplace instanceof SequentialValueGenerator)
+			return valueGeneratorToReplace;
+		// Step 2. Checking generated class
+		T generatedValue = valueGeneratorToReplace.generate();
+		if(generatedValue == null)
+			return valueGeneratorToReplace;
+		@SuppressWarnings("unchecked")
+		Class<T> targetClass = (Class<T>) valueGeneratorToReplace.generate().getClass();
+		// Step 3. Constructing generator, based on the class
+		return getValueGenerator(targetClass);
 	}
 	
 	public List<ValueGenerator<?>> replace(Collection<ValueGenerator<?>> generators) {
