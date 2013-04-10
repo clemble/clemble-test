@@ -2,7 +2,11 @@ package com.stresstest.random.constructor;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.util.Collections;
+import java.util.List;
+
 import com.stresstest.random.AbstractValueGenerator;
+import com.stresstest.random.ValueGenerator;
 
 
 
@@ -44,6 +48,23 @@ public class ClassValueGenerator<T> extends AbstractValueGenerator<T> {
         propertySetter.setProperties(generatedObject);
         // Step 3. Generated Object can be used
         return (T) generatedObject;
+    }
+    
+    @Override
+    public int scope(){
+    	int totalSize = 1;
+    	// Step 1. Calculating scope of constructor
+    	List<ValueGenerator<?>> constuctorGenerators = objectConstructor.getValueGenerators();
+    	for(ValueGenerator<?> generator: constuctorGenerators) {
+    		totalSize = totalSize * Math.max(1, generator.scope());
+    	}
+    	// Step 2. Calculating scope of properties
+    	constuctorGenerators = propertySetter != null ? propertySetter.getValueGenerators() : Collections.<ValueGenerator<?>>emptyList();
+    	for(ValueGenerator<?> generator: constuctorGenerators) {
+    		totalSize = totalSize * Math.max(1, generator.scope());
+    	}
+    	// Step 3. Returning final result
+    	return totalSize;
     }
 
     /**

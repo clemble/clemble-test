@@ -19,7 +19,6 @@ import com.stresstest.random.constructor.ClassConstructor;
 import com.stresstest.random.constructor.ClassPropertySetter;
 import com.stresstest.random.constructor.ClassPropertySetterManager;
 import com.stresstest.random.constructor.ClassValueGenerator;
-import com.stresstest.random.generator.RandomValueGenerator;
 import com.stresstest.reflection.ReflectionUtils;
 
 abstract public class AbstractValueGeneratorFactory implements ValueGeneratorFactory {
@@ -155,7 +154,7 @@ abstract public class AbstractValueGeneratorFactory implements ValueGeneratorFac
 			return valueGenerator;
 		// Step 2. If this is enum replace with Random value generator
 		if (klass.isEnum())
-			return (ValueGenerator<T>) RandomValueGenerator.enumValueGenerator(klass);
+			return enumValueGenerator(klass);
 		// Step 3. Initialize value generator with primarily public access
 		valueGenerator = construct(ClassAccessWrapper.createPublicAccessor(klass));
 		if (valueGenerator != null)
@@ -212,5 +211,7 @@ abstract public class AbstractValueGeneratorFactory implements ValueGeneratorFac
 		// Step 3. Generating final ClassGenerator for the type
 		return new ClassValueGenerator<T>(objectConstructor, classPropertySetter);
 	}
+	
+	protected abstract <T> ValueGenerator<T> enumValueGenerator(Class<T> klass);
 
 }

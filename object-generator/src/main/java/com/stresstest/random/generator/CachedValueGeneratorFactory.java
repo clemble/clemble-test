@@ -43,4 +43,9 @@ public class CachedValueGeneratorFactory extends AbstractValueGeneratorFactory {
 		}
 	}
 
+	@Override
+	protected <T> ValueGenerator<T> enumValueGenerator(Class<T> klass) {
+		throw new UnsupportedOperationException();
+	}
+
 }

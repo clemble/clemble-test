@@ -1,7 +1,5 @@
 package com.stresstest.random;
 
-import java.util.Iterator;
-
 import com.stresstest.random.constructor.ClassPropertySetterManager;
 import com.stresstest.random.generator.CachedValueGeneratorFactory;
 import com.stresstest.random.generator.RandomValueGeneratorFactory;
@@ -10,9 +8,9 @@ public class ObjectGenerator {
 	
 	final private static ClassPropertySetterManager SETTER_MANAGER = new ClassPropertySetterManager();
 	
-    final private static ValueGeneratorFactory STANDARD_VALUE_GENERATOR = new RandomValueGeneratorFactory(SETTER_MANAGER);
+    final private static ValueGeneratorFactory DEFAULT_VALUE_GENERATOR = new RandomValueGeneratorFactory(SETTER_MANAGER);
 
-    private static ValueGeneratorFactory valueGeneratorFactory = STANDARD_VALUE_GENERATOR;
+    private static ValueGeneratorFactory valueGeneratorFactory = DEFAULT_VALUE_GENERATOR;
 
     private ObjectGenerator(){
         throw new IllegalAccessError();
@@ -32,20 +30,14 @@ public class ObjectGenerator {
     }
     
     public static <T> Iterable<T> getPossibleValues(final Class<T> targetClass) {
-    	return new Iterable<T>() {
-
-			@Override
-			public Iterator<T> iterator() {
-				return null;
-			}
-		};
+    	return new PossibleValuesIterable<T>(getValueGenerator(targetClass));
     }
     
     public static void enableCaching() {
-    	valueGeneratorFactory = new CachedValueGeneratorFactory(STANDARD_VALUE_GENERATOR);
+    	valueGeneratorFactory = new CachedValueGeneratorFactory(DEFAULT_VALUE_GENERATOR);
     }
     
     public static void disableCaching() {
-    	valueGeneratorFactory = STANDARD_VALUE_GENERATOR;
+    	valueGeneratorFactory = DEFAULT_VALUE_GENERATOR;
     }
 }

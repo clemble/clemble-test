@@ -1,5 +1,6 @@
 package com.stresstest.random.generator;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -23,6 +24,11 @@ abstract public class SequentialValueGenerator<T>  extends AbstractValueGenerato
             currentBoolean = !currentBoolean;
             return currentBoolean;
         }
+        
+        @Override
+        public int scope() {
+        	return 2;
+        }
     };
 
     /**
@@ -36,6 +42,11 @@ abstract public class SequentialValueGenerator<T>  extends AbstractValueGenerato
         	currentByte++;
             return currentByte++;
         }
+        
+        @Override
+        public int scope() {
+        	return Byte.MAX_VALUE - Byte.MIN_VALUE;
+        }
     };
 
     /**
@@ -47,6 +58,11 @@ abstract public class SequentialValueGenerator<T>  extends AbstractValueGenerato
         @Override
         public Character generate() {
             return currentChar++;
+        }
+        
+        @Override
+        public int scope() {
+        	return Character.MAX_CODE_POINT;
         }
     };
 
@@ -71,6 +87,11 @@ abstract public class SequentialValueGenerator<T>  extends AbstractValueGenerato
         @Override
         public Short generate() {
             return currentShort++;
+        }
+        
+        @Override
+        public int scope() {
+        	return Short.MAX_VALUE - Short.MIN_VALUE;
         }
     };
 
@@ -110,30 +131,6 @@ abstract public class SequentialValueGenerator<T>  extends AbstractValueGenerato
         }
     };
     
-    final public static ValueGenerator<Integer> intRange(int start, int end) {
-    	return intRange(start, end, 1);
-    }
-    
-    final public static ValueGenerator<Integer> intRange(final int start, final int end, final int step) {
-    	if(end < start && step > 0)
-    		throw new IllegalArgumentException("Provided parameters " + start + " " + end + " " + step + " invalid");
-    	if (end > start && step < 0)
-    		throw new IllegalArgumentException("Provided parameters " + start + " " + end + " " + step + " invalid");
-    	
-    	final int range = end - start;
-    	
-    	return new SequentialValueGenerator<Integer>() {
-    		private int currentInteger = 0;
-    		
-			@Override
-			public Integer generate() {
-				int resultValue = start + (currentInteger % range);
-				currentInteger += step;
-				return resultValue;
-			}
-		};
-    }
-    
 	final public static <T> ValueGenerator<T> constantValueGenerator(final T constant) {
 		return new SequentialValueGenerator<T>() {
 			@Override
@@ -163,17 +160,75 @@ abstract public class SequentialValueGenerator<T>  extends AbstractValueGenerato
      * @return ValueGenerator that returns one of the elements of original {@link Iterable}.
      */
     final public static <T> ValueGenerator<T> valueGenerator(final Iterable<T> iterable) {
-        final List<T> randomValues = new ArrayList<T>();
+        final List<T> possibleValues = new ArrayList<T>();
         for (T value : iterable)
-            randomValues.add(value);
+            possibleValues.add(value);
         return new SequentialValueGenerator<T>() {
         	private int position = 0;
             @Override
             public T generate() {
-                return randomValues.get(position++ % randomValues.size());
+                return possibleValues.get(position++ % possibleValues.size());
+            }
+            
+            @Override
+            public int scope() {
+            	return possibleValues.size();
             }
         };
     }
+    
+    final public static ValueGenerator<Integer> intRange(int start, int end) {
+    	return SequentialValueGenerator.<Integer>range(start, end, 1);
+    }
+    
+    final public static ValueGenerator<Integer> intRange(int start, int end, int step) {
+    	return SequentialValueGenerator.<Integer>range(start, end, step);
+    }
+    
+    final public static <T extends Number> ValueGenerator<T> range(final Number start, final Number end, final Number step) {
+    	final BigDecimal startDecimal = (start instanceof Double || start instanceof Float) ? BigDecimal.valueOf(start.doubleValue()) : BigDecimal.valueOf(start.longValue());
+    	final BigDecimal endDecimal = (end instanceof Double || end instanceof Float) ? BigDecimal.valueOf(end.doubleValue()) : BigDecimal.valueOf(end.longValue());
+    	final BigDecimal stepDecimal = (step instanceof Double || step instanceof Float) ? BigDecimal.valueOf(step.doubleValue()) : BigDecimal.valueOf(step.longValue());
+
+    	if(endDecimal.compareTo(startDecimal) < 0 && stepDecimal.compareTo(BigDecimal.ZERO) > 0)
+    		throw new IllegalArgumentException("Provided parameters " + start + " " + end + " " + step + " invalid");
+    	if (endDecimal.compareTo(startDecimal) > 0 && stepDecimal.compareTo(BigDecimal.ZERO) < 0)
+    		throw new IllegalArgumentException("Provided parameters " + start + " " + end + " " + step + " invalid");
+
+    	final BigDecimal range = startDecimal.min(endDecimal).abs();
+    	
+    	return new SequentialValueGenerator<T>() {
+    		private int scope = range.divide(stepDecimal).add(BigDecimal.ONE).intValue();
+    		private BigDecimal currentInteger = BigDecimal.ZERO;
+    		
+			@Override
+			@SuppressWarnings("unchecked")
+			public T generate() {
+				BigDecimal resultValue = startDecimal.add(range.longValue() == 0 ? BigDecimal.ZERO : currentInteger.remainder(range));
+				currentInteger = currentInteger.add(stepDecimal);
+				if(start instanceof Byte) {
+					return (T) Byte.valueOf(resultValue.byteValue());
+				} else if(start instanceof Short) {
+					return (T) Short.valueOf(resultValue.shortValue());
+				} else if(start instanceof Integer) {
+					return (T) Integer.valueOf(resultValue.intValue());
+				} else if(start instanceof Long) {
+					return (T) Long.valueOf(resultValue.longValue());
+				} else if(start instanceof Double) {
+					return (T) Double.valueOf(resultValue.doubleValue());
+				} else if(start instanceof Float) {
+					return (T) Float.valueOf(resultValue.floatValue());
+				}
+				throw new IllegalArgumentException();
+			}
+			
+	        @Override
+	        public int scope() {
+	        	return scope;
+	        }
+		};
+    }
+
 
 	/**
 	 * Collection of standard value generators, which must be used by default
