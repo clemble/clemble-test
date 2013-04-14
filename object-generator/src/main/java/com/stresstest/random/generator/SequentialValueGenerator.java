@@ -174,6 +174,11 @@ abstract public class SequentialValueGenerator<T>  extends AbstractValueGenerato
             public int scope() {
             	return possibleValues.size();
             }
+            
+            @Override
+            public ValueGenerator<T> clone(){
+            	return valueGenerator(iterable);
+            }
         };
     }
     

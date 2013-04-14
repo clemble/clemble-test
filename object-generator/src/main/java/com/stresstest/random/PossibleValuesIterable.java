@@ -127,7 +127,7 @@ public class PossibleValuesIterable<T> implements Iterable<T> {
 		return new Iterator<T>() {
 
 			private int currentPosition = 0;
-			private ClassValueGenerator<T> valueGenerator = (ClassValueGenerator<T>) PossibleValuesIterable.this.valueGenerator
+			private ValueGenerator<T> valueGenerator = PossibleValuesIterable.this.valueGenerator
 					.clone();
 
 			@Override
