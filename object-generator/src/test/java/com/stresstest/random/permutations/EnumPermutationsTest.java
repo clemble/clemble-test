@@ -48,6 +48,24 @@ public class EnumPermutationsTest {
 		Assert.assertFalse(publicEnumsIterator.hasNext());
 		Assert.assertNull(publicEnumsIterator.next());
 	}
+	
+	@Test
+	public void testCompositeObjectWithPublicEnumPermutations() {
+		Iterable<CompositeObjectWithEnum> publicEnums = ObjectGenerator.getPossibleValues(CompositeObjectWithEnum.class);
+		Iterator<CompositeObjectWithEnum> publicEnumsIterator = publicEnums.iterator();
+
+		Assert.assertEquals(publicEnumsIterator.next().getPublicEnum(), PublicEnum.PUBLIC_ONE);
+		Assert.assertEquals(publicEnumsIterator.next().getPublicEnum(), PublicEnum.PUBLIC_TWO);
+		Assert.assertEquals(publicEnumsIterator.next().getPublicEnum(), PublicEnum.PUBLIC_THREE);
+		Assert.assertEquals(publicEnumsIterator.next().getPublicEnum(), PublicEnum.PUBLIC_FOUR);
+		Assert.assertEquals(publicEnumsIterator.next().getPublicEnum(), PublicEnum.PUBLIC_FIVE);
+		Assert.assertEquals(publicEnumsIterator.next().getPublicEnum(), PublicEnum.PUBLIC_SIX);
+		Assert.assertEquals(publicEnumsIterator.next().getPublicEnum(), PublicEnum.PUBLIC_SEVEN);
+		Assert.assertEquals(publicEnumsIterator.next().getPublicEnum(), PublicEnum.PUBLIC_EIGHT);
+		Assert.assertEquals(publicEnumsIterator.next().getPublicEnum(), PublicEnum.PUBLIC_NINE);
+		Assert.assertFalse(publicEnumsIterator.hasNext());
+		Assert.assertNull(publicEnumsIterator.next());
+	}
 
 	@Test
 	public void testExternalPublicEnumPermutations() {
