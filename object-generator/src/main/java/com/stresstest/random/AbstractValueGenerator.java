@@ -1,6 +1,6 @@
 package com.stresstest.random;
 
-abstract public class AbstractValueGenerator<T> implements ValueGenerator<T> {
+abstract public class AbstractValueGenerator<T> implements ValueGenerator<T>, Cloneable {
 	
 	public int scope() {
 		return 1;

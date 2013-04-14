@@ -2,13 +2,12 @@ package com.stresstest.random.permutations;
 
 import java.util.Iterator;
 
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter.DEFAULT;
-
 import junit.framework.Assert;
 
 import org.junit.Test;
 
 import com.stresstest.random.ObjectGenerator;
+import com.stresstest.random.permutations.external.ExternalPublicEnum;
 
 public class EnumPermutationsTest {
 
@@ -16,7 +15,7 @@ public class EnumPermutationsTest {
 	public void testPublicEnumPermutations() {
 		Iterable<PublicEnum> publicEnums = ObjectGenerator.getPossibleValues(PublicEnum.class);
 		Iterator<PublicEnum> publicEnumsIterator = publicEnums.iterator();
-		
+
 		Assert.assertEquals(publicEnumsIterator.next(), PublicEnum.PUBLIC_ONE);
 		Assert.assertEquals(publicEnumsIterator.next(), PublicEnum.PUBLIC_TWO);
 		Assert.assertEquals(publicEnumsIterator.next(), PublicEnum.PUBLIC_THREE);
@@ -31,10 +30,46 @@ public class EnumPermutationsTest {
 	}
 	
 	@Test
+	public void testObjectWithPublicEnumPermutations() {
+		Iterable<ObjectWithPublicEnum> publicEnums = ObjectGenerator.getPossibleValues(ObjectWithPublicEnum.class);
+		Iterator<ObjectWithPublicEnum> publicEnumsIterator = publicEnums.iterator();
+
+		Assert.assertEquals(publicEnumsIterator.next().getPublicEnum(), PublicEnum.PUBLIC_ONE);
+		Assert.assertEquals(publicEnumsIterator.next().getPublicEnum(), PublicEnum.PUBLIC_TWO);
+		Assert.assertEquals(publicEnumsIterator.next().getPublicEnum(), PublicEnum.PUBLIC_THREE);
+		Assert.assertEquals(publicEnumsIterator.next().getPublicEnum(), PublicEnum.PUBLIC_FOUR);
+		Assert.assertEquals(publicEnumsIterator.next().getPublicEnum(), PublicEnum.PUBLIC_FIVE);
+		Assert.assertEquals(publicEnumsIterator.next().getPublicEnum(), PublicEnum.PUBLIC_SIX);
+		Assert.assertEquals(publicEnumsIterator.next().getPublicEnum(), PublicEnum.PUBLIC_SEVEN);
+		Assert.assertEquals(publicEnumsIterator.next().getPublicEnum(), PublicEnum.PUBLIC_EIGHT);
+		Assert.assertEquals(publicEnumsIterator.next().getPublicEnum(), PublicEnum.PUBLIC_NINE);
+		Assert.assertFalse(publicEnumsIterator.hasNext());
+		Assert.assertNull(publicEnumsIterator.next());
+	}
+
+	@Test
+	public void testExternalPublicEnumPermutations() {
+		Iterable<ExternalPublicEnum> publicEnums = ObjectGenerator.getPossibleValues(ExternalPublicEnum.class);
+		Iterator<ExternalPublicEnum> publicEnumsIterator = publicEnums.iterator();
+
+		Assert.assertEquals(publicEnumsIterator.next(), ExternalPublicEnum.PUBLIC_ONE);
+		Assert.assertEquals(publicEnumsIterator.next(), ExternalPublicEnum.PUBLIC_TWO);
+		Assert.assertEquals(publicEnumsIterator.next(), ExternalPublicEnum.PUBLIC_THREE);
+		Assert.assertEquals(publicEnumsIterator.next(), ExternalPublicEnum.PUBLIC_FOUR);
+		Assert.assertEquals(publicEnumsIterator.next(), ExternalPublicEnum.PUBLIC_FIVE);
+		Assert.assertEquals(publicEnumsIterator.next(), ExternalPublicEnum.PUBLIC_SIX);
+		Assert.assertEquals(publicEnumsIterator.next(), ExternalPublicEnum.PUBLIC_SEVEN);
+		Assert.assertEquals(publicEnumsIterator.next(), ExternalPublicEnum.PUBLIC_EIGHT);
+		Assert.assertEquals(publicEnumsIterator.next(), ExternalPublicEnum.PUBLIC_NINE);
+		Assert.assertFalse(publicEnumsIterator.hasNext());
+		Assert.assertNull(publicEnumsIterator.next());
+	}
+
+	@Test
 	public void testDefaultEnumPermutations() {
 		Iterable<DefaultEnum> publicEnums = ObjectGenerator.getPossibleValues(DefaultEnum.class);
 		Iterator<DefaultEnum> publicEnumsIterator = publicEnums.iterator();
-		
+
 		Assert.assertEquals(publicEnumsIterator.next(), DefaultEnum.DEFAULT_ONE);
 		Assert.assertEquals(publicEnumsIterator.next(), DefaultEnum.DEFAULT_TWO);
 		Assert.assertEquals(publicEnumsIterator.next(), DefaultEnum.DEFAULT_THREE);
@@ -48,5 +83,5 @@ public class EnumPermutationsTest {
 		Assert.assertFalse(publicEnumsIterator.hasNext());
 		Assert.assertNull(publicEnumsIterator.next());
 	}
-	
+
 }

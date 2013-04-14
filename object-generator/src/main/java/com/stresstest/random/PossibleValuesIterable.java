@@ -33,15 +33,7 @@ public class PossibleValuesIterable<T> implements Iterable<T> {
 			propertyValueGenerator = ValueGeneratorWrapper.convert(propertyValueGenerator);
 			classPropertySetter.clone(new ArrayList<ValueGenerator<?>>(propertyValueGenerator));
 			// Step 4. Linking all generator wrappers
-			ValueGeneratorWrapper<?> previous = null;
-			for(ValueGenerator<?> valueGenerator: constructorValueGenerators) {
-				((ValueGeneratorWrapper<?>) valueGenerator).setPrevious(previous);
-				previous = (ValueGeneratorWrapper<?>) valueGenerator;
-			}
-			for(ValueGenerator<?> valueGenerator: propertyValueGenerator) {
-				((ValueGeneratorWrapper<?>) valueGenerator).setPrevious(previous);
-				previous = (ValueGeneratorWrapper<?>) valueGenerator;
-			}
+			ValueGeneratorWrapper.link(constructorValueGenerators, propertyValueGenerator);
 			// Step 3. Creating new ClassValueGenerator
 			classValueGenerator = new ClassValueGenerator<T>(classConstructor, classPropertySetter);
 			// Step 4. Calculating possible range
@@ -60,16 +52,16 @@ public class PossibleValuesIterable<T> implements Iterable<T> {
 		private int currentPosition = 0;
 		private T currentValue;
 		
-		private ValueGeneratorWrapper<T> next;
-		private ValueGeneratorWrapper<T> previous;
+		private ValueGeneratorWrapper<?> next;
+		private ValueGeneratorWrapper<?> previous;
 		
 		private ValueGeneratorWrapper(ValueGenerator<T> valueGenerator) {
 			this.delegate = valueGenerator;
 		}
 
-		@SuppressWarnings("unchecked")
-		public void setPrevious(ValueGeneratorWrapper<?> previous) {
-			this.previous = (ValueGeneratorWrapper<T>) previous;
+		public void setNext(ValueGeneratorWrapper<?> next) {
+			this.next = next;
+			this.next.previous = this;
 		}
 
 		public static <T> ValueGeneratorWrapper<T> convert(ValueGenerator<T> valueGenerator) {
@@ -88,12 +80,27 @@ public class PossibleValuesIterable<T> implements Iterable<T> {
 				resultValueGenerators.add(convert(valueGenerator));
 			return resultValueGenerators;
 		}
+		
+		public static void link(List<ValueGenerator<?>> ... valueGeneratorsCollection) {
+			ValueGeneratorWrapper<?> previousValid = null;
+			for(int i = 0; i < valueGeneratorsCollection.length; i++) {
+				if(!valueGeneratorsCollection[i].isEmpty()) {
+					for(int j = 0; j < valueGeneratorsCollection[i].size() - 1; j++) {
+						ValueGeneratorWrapper<?> currentWrapper = (ValueGeneratorWrapper<?>) valueGeneratorsCollection[i].get(j);
+						currentWrapper.setNext((ValueGeneratorWrapper<?>) valueGeneratorsCollection[i].get(j + 1));
+					}
+					if(previousValid != null) {
+						previousValid.setNext((ValueGeneratorWrapper<?>) valueGeneratorsCollection[i].get(0));
+					}
+					previousValid = (ValueGeneratorWrapper<?>) valueGeneratorsCollection[i].get(valueGeneratorsCollection[i].size() - 1);
+				}
+			}
+		}
 
 		@Override
 		public T generate() {
-			if (previous == null) {
+			if(previous == null)
 				next();
-			}
 			return currentValue;
 		}
 		
