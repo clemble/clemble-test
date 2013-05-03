@@ -1,6 +1,9 @@
 package com.stresstest.jbehave.context.configuration;
 
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,6 +60,29 @@ public class StoryContextSpringStepsFactory extends AbstractStepsFactory {
      */
     protected boolean isAllowed(Class<?> targetClass) {
         return targetClass != null && !Modifier.isAbstract(targetClass.getModifiers()) && hasAnnotatedMethods(targetClass);
+    }
+
+    protected boolean hasAnnotatedMethods(Type type) {
+        if (type instanceof Class<?>) {
+            // Step 1. Check all the methods
+            for (Method method : ((Class<?>) type).getMethods()) {
+                for (Annotation annotation : method.getAnnotations()) {
+                    if (annotation.annotationType().getName().startsWith("org.jbehave.core.annotations")) {
+                        return true;
+                    }
+                }
+            }
+            // Step 2. Check all interfaces
+            for (Class<?> inheritedInterface : ((Class<?>) type).getInterfaces()) {
+                if (hasAnnotatedMethods(inheritedInterface))
+                    return true;
+            }
+            // Step 3. Check superclass
+            if (((Class<?>) type).getSuperclass() != Object.class) {
+                return hasAnnotatedMethods(((Class<?>) type).getSuperclass());
+            }
+        }
+        return false;
     }
 
     public Object createInstanceOfType(Class<?> type) {
