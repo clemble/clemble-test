@@ -7,8 +7,12 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jbehave.core.annotations.AsParameterConverter;
 import org.jbehave.core.configuration.Configuration;
 import org.jbehave.core.steps.AbstractStepsFactory;
+import org.jbehave.core.steps.CandidateSteps;
+import org.jbehave.core.steps.ParameterConverters.MethodReturningConverter;
+import org.jbehave.core.steps.ParameterConverters.ParameterConverter;
 import org.jbehave.core.steps.spring.SpringStepsFactory;
 import org.springframework.aop.framework.Advised;
 import org.springframework.context.ApplicationContext;
@@ -20,9 +24,38 @@ public class StoryContextSpringStepsFactory extends AbstractStepsFactory {
 
     private final ApplicationContext context;
 
+    final private Configuration configuration;
+
     public StoryContextSpringStepsFactory(Configuration configuration, ApplicationContext context) {
         super(configuration);
         this.context = context;
+        this.configuration = configuration;
+    }
+
+    @Override
+    public List<CandidateSteps> createCandidateSteps() {
+        List<Class<?>> types = stepsTypes();
+        List<CandidateSteps> steps = new ArrayList<CandidateSteps>();
+        for (Class<?> type : types) {
+            configuration.parameterConverters().addConverters(methodReturningConverters(type));
+            steps.add(new StorySteps(configuration, type, this));
+        }
+        return steps;
+    }
+
+    private List<ParameterConverter> methodReturningConverters(Class<?> type) {
+        List<ParameterConverter> converters = new ArrayList<ParameterConverter>();
+
+        while (type != Object.class) {
+            for (Method method : type.getMethods()) {
+                if (method.isAnnotationPresent(AsParameterConverter.class)) {
+                    converters.add(new MethodReturningConverter(method, type, this));
+                }
+            }
+            type = type.getSuperclass();
+        }
+
+        return converters;
     }
 
     @Override
@@ -50,14 +83,6 @@ public class StoryContextSpringStepsFactory extends AbstractStepsFactory {
         return targetClass;
     }
 
-    /**
-     * Checks if type returned from context is allowed, i.e. not null and not
-     * abstract.
-     * 
-     * @param type
-     *            the Class of the bean
-     * @return A boolean, <code>true</code> if allowed
-     */
     protected boolean isAllowed(Class<?> targetClass) {
         return targetClass != null && !Modifier.isAbstract(targetClass.getModifiers()) && hasAnnotatedMethods(targetClass);
     }
@@ -85,8 +110,18 @@ public class StoryContextSpringStepsFactory extends AbstractStepsFactory {
         return false;
     }
 
+    @Override
     public Object createInstanceOfType(Class<?> type) {
-        return context.getBean(type);
+        try {
+            return context.getBean(type);
+        } catch (RuntimeException runtimeException) {
+            for(String beanName: context.getBeanDefinitionNames()) {
+                Object candidateBean = context.getBean(beanName);
+                if(type.isAssignableFrom(fetchTargetClass(candidateBean)))
+                    return candidateBean;
+            }
+        }
+        throw new RuntimeException();
     }
 
 }

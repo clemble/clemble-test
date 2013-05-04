@@ -46,6 +46,11 @@ public class StoryContextBaseConfiguration implements ImportAware {
         return new DefaultConversionService();
     }
 
+    @Bean
+    public StoryContextListenerProcessingBean storyContextListenerProcessingBean() {
+        return new StoryContextListenerProcessingBean();
+    }
+
     @Override
     public void setImportMetadata(AnnotationMetadata importMetadata) {
         this.enableStoryContext = AnnotationAttributes.fromMap(importMetadata.getAnnotationAttributes(EnableStoryContext.class.getName(), false));
