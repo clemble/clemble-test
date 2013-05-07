@@ -204,7 +204,7 @@ abstract public class ClassPropertySetter<T> {
 	 *            {@link ValueGenerator} to use.
 	 * @return PropertySetter for the provided field.
 	 */
-	private static <T> ClassPropertySetter<T> createFieldSetter(final ClassAccessWrapper<?> sourceClass,
+	public static <T> ClassPropertySetter<T> createFieldSetter(final ClassAccessWrapper<?> sourceClass,
 			final Field field) {
 		// Step 1. Sanity check
 		if (field == null)

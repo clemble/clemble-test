@@ -10,7 +10,7 @@ import com.stresstest.random.ObjectGenerator;
 import com.stresstest.random.ValueGenerator;
 import com.stresstest.random.constructor.ClassPropertySetter;
 import com.stresstest.random.constructor.ClassConstructorSimple;
-import com.stresstest.random.constructor.ClassPropertySetterManager;
+import com.stresstest.random.constructor.ClassPropertySetterRegistry;
 import com.stresstest.random.constructor.ClassValueGenerator;
 import com.stresstest.random.generator.RandomValueGenerator;
 import com.stresstest.random.generator.SequentialValueGenerator;

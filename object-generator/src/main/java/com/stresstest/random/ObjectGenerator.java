@@ -1,12 +1,12 @@
 package com.stresstest.random;
 
-import com.stresstest.random.constructor.ClassPropertySetterManager;
+import com.stresstest.random.constructor.ClassPropertySetterRegistry;
 import com.stresstest.random.generator.CachedValueGeneratorFactory;
 import com.stresstest.random.generator.RandomValueGeneratorFactory;
 
 public class ObjectGenerator {
 	
-	final private static ClassPropertySetterManager SETTER_MANAGER = new ClassPropertySetterManager();
+	final private static ClassPropertySetterRegistry SETTER_MANAGER = new ClassPropertySetterRegistry();
 	
     final private static ValueGeneratorFactory DEFAULT_VALUE_GENERATOR = new RandomValueGeneratorFactory(SETTER_MANAGER);
 

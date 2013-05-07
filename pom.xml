@@ -49,6 +49,7 @@
         <reflections.version>0.9.8</reflections.version>
         <commons-lang.version>3.1</commons-lang.version>
         <commons-math.version>3.0</commons-math.version>
+        <javax.validation.version>1.0.0.GA</javax.validation.version>
         <!-- Test dependencies -->
         <junit.version>4.10</junit.version>
         <!-- Build plugins dependencies -->
@@ -148,6 +149,11 @@
                 <artifactId>jbehave-spring</artifactId>
                 <version>${jbehave.version}</version>
             </dependency>
+            <dependency>
+				<groupId>javax.validation</groupId>
+				<artifactId>validation-api</artifactId>
+				<version>${javax.validation.version}</version>
+			</dependency>
 
             <dependency>
                 <groupId>junit</groupId>

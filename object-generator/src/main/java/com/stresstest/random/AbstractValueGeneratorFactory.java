@@ -17,7 +17,7 @@ import com.google.common.collect.ImmutableMap;
 import com.stresstest.random.constructor.ClassAccessWrapper;
 import com.stresstest.random.constructor.ClassConstructor;
 import com.stresstest.random.constructor.ClassPropertySetter;
-import com.stresstest.random.constructor.ClassPropertySetterManager;
+import com.stresstest.random.constructor.ClassPropertySetterRegistry;
 import com.stresstest.random.constructor.ClassValueGenerator;
 import com.stresstest.reflection.ReflectionUtils;
 
@@ -90,19 +90,19 @@ abstract public class AbstractValueGeneratorFactory implements ValueGeneratorFac
 
 	final private Map<Class<?>, ValueGenerator<?>> DEFAULT_GENERATORS;
 
-	final private ClassPropertySetterManager propertySetterManager;
+	final private ClassPropertySetterRegistry propertySetterManager;
 
 	public AbstractValueGeneratorFactory() {
-		this(new ClassPropertySetterManager());
+		this(new ClassPropertySetterRegistry());
 	}
 
-	public AbstractValueGeneratorFactory(final ClassPropertySetterManager setterManager) {
+	public AbstractValueGeneratorFactory(final ClassPropertySetterRegistry setterManager) {
 		this(setterManager, null);
 	}
 
-	public AbstractValueGeneratorFactory(final ClassPropertySetterManager setterManager,
+	public AbstractValueGeneratorFactory(final ClassPropertySetterRegistry setterManager,
 			Map<Class<?>, ValueGenerator<?>> defaultGenerators) {
-		this.propertySetterManager = setterManager != null ? setterManager : new ClassPropertySetterManager();
+		this.propertySetterManager = setterManager != null ? setterManager : new ClassPropertySetterRegistry();
 
 		HashMap<Class<?>, ValueGenerator<?>> standardValueGenerators = new HashMap<Class<?>, ValueGenerator<?>>();
 
@@ -135,7 +135,7 @@ abstract public class AbstractValueGeneratorFactory implements ValueGeneratorFac
 	}
 
 	@Override
-	final public ClassPropertySetterManager getPropertySetterManager() {
+	final public ClassPropertySetterRegistry getPropertySetterManager() {
 		return propertySetterManager;
 	}
 

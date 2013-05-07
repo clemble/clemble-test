@@ -2,15 +2,15 @@ package com.stresstest.random.generator;
 
 import com.stresstest.random.AbstractValueGeneratorFactory;
 import com.stresstest.random.ValueGenerator;
-import com.stresstest.random.constructor.ClassPropertySetterManager;
+import com.stresstest.random.constructor.ClassPropertySetterRegistry;
 
 public class RandomValueGeneratorFactory extends AbstractValueGeneratorFactory {
 
 	public RandomValueGeneratorFactory() {
-		super(new ClassPropertySetterManager(), RandomValueGenerator.DEFAULT_GENERATORS);
+		super(new ClassPropertySetterRegistry(), RandomValueGenerator.DEFAULT_GENERATORS);
 	}
 
-	public RandomValueGeneratorFactory(ClassPropertySetterManager propertySetterManager) {
+	public RandomValueGeneratorFactory(ClassPropertySetterRegistry propertySetterManager) {
 		super(propertySetterManager, RandomValueGenerator.DEFAULT_GENERATORS);
 	}
 

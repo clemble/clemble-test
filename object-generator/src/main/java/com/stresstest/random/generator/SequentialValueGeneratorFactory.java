@@ -6,15 +6,15 @@ import java.util.List;
 
 import com.stresstest.random.AbstractValueGeneratorFactory;
 import com.stresstest.random.ValueGenerator;
-import com.stresstest.random.constructor.ClassPropertySetterManager;
+import com.stresstest.random.constructor.ClassPropertySetterRegistry;
 
 public class SequentialValueGeneratorFactory extends AbstractValueGeneratorFactory {
 
 	public SequentialValueGeneratorFactory() {
-		super(new ClassPropertySetterManager(), SequentialValueGenerator.DEFAULT_GENERATORS);
+		super(new ClassPropertySetterRegistry(), SequentialValueGenerator.DEFAULT_GENERATORS);
 	}
 
-	public SequentialValueGeneratorFactory(ClassPropertySetterManager propertySetterManager) {
+	public SequentialValueGeneratorFactory(ClassPropertySetterRegistry propertySetterManager) {
 		super(propertySetterManager, SequentialValueGenerator.DEFAULT_GENERATORS);
 	}
 
