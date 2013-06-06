@@ -44,11 +44,11 @@ final class JDK6AgentLoader {
         }
     };
 
-    private final String jarFilePath;
+    private final String filePath;
     private final String pid;
 
-    JDK6AgentLoader(String jarFilePath) {
-        this.jarFilePath = jarFilePath;
+    JDK6AgentLoader(String filePath) {
+        this.filePath = filePath;
         this.pid = discoverProcessIdForRunningVM();
     }
 
@@ -111,7 +111,7 @@ final class JDK6AgentLoader {
 
     private void loadAgentAndDetachFromThisVM(VirtualMachine vm) {
         try {
-            vm.loadAgent(jarFilePath, null);
+            vm.loadAgentPath(filePath);
             vm.detach();
         } catch (AgentLoadException e) {
             throw new RuntimeException(e);

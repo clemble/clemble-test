@@ -62,7 +62,7 @@ public final class Startup {
             String jarFilePath = JarSearchUtils.discoverPathToJarFile(".*jvm-support[-.\\d]*.jar");
 
             if (javaSpecVersion >= 1.6) {
-                new JDK6AgentLoader(jarFilePath).loadAgent();
+                new JDK6AgentLoader(Startup.class.getResource("Startup.class").toString()).loadAgent();
             } else {
                 throw new IllegalStateException("Unable to initialize, check that your Java 5 VM has been started with the -javaagent:" + jarFilePath
                         + " command line option.");
