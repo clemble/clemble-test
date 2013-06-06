@@ -40,6 +40,8 @@
         <module>spring-runners</module>
         <module>object-generator</module>
         <module>jbehave-stress</module>
+        <module>spring-cleaners</module>
+        <module>common-spring</module>
     </modules>
 
     <properties>
@@ -71,6 +73,11 @@
             <dependency>
                 <groupId>com.stresstest</groupId>
                 <artifactId>common</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.stresstest</groupId>
+                <artifactId>common-spring</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

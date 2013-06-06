@@ -1,4 +1,4 @@
-package com.stresstest.jbehave.context.aop;
+package com.stresstest.spring.aop;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -15,24 +15,24 @@ import org.springframework.aop.support.annotation.AnnotationMethodMatcher;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.util.Assert;
 
-public class BasicAnnotationAdvisor extends AbstractPointcutAdvisor {
+public class MethodAndClassAnnotationAdvisor extends AbstractPointcutAdvisor {
 
     /**
      * Generated 1/09/2012
      */
     private static final long serialVersionUID = -5960130626158352051L;
 
-    private Advice interceptor;
+    private Advice advice;
 
     private Class<? extends Annotation> targetClass;
 
-    protected BasicAnnotationAdvisor(Class<? extends Annotation> targetClass, Advice advice) {
+    public MethodAndClassAnnotationAdvisor(Class<? extends Annotation> targetClass, Advice advice) {
         this.targetClass = targetClass;
-        this.interceptor = advice;
+        this.advice = advice;
     }
 
     public Advice getAdvice() {
-        return this.interceptor;
+        return this.advice;
     }
 
     public Pointcut getPointcut() {
@@ -40,9 +40,9 @@ public class BasicAnnotationAdvisor extends AbstractPointcutAdvisor {
     }
 
     private Pointcut buildPointcut() {
-        Pointcut cpc = new MetaAnnotationMatchingPointcut(targetClass, true);
-        Pointcut mpc = new MetaAnnotationMatchingPointcut(null, targetClass);
-        return new ComposablePointcut(cpc).union(mpc);
+        Pointcut classPointCut = new MetaAnnotationMatchingPointcut(targetClass, true);
+        Pointcut methodPointCut = new MetaAnnotationMatchingPointcut(null, targetClass);
+        return new ComposablePointcut(classPointCut).union(methodPointCut);
     }
 
     private static class MetaAnnotationMatchingPointcut implements Pointcut {

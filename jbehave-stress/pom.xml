@@ -11,7 +11,7 @@
     <dependencies>
         <dependency>
             <groupId>com.stresstest</groupId>
-            <artifactId>common</artifactId>
+            <artifactId>common-spring</artifactId>
         </dependency>
         <dependency>
             <groupId>com.stresstest</groupId>

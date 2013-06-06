@@ -15,6 +15,7 @@ import com.stresstest.jbehave.context.aop.StoryContextConverter;
 import com.stresstest.jbehave.context.aop.StoryContextSpringAdvisor;
 import com.stresstest.jbehave.support.internal.StoryContextClassFileTransformer;
 import com.stresstest.jbehave.support.internal.startup.Startup;
+import com.stresstest.spring.listener.TestContextListenerRegistrator;
 
 @Configuration
 public class StoryContextBaseConfiguration implements ImportAware {
@@ -47,8 +48,8 @@ public class StoryContextBaseConfiguration implements ImportAware {
     }
 
     @Bean
-    public StoryContextListenerProcessingBean storyContextListenerProcessingBean() {
-        return new StoryContextListenerProcessingBean();
+    public TestContextListenerRegistrator storyContextListenerProcessingBean() {
+        return new TestContextListenerRegistrator(new StoryContextTestExecutionListener());
     }
 
     @Override
