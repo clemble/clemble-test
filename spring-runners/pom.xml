@@ -11,6 +11,10 @@
 	<dependencies>
 		<dependency>
 			<groupId>com.stresstest</groupId>
+			<artifactId>common-spring</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.stresstest</groupId>
 			<artifactId>runners</artifactId>
 		</dependency>
 		<dependency>

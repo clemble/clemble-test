@@ -12,6 +12,8 @@ import com.stresstest.spring.listener.TestContextListenerRegistrator;
 public class ContextCleanerBaseConfiguration implements ImportAware {
 	protected AnnotationAttributes enableContextCleaner;
 
+	private CleanerContext cleanerContext = new CleanerContext();
+
 	@Bean
 	public CleanerSpringAdvisor cleanerSpringAdvisor() {
 		return new CleanerSpringAdvisor();
@@ -19,12 +21,12 @@ public class ContextCleanerBaseConfiguration implements ImportAware {
 
 	@Bean
 	public CleanerContext cleanerContext() {
-		return new CleanerContext();
+		return cleanerContext;
 	}
 
 	@Bean
 	public TestContextListenerRegistrator contextListenerRegistrator() {
-		return new TestContextListenerRegistrator(null);
+		return new TestContextListenerRegistrator(cleanerTestExecutionListener());
 	}
 
 	@Bean

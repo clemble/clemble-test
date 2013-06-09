@@ -27,6 +27,7 @@ import java.util.Set;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.util.Assert;
@@ -81,7 +82,14 @@ public class TestContextManager {
     private final ThreadLocal<TestContext> testContext = new ThreadLocal<TestContext>() {
         @Override
         public TestContext initialValue() {
-            return new TestContext(testClass, contextCache, defaultContextLoaderClassName);
+            TestContext testContext = new TestContext(testClass, contextCache, defaultContextLoaderClassName);
+            synchronized (testContext.getApplicationContext()) {
+        		AutowireCapableBeanFactory beanFactory = testContext.getApplicationContext().getAutowireCapableBeanFactory();
+        		if(!beanFactory.containsBean("testContextManager")) {
+        			beanFactory.initializeBean(TestContextManager.this, "testContextManager");
+        		}
+			}
+            return testContext;
         }
     };
     private final Class<?> testClass;
