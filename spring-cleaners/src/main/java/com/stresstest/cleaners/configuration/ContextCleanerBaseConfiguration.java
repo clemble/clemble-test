@@ -1,6 +1,7 @@
 package com.stresstest.cleaners.configuration;
 
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ImportAware;
 import org.springframework.core.annotation.AnnotationAttributes;
 import org.springframework.core.type.AnnotationMetadata;
@@ -9,14 +10,26 @@ import com.stresstest.cleaners.aop.CleanerSpringAdvisor;
 import com.stresstest.cleaners.context.CleanerContext;
 import com.stresstest.spring.listener.TestContextListenerRegistrator;
 
+@Configuration
 public class ContextCleanerBaseConfiguration implements ImportAware {
+
 	protected AnnotationAttributes enableContextCleaner;
 
 	private CleanerContext cleanerContext = new CleanerContext();
 
+	private ContextCleanerTestExecutionListener cleanerTestExecutionListener = new ContextCleanerTestExecutionListener(
+			cleanerContext);
+
+	private TestContextListenerRegistrator contextListenerRegistrator = new TestContextListenerRegistrator(
+			cleanerTestExecutionListener);
+
 	@Bean
 	public CleanerSpringAdvisor cleanerSpringAdvisor() {
-		return new CleanerSpringAdvisor();
+		if (enableContextCleaner != null) {
+			return new CleanerSpringAdvisor(enableContextCleaner.getStringArray("packages"));
+		} else {
+			return new CleanerSpringAdvisor(new String[0]);
+		}
 	}
 
 	@Bean
@@ -26,12 +39,12 @@ public class ContextCleanerBaseConfiguration implements ImportAware {
 
 	@Bean
 	public TestContextListenerRegistrator contextListenerRegistrator() {
-		return new TestContextListenerRegistrator(cleanerTestExecutionListener());
+		return contextListenerRegistrator;
 	}
 
 	@Bean
 	public ContextCleanerTestExecutionListener cleanerTestExecutionListener() {
-		return new ContextCleanerTestExecutionListener(cleanerContext());
+		return cleanerTestExecutionListener;
 	}
 
 	@Override

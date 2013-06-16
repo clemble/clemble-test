@@ -1,5 +1,7 @@
 package com.stresstest.cleaners;
 
+import com.stresstest.cleaners.Cleanable;
+
 public class SimpleCleanable implements Cleanable {
 
 	private boolean cleanCalled = false;

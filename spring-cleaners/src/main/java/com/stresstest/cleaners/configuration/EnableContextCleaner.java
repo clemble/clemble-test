@@ -14,6 +14,8 @@ import org.springframework.context.annotation.Import;
 @Documented
 @Inherited
 @Import(ContextCleanerBaseConfiguration.class)
-public  @interface  EnableContextCleaner {
+public @interface EnableContextCleaner {
+
+	public String[] packages() default {};
 
 }

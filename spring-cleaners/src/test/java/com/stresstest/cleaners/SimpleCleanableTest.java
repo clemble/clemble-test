@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.TestContextManager;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.stresstest.cleaners.configuration.EnableContextCleaner;
@@ -20,7 +19,7 @@ import com.stresstest.cleaners.context.CleanerContext;
 public class SimpleCleanableTest {
 
 	@Configuration
-	@EnableContextCleaner
+	@EnableContextCleaner(packages = "com.stresstest.cleaners")
 	public static class SimpleConfiguration {
 
 		@Bean

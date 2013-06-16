@@ -1,7 +1,5 @@
 package com.stresstest.cleaners.aop;
 
-import java.lang.annotation.Annotation;
-
 import org.aopalliance.aop.Advice;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
@@ -16,93 +14,120 @@ import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.config.BeanPostProcessor;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
 import org.springframework.util.ClassUtils;
 
 import com.stresstest.cleaners.CleanableFactory;
-import com.stresstest.cleaners.annotation.Cleaner;
 import com.stresstest.cleaners.context.CleanerContext;
 
-public class CleanerSpringAdvisor extends ProxyConfig implements BeanPostProcessor, BeanClassLoaderAware, BeanFactoryAware, InitializingBean, Ordered {
+public class CleanerSpringAdvisor extends ProxyConfig implements BeanPostProcessor, BeanClassLoaderAware, BeanFactoryAware,
+		InitializingBean, Ordered {
 
-    /**
-     * Generated 23/02/13
-     */
-    private static final long serialVersionUID = -2003741391204658480L;
+	/**
+	 * Generated 23/02/13
+	 */
+	private static final long serialVersionUID = -2003741391204658480L;
 
-    final private Advice advice = new MethodInterceptor() {
-        @Override
-        public Object invoke(MethodInvocation invocation) throws Throwable {
-            // Step 1. Checking this was applied to appropriate
-            Object[] arguments = invocation.getArguments();
-            // Step 2. Invoking underlying class
-            Object value = invocation.proceed();
-            // Step 2.1. Adding value to the CleanerContext
-            if(value != null && CleanableFactory.canApply(value.getClass())) {
-            	cleanerContext.add(value);
-            }
-            // Step 2.3. Returning result
-            return value;
-        }
-    };
+	final private Advice advice = new MethodInterceptor() {
+		@Override
+		public Object invoke(MethodInvocation invocation) throws Throwable {
+			// Step 1. Checking this was applied to appropriate
+			Object[] arguments = invocation.getArguments();
+			for(Object argument: arguments) {
+				if (argument != null && CleanableFactory.canApply(argument.getClass())) {
+					cleanerContext.add(argument);
+				}
+			}
+			// Step 2. Invoking underlying class
+			Object value = invocation.proceed();
+			// Step 2.1. Adding value to the CleanerContext
+			if (value != null && CleanableFactory.canApply(value.getClass())) {
+				cleanerContext.add(value);
+			}
+			// Step 2.3. Returning result
+			return value;
+		}
+	};
 
-    private volatile CleanerContext cleanerContext;
+	final private Advisor cleanerAdvisor = new CleanerPointcutAdvisor(advice);
 
-    private volatile Advisor cleanerAdvisor = new CleanerPointcutAdvisor(advice);
+	final private String[] packages;
 
-    private volatile BeanFactory beanFactory;
+	private volatile CleanerContext cleanerContext;
 
-    private volatile ClassLoader beanClassLoader = ClassUtils.getDefaultClassLoader();
+	private volatile BeanFactory beanFactory;
 
-    @Override
-    public void setBeanFactory(BeanFactory beanFactory) {
-        this.beanFactory = beanFactory;
-    }
+	private volatile ClassLoader beanClassLoader = ClassUtils.getDefaultClassLoader();
 
-    @Override
-    public void setBeanClassLoader(ClassLoader classLoader) {
-        this.beanClassLoader = classLoader;
-    }
+	public CleanerSpringAdvisor(String[] packages) {
+		this.packages = packages == null ? new String[0] : packages;
+	}
 
-    @Override
-    public int getOrder() {
-        return Ordered.LOWEST_PRECEDENCE;
-    }
+	@Override
+	public void setBeanFactory(BeanFactory beanFactory) {
+		this.beanFactory = beanFactory;
+	}
 
-    @Override
-    public void afterPropertiesSet() {
-    	this.cleanerContext = beanFactory.getBean(CleanerContext.class);
-    }
+	@Override
+	public void setBeanClassLoader(ClassLoader classLoader) {
+		this.beanClassLoader = classLoader;
+	}
 
-    @Override
-    public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
-        return bean;
-    }
+	@Override
+	public int getOrder() {
+		return Ordered.LOWEST_PRECEDENCE;
+	}
 
-    public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
-    	bean = advice(cleanerAdvisor, bean);
-        return bean;
-    }
+	@Override
+	public void afterPropertiesSet() {
+		this.cleanerContext = beanFactory.getBean(CleanerContext.class);
+	}
 
-    private Object advice(Advisor advisor, Object bean) {
-        Class<?> targetClass = AopUtils.getTargetClass(bean);
-        if (targetClass == null) {
-            return bean;
-        }
+	@Override
+	public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
+		return bean;
+	}
 
-        if (AopUtils.canApply(advisor, targetClass)) {
-            if (bean instanceof Advised) {
-                ((Advised) bean).addAdvisor(advisor);
-            } else {
-                ProxyFactory proxyFactory = new ProxyFactory(bean);
-                // Copy our properties (proxyTargetClass etc) inherited from ProxyConfig.
-                proxyFactory.copyFrom(this);
-                proxyFactory.addAdvisor(advisor);
-                bean = proxyFactory.getProxy(this.beanClassLoader);
-            }
-        }
+	public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
+		bean = advice(cleanerAdvisor, bean);
+		return bean;
+	}
 
-        return bean;
-    }
+	private Object advice(Advisor advisor, Object bean) {
+		Class<?> targetClass = AopUtils.getTargetClass(bean);
+		if (targetClass == null) {
+			return bean;
+		}
+		
+		bean.getClass().getPackage();
+
+		Class<?> currentClass = bean.getClass();
+		while(currentClass != Object.class) {
+			if(currentClass.getAnnotation(Configuration.class) != null)
+				return bean;
+			currentClass = currentClass.getSuperclass();
+		}
+
+		boolean matches = packages.length == 0;
+		if (!matches) {
+			String className = targetClass.getName();
+			for (String packageName : packages)
+				matches = matches || className.startsWith(packageName);
+		}
+		if (matches) {
+			if (bean instanceof Advised) {
+				((Advised) bean).addAdvisor(advisor);
+			} else {
+				ProxyFactory proxyFactory = new ProxyFactory(bean);
+				// Copy our properties (proxyTargetClass etc) inherited from ProxyConfig.
+				proxyFactory.copyFrom(this);
+				proxyFactory.addAdvisor(advisor);
+				bean = proxyFactory.getProxy(this.beanClassLoader);
+			}
+		}
+
+		return bean;
+	}
 
 }
