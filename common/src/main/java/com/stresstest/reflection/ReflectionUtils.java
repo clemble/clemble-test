@@ -1,6 +1,7 @@
 package com.stresstest.reflection;
 
 import java.lang.annotation.Annotation;
+import java.util.Collections;
 import java.util.Set;
 
 import org.reflections.Reflections;
@@ -42,7 +43,10 @@ public class ReflectionUtils {
      *                  from original package and all sub packages.
      */
     public static <T> Set<Class<? extends T>> findPossibleImplementations(Class<T> klass) {
-        return findPossibleImplementations(klass.getPackage().toString().replace("package ", ""), klass);
+        if(klass == null || klass.getPackage() == null || klass.getPackage().getName() == null)
+            return Collections.emptySet();
+        String packageName = klass.getPackage().toString().replace("package ", "");
+        return findPossibleImplementations(packageName, klass);
     }
     
     /**
