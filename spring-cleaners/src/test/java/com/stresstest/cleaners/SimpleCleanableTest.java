@@ -37,20 +37,38 @@ public class SimpleCleanableTest {
 
 	final static private AtomicReference<SimpleCleanable> cleanable = new AtomicReference<SimpleCleanable>();
 
+	private int order = 0;
+
 	public SimpleCleanableTest() {
 
 	}
 
 	@Test
 	public void testGenerated() {
+		testCleanCalled();
+	}
+
+	/**
+	 * Can't guarantee order of execution in JUnit so emulating it
+	 */
+	@Test
+	public void testCleanCalled() {
+		if(order == 0) {
+			order++;
+			actualTestGenerated();
+		} else {
+			actualtestCleanCalled();
+		}
+	}
+	
+	public void actualTestGenerated() {
 		cleanable.set(cleanableService.getCleanable());
 		Assert.assertNotNull(cleanable.get());
 		Assert.assertFalse(cleanable.get().isCleanCalled());
 		Assert.assertTrue(cleanerContext.contains(cleanable.get()));
 	}
-
-	@Test
-	public void testCleanCalled() {
+	
+	public void actualtestCleanCalled() {
 		Assert.assertFalse(cleanerContext.contains(cleanable.get()));
 		Assert.assertNotNull(cleanable.get());
 		Assert.assertTrue(cleanable.get().isCleanCalled());

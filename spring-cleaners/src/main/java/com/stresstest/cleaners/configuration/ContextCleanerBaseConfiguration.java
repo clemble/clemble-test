@@ -16,10 +16,8 @@ public class ContextCleanerBaseConfiguration implements ImportAware {
 	protected AnnotationAttributes enableContextCleaner;
 
 	private CleanerContext cleanerContext = new CleanerContext();
-
 	private ContextCleanerTestExecutionListener cleanerTestExecutionListener = new ContextCleanerTestExecutionListener(
 			cleanerContext);
-
 	private TestContextListenerRegistrator contextListenerRegistrator = new TestContextListenerRegistrator(
 			cleanerTestExecutionListener);
 
