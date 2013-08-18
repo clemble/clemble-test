@@ -77,7 +77,7 @@ public final class ClassConstructorSimple<T> extends ClassConstructor<T> {
 			generatedObject = values.size() == 0 ? getConstructor().newInstance() : getConstructor()
 					.newInstance(values.toArray());
 		} catch (Exception e) {
-			throw new RuntimeException(e);
+			throw new RuntimeException("Failed to constuct using " + getConstructor(),e);
 		}
 		return (T) generatedObject;
 	}
