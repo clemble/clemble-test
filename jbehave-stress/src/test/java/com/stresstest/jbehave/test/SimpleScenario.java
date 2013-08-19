@@ -2,6 +2,8 @@ package com.stresstest.jbehave.test;
 
 import java.util.List;
 
+import javax.inject.Singleton;
+
 import org.jbehave.core.annotations.UsingSteps;
 import org.jbehave.core.configuration.Configuration;
 import org.jbehave.core.configuration.MostUsefulConfiguration;
@@ -33,10 +35,11 @@ import com.stresstest.jbehave.test.SimpleScenario.TestScenarioConfiguration;
 public class SimpleScenario extends JUnitStory {
 
     @org.springframework.context.annotation.Configuration
-    @EnableStoryContext(packages = {"com.stresstest.jbehave.test"})
+    @EnableStoryContext(packages = { "com.stresstest.jbehave.test" })
     public static class TestScenarioConfiguration {
 
         @Bean
+        @Singleton
         public SimpleJbehaveConditions simpleJbehaveConditions() {
             return new SimpleJbehaveConditions();
         }
@@ -54,13 +57,9 @@ public class SimpleScenario extends JUnitStory {
 
         StoryReporterBuilder storyReporterBuilder = new StoryReporterBuilder().withFailureTrace(true).withReporters(new ConsoleOutput());
 
-        return new MostUsefulConfiguration()
-            .usePendingStepStrategy(new FailingUponPendingStep())
-            .useFailureStrategy(new RethrowingFailure())
-            .useStoryLoader(storyLoader)
-            .useStepFinder(new StepFinder(new StepFinder.ByLevenshteinDistance()))
-            .useParameterConverters(new ParameterConverters().addConverters(storyContextConverter))
-            .useStoryReporterBuilder(storyReporterBuilder);
+        return new MostUsefulConfiguration().usePendingStepStrategy(new FailingUponPendingStep()).useFailureStrategy(new RethrowingFailure())
+                .useStoryLoader(storyLoader).useStepFinder(new StepFinder(new StepFinder.ByLevenshteinDistance()))
+                .useParameterConverters(new ParameterConverters().addConverters(storyContextConverter)).useStoryReporterBuilder(storyReporterBuilder);
     }
 
     @Override

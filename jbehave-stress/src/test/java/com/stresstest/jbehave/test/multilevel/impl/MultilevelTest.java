@@ -2,6 +2,8 @@ package com.stresstest.jbehave.test.multilevel.impl;
 
 import java.util.List;
 
+import javax.inject.Singleton;
+
 import org.jbehave.core.configuration.Configuration;
 import org.jbehave.core.configuration.MostUsefulConfiguration;
 import org.jbehave.core.failures.FailingUponPendingStep;
@@ -32,29 +34,32 @@ import com.stresstest.jbehave.test.multilevel.WhenInterface;
 @Ignore
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = MultilevelTest.MultilevelTestConfiguration.class)
-public class MultilevelTest extends JUnitStory{
+public class MultilevelTest extends JUnitStory {
 
-	@org.springframework.context.annotation.Configuration
-	@EnableStoryContext(packages = {"com"})
-	public static class MultilevelTestConfiguration{
-		
-		@Bean
-		public GivenInterface<Integer> givenInterface(){
-			return new IntegerGiven();
-		}
-		
-		@Bean
-		public WhenInterface<Integer> whenInterface(){
-			return new IntegerWhen();
-		}
-		
-		@Bean
-		public ThenInterface<Integer> thenInterface(){
-			return new ObjectThen<Integer>();
-		}
+    @org.springframework.context.annotation.Configuration
+    @EnableStoryContext(packages = { "com" })
+    public static class MultilevelTestConfiguration {
 
-	}
-	
+        @Bean
+        @Singleton
+        public GivenInterface<Integer> givenInterface() {
+            return new IntegerGiven();
+        }
+
+        @Bean
+        @Singleton
+        public WhenInterface<Integer> whenInterface() {
+            return new IntegerWhen();
+        }
+
+        @Bean
+        @Singleton
+        public ThenInterface<Integer> thenInterface() {
+            return new ObjectThen<Integer>();
+        }
+
+    }
+
     @Autowired
     public ApplicationContext applicationContext;
 
@@ -67,13 +72,9 @@ public class MultilevelTest extends JUnitStory{
 
         StoryReporterBuilder storyReporterBuilder = new StoryReporterBuilder().withFailureTrace(true).withReporters(new ConsoleOutput());
 
-        return new MostUsefulConfiguration()
-            .usePendingStepStrategy(new FailingUponPendingStep())
-            .useFailureStrategy(new RethrowingFailure())
-            .useStoryLoader(storyLoader)
-            .useStepFinder(new StepFinder(new StepFinder.ByLevenshteinDistance()))
-            .useParameterConverters(new ParameterConverters().addConverters(storyContextConverter))
-            .useStoryReporterBuilder(storyReporterBuilder);
+        return new MostUsefulConfiguration().usePendingStepStrategy(new FailingUponPendingStep()).useFailureStrategy(new RethrowingFailure())
+                .useStoryLoader(storyLoader).useStepFinder(new StepFinder(new StepFinder.ByLevenshteinDistance()))
+                .useParameterConverters(new ParameterConverters().addConverters(storyContextConverter)).useStoryReporterBuilder(storyReporterBuilder);
     }
 
     @Override

@@ -1,5 +1,7 @@
 package com.stresstest.cleaners.configuration;
 
+import javax.inject.Singleton;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ImportAware;
@@ -13,43 +15,44 @@ import com.stresstest.spring.listener.TestContextListenerRegistrator;
 @Configuration
 public class ContextCleanerBaseConfiguration implements ImportAware {
 
-	protected AnnotationAttributes enableContextCleaner;
+    protected AnnotationAttributes enableContextCleaner;
 
-	private CleanerContext cleanerContext = new CleanerContext();
+    private CleanerContext cleanerContext = new CleanerContext();
 
-	private ContextCleanerTestExecutionListener cleanerTestExecutionListener = new ContextCleanerTestExecutionListener(
-			cleanerContext);
+    private ContextCleanerTestExecutionListener cleanerTestExecutionListener = new ContextCleanerTestExecutionListener(cleanerContext);
 
-	private TestContextListenerRegistrator contextListenerRegistrator = new TestContextListenerRegistrator(
-			cleanerTestExecutionListener);
+    private TestContextListenerRegistrator contextListenerRegistrator = new TestContextListenerRegistrator(cleanerTestExecutionListener);
 
-	@Bean
-	public CleanerSpringAdvisor cleanerSpringAdvisor() {
-		if (enableContextCleaner != null) {
-			return new CleanerSpringAdvisor(enableContextCleaner.getStringArray("packages"));
-		} else {
-			return new CleanerSpringAdvisor(new String[0]);
-		}
-	}
+    @Bean
+    @Singleton
+    public CleanerSpringAdvisor cleanerSpringAdvisor() {
+        if (enableContextCleaner != null) {
+            return new CleanerSpringAdvisor(enableContextCleaner.getStringArray("packages"));
+        } else {
+            return new CleanerSpringAdvisor(new String[0]);
+        }
+    }
 
-	@Bean
-	public CleanerContext cleanerContext() {
-		return cleanerContext;
-	}
+    @Bean
+    @Singleton
+    public CleanerContext cleanerContext() {
+        return cleanerContext;
+    }
 
-	@Bean
-	public TestContextListenerRegistrator contextListenerRegistrator() {
-		return contextListenerRegistrator;
-	}
+    @Bean
+    @Singleton
+    public TestContextListenerRegistrator contextListenerRegistrator() {
+        return contextListenerRegistrator;
+    }
 
-	@Bean
-	public ContextCleanerTestExecutionListener cleanerTestExecutionListener() {
-		return cleanerTestExecutionListener;
-	}
+    @Bean
+    @Singleton
+    public ContextCleanerTestExecutionListener cleanerTestExecutionListener() {
+        return cleanerTestExecutionListener;
+    }
 
-	@Override
-	public void setImportMetadata(AnnotationMetadata importMetadata) {
-		this.enableContextCleaner = AnnotationAttributes.fromMap(importMetadata.getAnnotationAttributes(
-				EnableContextCleaner.class.getName(), false));
-	}
+    @Override
+    public void setImportMetadata(AnnotationMetadata importMetadata) {
+        this.enableContextCleaner = AnnotationAttributes.fromMap(importMetadata.getAnnotationAttributes(EnableContextCleaner.class.getName(), false));
+    }
 }

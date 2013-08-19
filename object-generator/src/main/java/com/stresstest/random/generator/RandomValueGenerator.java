@@ -13,14 +13,13 @@ import com.google.common.collect.ImmutableMap;
 import com.stresstest.random.AbstractValueGenerator;
 import com.stresstest.random.ValueGenerator;
 
+public abstract class RandomValueGenerator<T> extends AbstractValueGenerator<T> {
 
-public abstract class RandomValueGenerator<T>  extends AbstractValueGenerator<T> {
+    /**
+     * Generic source of randomness in all value generators (shared for performance reasons).
+     */
+    final public static Random RANDOM_UTILS = new Random();
 
-	/**
-	 * Generic source of randomness in all value generators (shared for performance reasons).
-	 */
-	final public static Random RANDOM_UTILS = new Random();
-	
     /**
      * {@link Boolean} random value generator.
      */
@@ -28,6 +27,19 @@ public abstract class RandomValueGenerator<T>  extends AbstractValueGenerator<T>
         @Override
         public Boolean generate() {
             return RANDOM_UTILS.nextBoolean();
+        }
+    };
+
+    /**
+     * {@link Byte} array random value generator.
+     */
+    final public static ValueGenerator<boolean[]> BOOLEAN_ARRAY_VALUE_GENERATOR = new RandomValueGenerator<boolean[]>() {
+        @Override
+        public boolean[] generate() {
+            boolean[] resultArray = new boolean[1 + RANDOM_UTILS.nextInt(10)];
+            for (int i = 0; i < resultArray.length; i++)
+                resultArray[i] = BOOLEAN_VALUE_GENERATOR.generate();
+            return resultArray;
         }
     };
 
@@ -42,12 +54,38 @@ public abstract class RandomValueGenerator<T>  extends AbstractValueGenerator<T>
     };
 
     /**
+     * {@link Byte} array random value generator.
+     */
+    final public static ValueGenerator<byte[]> BYTE_ARRAY_VALUE_GENERATOR = new RandomValueGenerator<byte[]>() {
+        @Override
+        public byte[] generate() {
+            byte[] resultArray = new byte[1 + RANDOM_UTILS.nextInt(10)];
+            for (int i = 0; i < resultArray.length; i++)
+                resultArray[i] = BYTE_VALUE_GENERATOR.generate();
+            return resultArray;
+        }
+    };
+
+    /**
      * {@link Character} random value generator.
      */
     final public static ValueGenerator<Character> CHAR_VALUE_GENERATOR = new RandomValueGenerator<Character>() {
         @Override
         public Character generate() {
             return (char) RANDOM_UTILS.nextInt((int) Character.MAX_VALUE);
+        }
+    };
+
+    /**
+     * {@link Character} array random value generator.
+     */
+    final public static ValueGenerator<char[]> CHAR_ARRAY_VALUE_GENERATOR = new RandomValueGenerator<char[]>() {
+        @Override
+        public char[] generate() {
+            char[] resultArray = new char[1 + RANDOM_UTILS.nextInt(10)];
+            for (int i = 0; i < resultArray.length; i++)
+                resultArray[i] = CHAR_VALUE_GENERATOR.generate();
+            return resultArray;
         }
     };
 
@@ -62,12 +100,38 @@ public abstract class RandomValueGenerator<T>  extends AbstractValueGenerator<T>
     };
 
     /**
+     * {@link Integer} array random value generator.
+     */
+    final public static ValueGenerator<int[]> INTEGER_ARRAY_VALUE_GENERATOR = new RandomValueGenerator<int[]>() {
+        @Override
+        public int[] generate() {
+            int[] resultArray = new int[1 + RANDOM_UTILS.nextInt(10)];
+            for (int i = 0; i < resultArray.length; i++)
+                resultArray[i] = INTEGER_VALUE_GENERATOR.generate();
+            return resultArray;
+        }
+    };
+
+    /**
      * {@link Short} random value generator.
      */
     final public static ValueGenerator<Short> SHORT_VALUE_GENERATOR = new RandomValueGenerator<Short>() {
         @Override
         public Short generate() {
             return (short) RANDOM_UTILS.nextInt();
+        }
+    };
+
+    /**
+     * {@link Short} array random value generator.
+     */
+    final public static ValueGenerator<short[]> SHORT_ARRAY_VALUE_GENERATOR = new RandomValueGenerator<short[]>() {
+        @Override
+        public short[] generate() {
+            short[] resultArray = new short[1 + RANDOM_UTILS.nextInt(10)];
+            for (int i = 0; i < resultArray.length; i++)
+                resultArray[i] = SHORT_VALUE_GENERATOR.generate();
+            return resultArray;
         }
     };
 
@@ -82,12 +146,38 @@ public abstract class RandomValueGenerator<T>  extends AbstractValueGenerator<T>
     };
 
     /**
+     * {@link Long} array random value generator.
+     */
+    final public static ValueGenerator<long[]> LONG_ARRAY_VALUE_GENERATOR = new RandomValueGenerator<long[]>() {
+        @Override
+        public long[] generate() {
+            long[] resultArray = new long[1 + RANDOM_UTILS.nextInt(10)];
+            for (int i = 0; i < resultArray.length; i++)
+                resultArray[i] = LONG_VALUE_GENERATOR.generate();
+            return resultArray;
+        }
+    };
+
+    /**
      * {@link Float} random value generator.
      */
     final public static ValueGenerator<Float> FLOAT_VALUE_GENERATOR = new RandomValueGenerator<Float>() {
         @Override
         public Float generate() {
             return RANDOM_UTILS.nextFloat();
+        }
+    };
+
+    /**
+     * {@link Float} array random value generator.
+     */
+    final public static ValueGenerator<float[]> FLOAT_ARRAY_VALUE_GENERATOR = new RandomValueGenerator<float[]>() {
+        @Override
+        public float[] generate() {
+            float[] resultArray = new float[1 + RANDOM_UTILS.nextInt(10)];
+            for (int i = 0; i < resultArray.length; i++)
+                resultArray[i] = LONG_VALUE_GENERATOR.generate();
+            return resultArray;
         }
     };
 
@@ -100,7 +190,20 @@ public abstract class RandomValueGenerator<T>  extends AbstractValueGenerator<T>
             return RANDOM_UTILS.nextDouble();
         }
     };
-    
+
+    /**
+     * {@link Double} array random value generator.
+     */
+    final public static ValueGenerator<double[]> DOUBLE_ARRAY_VALUE_GENERATOR = new RandomValueGenerator<double[]>() {
+        @Override
+        public double[] generate() {
+            double[] resultArray = new double[1 + RANDOM_UTILS.nextInt(10)];
+            for (int i = 0; i < resultArray.length; i++)
+                resultArray[i] = LONG_VALUE_GENERATOR.generate();
+            return resultArray;
+        }
+    };
+
     /**
      * {@link String} generates random String of 10 characters long.
      */
@@ -120,8 +223,8 @@ public abstract class RandomValueGenerator<T>  extends AbstractValueGenerator<T>
      * @return random enum value
      */
     final public static <T> ValueGenerator<T> enumValueGenerator(final Class<T> enumClass) {
-    	if(!enumClass.isEnum())
-    		throw new IllegalArgumentException("Class must be of type enum");
+        if (!enumClass.isEnum())
+            throw new IllegalArgumentException("Class must be of type enum");
         return valueGenerator(Arrays.asList(enumClass.getEnumConstants()));
     }
 
@@ -144,7 +247,7 @@ public abstract class RandomValueGenerator<T>  extends AbstractValueGenerator<T>
 
             @Override
             public int scope() {
-            	return randomValues.size();
+                return randomValues.size();
             }
         };
     }
@@ -220,36 +323,48 @@ public abstract class RandomValueGenerator<T>  extends AbstractValueGenerator<T>
             }
         };
     }
-    
-	/**
-	 * Collection of standard value generators, which must be used by default
-	 */
-	final public static Map<Class<?>, ValueGenerator<?>> DEFAULT_GENERATORS;
-	static {
-		Map<Class<?>, ValueGenerator<?>> valueGenerators = new HashMap<Class<?>, ValueGenerator<?>>();
-		valueGenerators.put(String.class, RandomValueGenerator.STRING_VALUE_GENERATOR);
 
-		valueGenerators.put(Boolean.class, RandomValueGenerator.BOOLEAN_VALUE_GENERATOR);
-		valueGenerators.put(boolean.class, RandomValueGenerator.BOOLEAN_VALUE_GENERATOR);
+    /**
+     * Collection of standard value generators, which must be used by default
+     */
+    final public static Map<Class<?>, ValueGenerator<?>> DEFAULT_GENERATORS;
+    static {
+        Map<Class<?>, ValueGenerator<?>> valueGenerators = new HashMap<Class<?>, ValueGenerator<?>>();
+        valueGenerators.put(String.class, RandomValueGenerator.STRING_VALUE_GENERATOR);
 
-		valueGenerators.put(Byte.class, RandomValueGenerator.BYTE_VALUE_GENERATOR);
-		valueGenerators.put(byte.class, RandomValueGenerator.BYTE_VALUE_GENERATOR);
-		valueGenerators.put(Character.class, RandomValueGenerator.CHAR_VALUE_GENERATOR);
-		valueGenerators.put(char.class, RandomValueGenerator.CHAR_VALUE_GENERATOR);
-		valueGenerators.put(Short.class, RandomValueGenerator.SHORT_VALUE_GENERATOR);
-		valueGenerators.put(short.class, RandomValueGenerator.SHORT_VALUE_GENERATOR);
-		valueGenerators.put(Integer.class, RandomValueGenerator.INTEGER_VALUE_GENERATOR);
-		valueGenerators.put(int.class, RandomValueGenerator.INTEGER_VALUE_GENERATOR);
-		valueGenerators.put(Long.class, RandomValueGenerator.LONG_VALUE_GENERATOR);
-		valueGenerators.put(long.class, RandomValueGenerator.LONG_VALUE_GENERATOR);
+        valueGenerators.put(Boolean.class, RandomValueGenerator.BOOLEAN_VALUE_GENERATOR);
+        valueGenerators.put(boolean.class, RandomValueGenerator.BOOLEAN_VALUE_GENERATOR);
+        valueGenerators.put(boolean[].class, RandomValueGenerator.BOOLEAN_ARRAY_VALUE_GENERATOR);
 
-		valueGenerators.put(Float.class, RandomValueGenerator.FLOAT_VALUE_GENERATOR);
-		valueGenerators.put(float.class, RandomValueGenerator.FLOAT_VALUE_GENERATOR);
-		valueGenerators.put(Double.class, RandomValueGenerator.DOUBLE_VALUE_GENERATOR);
-		valueGenerators.put(double.class, RandomValueGenerator.DOUBLE_VALUE_GENERATOR);
+        valueGenerators.put(Byte.class, RandomValueGenerator.BYTE_VALUE_GENERATOR);
+        valueGenerators.put(byte.class, RandomValueGenerator.BYTE_VALUE_GENERATOR);
+        valueGenerators.put(byte[].class, RandomValueGenerator.BYTE_ARRAY_VALUE_GENERATOR);
 
-		DEFAULT_GENERATORS = ImmutableMap.<Class<?>, ValueGenerator<?>>copyOf(valueGenerators);
-	}
+        valueGenerators.put(Character.class, RandomValueGenerator.CHAR_VALUE_GENERATOR);
+        valueGenerators.put(char.class, RandomValueGenerator.CHAR_VALUE_GENERATOR);
+        valueGenerators.put(char[].class, RandomValueGenerator.CHAR_ARRAY_VALUE_GENERATOR);
+
+        valueGenerators.put(Short.class, RandomValueGenerator.SHORT_VALUE_GENERATOR);
+        valueGenerators.put(short.class, RandomValueGenerator.SHORT_VALUE_GENERATOR);
+        valueGenerators.put(short[].class, RandomValueGenerator.SHORT_ARRAY_VALUE_GENERATOR);
+
+        valueGenerators.put(Integer.class, RandomValueGenerator.INTEGER_VALUE_GENERATOR);
+        valueGenerators.put(int.class, RandomValueGenerator.INTEGER_VALUE_GENERATOR);
+        valueGenerators.put(int[].class, RandomValueGenerator.INTEGER_ARRAY_VALUE_GENERATOR);
+
+        valueGenerators.put(Long.class, RandomValueGenerator.LONG_VALUE_GENERATOR);
+        valueGenerators.put(long.class, RandomValueGenerator.LONG_VALUE_GENERATOR);
+        valueGenerators.put(long[].class, RandomValueGenerator.LONG_ARRAY_VALUE_GENERATOR);
+
+        valueGenerators.put(Float.class, RandomValueGenerator.FLOAT_VALUE_GENERATOR);
+        valueGenerators.put(float.class, RandomValueGenerator.FLOAT_VALUE_GENERATOR);
+        valueGenerators.put(float[].class, RandomValueGenerator.FLOAT_ARRAY_VALUE_GENERATOR);
+
+        valueGenerators.put(Double.class, RandomValueGenerator.DOUBLE_VALUE_GENERATOR);
+        valueGenerators.put(double.class, RandomValueGenerator.DOUBLE_VALUE_GENERATOR);
+        valueGenerators.put(double[].class, RandomValueGenerator.DOUBLE_ARRAY_VALUE_GENERATOR);
+
+        DEFAULT_GENERATORS = ImmutableMap.<Class<?>, ValueGenerator<?>> copyOf(valueGenerators);
+    }
 
 }
-

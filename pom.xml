@@ -52,6 +52,7 @@
         <commons-lang.version>3.1</commons-lang.version>
         <commons-math.version>3.0</commons-math.version>
         <javax.validation.version>1.0.0.GA</javax.validation.version>
+        <javax.inject.version>1</javax.inject.version>
         <!-- Test dependencies -->
         <junit.version>4.10</junit.version>
         <!-- Build plugins dependencies -->
@@ -160,6 +161,12 @@
                 <groupId>javax.validation</groupId>
                 <artifactId>validation-api</artifactId>
                 <version>${javax.validation.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>javax.inject</groupId>
+                <artifactId>javax.inject</artifactId>
+                <version>${javax.inject.version}</version>
             </dependency>
 
             <dependency>

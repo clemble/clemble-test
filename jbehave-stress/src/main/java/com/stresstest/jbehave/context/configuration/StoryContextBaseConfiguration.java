@@ -1,6 +1,7 @@
 package com.stresstest.jbehave.context.configuration;
 
 import javax.annotation.PostConstruct;
+import javax.inject.Singleton;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,26 +29,31 @@ public class StoryContextBaseConfiguration implements ImportAware {
     }
 
     @Bean
+    @Singleton
     public StoryContextSpringAdvisor storyContextSpringAdvisor() {
         return new StoryContextSpringAdvisor();
     }
 
     @Bean
+    @Singleton
     public StoryContext storyContext() {
         return new StoryContext();
     }
 
     @Bean
+    @Singleton
     public StoryContextConverter storyContextConverter() {
         return new StoryContextConverter();
     }
 
     @Bean
+    @Singleton
     public ConversionService conversionService() {
         return new DefaultConversionService();
     }
 
     @Bean
+    @Singleton
     public TestContextListenerRegistrator storyContextListenerProcessingBean() {
         return new TestContextListenerRegistrator(new StoryContextTestExecutionListener());
     }

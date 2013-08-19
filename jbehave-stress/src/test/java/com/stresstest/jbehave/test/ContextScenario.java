@@ -2,6 +2,8 @@ package com.stresstest.jbehave.test;
 
 import java.util.List;
 
+import javax.inject.Singleton;
+
 import org.jbehave.core.annotations.UsingSteps;
 import org.jbehave.core.configuration.Configuration;
 import org.jbehave.core.configuration.MostUsefulConfiguration;
@@ -32,42 +34,38 @@ import com.stresstest.jbehave.test.ContextScenario.TestScenarioConfiguration;
 @ContextConfiguration(classes = { TestScenarioConfiguration.class })
 public class ContextScenario extends JUnitStory {
 
-	@org.springframework.context.annotation.Configuration
-	@EnableStoryContext(packages = { "com.stresstest.jbehave.test" })
-	public static class TestScenarioConfiguration {
+    @org.springframework.context.annotation.Configuration
+    @EnableStoryContext(packages = { "com.stresstest.jbehave.test" })
+    public static class TestScenarioConfiguration {
 
-		@Bean
-		public SimpleJbehaveConditions simpleJbehaveConditions() {
-			return new SimpleJbehaveConditions();
-		}
-	}
+        @Bean
+        @Singleton
+        public SimpleJbehaveConditions simpleJbehaveConditions() {
+            return new SimpleJbehaveConditions();
+        }
+    }
 
-	@Autowired
-	public ApplicationContext applicationContext;
+    @Autowired
+    public ApplicationContext applicationContext;
 
-	@Autowired
-	public StoryContextConverter storyContextConverter;
+    @Autowired
+    public StoryContextConverter storyContextConverter;
 
-	@Override
-	public Configuration configuration() {
-		StoryLoader storyLoader = new LoadFromRelativeFile(getClass().getResource("/"));
+    @Override
+    public Configuration configuration() {
+        StoryLoader storyLoader = new LoadFromRelativeFile(getClass().getResource("/"));
 
-		StoryReporterBuilder storyReporterBuilder = new StoryReporterBuilder().withFailureTrace(true).withReporters(
-				new ConsoleOutput());
+        StoryReporterBuilder storyReporterBuilder = new StoryReporterBuilder().withFailureTrace(true).withReporters(new ConsoleOutput());
 
-		return new MostUsefulConfiguration()
-				.usePendingStepStrategy(new FailingUponPendingStep())
-				.useFailureStrategy(new RethrowingFailure()).useStoryLoader(storyLoader)
-				.useStepFinder(new StepFinder(new StepFinder.ByLevenshteinDistance()))
-				.useParameterConverters(new ParameterConverters().addConverters(storyContextConverter))
-				.useStoryReporterBuilder(storyReporterBuilder);
-	}
+        return new MostUsefulConfiguration().usePendingStepStrategy(new FailingUponPendingStep()).useFailureStrategy(new RethrowingFailure())
+                .useStoryLoader(storyLoader).useStepFinder(new StepFinder(new StepFinder.ByLevenshteinDistance()))
+                .useParameterConverters(new ParameterConverters().addConverters(storyContextConverter)).useStoryReporterBuilder(storyReporterBuilder);
+    }
 
-	@Override
-	public List<CandidateSteps> candidateSteps() {
-		List<CandidateSteps> candidateSteps = new StoryContextSpringStepsFactory(configuration(), applicationContext)
-				.createCandidateSteps();
-		return candidateSteps;
-	}
+    @Override
+    public List<CandidateSteps> candidateSteps() {
+        List<CandidateSteps> candidateSteps = new StoryContextSpringStepsFactory(configuration(), applicationContext).createCandidateSteps();
+        return candidateSteps;
+    }
 
 }

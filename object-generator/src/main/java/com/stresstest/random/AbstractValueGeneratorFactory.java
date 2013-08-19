@@ -1,6 +1,7 @@
 package com.stresstest.random;
 
 import java.lang.reflect.Modifier;
+import java.lang.reflect.TypeVariable;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -173,6 +174,10 @@ abstract public class AbstractValueGeneratorFactory implements ValueGeneratorFac
         valueGenerator = construct(ClassAccessWrapper.createAllMethodsAccessor(klass));
         if (valueGenerator != null)
             return valueGenerator;
+        // Step 5. Special case for an array
+        if(klass.isArray()) {
+            return arrayValueGenerator(klass);
+        }
         // Step 5. If there is no result throw IllegalArgumentException
         throw new IllegalArgumentException("Can't construct " + klass.getSimpleName());
     }
@@ -225,5 +230,7 @@ abstract public class AbstractValueGeneratorFactory implements ValueGeneratorFac
     }
 
     protected abstract <T> ValueGenerator<T> enumValueGenerator(Class<T> klass);
+
+    protected abstract <T> ValueGenerator<T> arrayValueGenerator(Class<?> klass);
 
 }

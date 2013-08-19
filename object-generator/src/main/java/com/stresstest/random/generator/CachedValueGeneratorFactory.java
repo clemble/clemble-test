@@ -15,37 +15,42 @@ import com.stresstest.random.ValueGeneratorFactory;
  */
 public class CachedValueGeneratorFactory extends AbstractValueGeneratorFactory {
 
-	final private ValueGeneratorFactory valueGeneratorFactory;
+    final private ValueGeneratorFactory valueGeneratorFactory;
 
-	/**
-	 * Google LoadingCache that is used as a primary cache implementation.
-	 */
-	final private LoadingCache<Class<?>, ValueGenerator<?>> cachedValueGenerators = CacheBuilder.newBuilder().build(
-			new CacheLoader<Class<?>, ValueGenerator<?>>() {
-				@Override
-				public ValueGenerator<?> load(Class<?> klass) throws Exception {
-					return valueGeneratorFactory.getValueGenerator(klass);
-				}
-			});
+    /**
+     * Google LoadingCache that is used as a primary cache implementation.
+     */
+    final private LoadingCache<Class<?>, ValueGenerator<?>> cachedValueGenerators = CacheBuilder.newBuilder().build(
+            new CacheLoader<Class<?>, ValueGenerator<?>>() {
+                @Override
+                public ValueGenerator<?> load(Class<?> klass) throws Exception {
+                    return valueGeneratorFactory.getValueGenerator(klass);
+                }
+            });
 
-	public CachedValueGeneratorFactory(ValueGeneratorFactory newValueGeneratorFactory) {
-		super(newValueGeneratorFactory.getPropertySetterManager());
-		this.valueGeneratorFactory = newValueGeneratorFactory;
-	}
+    public CachedValueGeneratorFactory(ValueGeneratorFactory newValueGeneratorFactory) {
+        super(newValueGeneratorFactory.getPropertySetterManager());
+        this.valueGeneratorFactory = newValueGeneratorFactory;
+    }
 
-	@Override
-	@SuppressWarnings("unchecked")
-	public <T> ValueGenerator<T> getValueGenerator(Class<T> klass) {
-		try {
-			return (ValueGenerator<T>) cachedValueGenerators.get(klass);
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T> ValueGenerator<T> getValueGenerator(Class<T> klass) {
+        try {
+            return (ValueGenerator<T>) cachedValueGenerators.get(klass);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 
-	@Override
-	protected <T> ValueGenerator<T> enumValueGenerator(Class<T> klass) {
-		throw new UnsupportedOperationException();
-	}
+    @Override
+    protected <T> ValueGenerator<T> enumValueGenerator(Class<T> klass) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    protected <T> ValueGenerator<T> arrayValueGenerator(Class<?> klass) {
+        throw new UnsupportedOperationException();
+    }
 
 }
