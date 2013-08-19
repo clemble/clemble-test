@@ -178,7 +178,12 @@ abstract public class AbstractValueGeneratorFactory implements ValueGeneratorFac
         if(klass.isArray()) {
             return arrayValueGenerator(klass);
         }
-        // Step 5. If there is no result throw IllegalArgumentException
+        for(Class<?> registered: REGISTERED_GENERATORS.keySet()) {
+            if(klass.isAssignableFrom(registered)) {
+                return (ValueGenerator<T>) REGISTERED_GENERATORS.get(registered);
+            }
+        }
+        // Step 7. If there is no result throw IllegalArgumentException
         throw new IllegalArgumentException("Can't construct " + klass.getSimpleName());
     }
 
