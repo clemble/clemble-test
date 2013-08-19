@@ -1,7 +1,5 @@
 package com.stresstest.cleaners.configuration;
 
-import javax.inject.Singleton;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ImportAware;
@@ -18,11 +16,8 @@ public class ContextCleanerBaseConfiguration implements ImportAware {
     protected AnnotationAttributes enableContextCleaner;
 
     private CleanerContext cleanerContext = new CleanerContext();
-
     private ContextCleanerTestExecutionListener cleanerTestExecutionListener = new ContextCleanerTestExecutionListener(cleanerContext);
-
     private TestContextListenerRegistrator contextListenerRegistrator = new TestContextListenerRegistrator(cleanerTestExecutionListener);
-
     @Bean
     @Singleton
     public CleanerSpringAdvisor cleanerSpringAdvisor() {
@@ -32,7 +27,6 @@ public class ContextCleanerBaseConfiguration implements ImportAware {
             return new CleanerSpringAdvisor(new String[0]);
         }
     }
-
     @Bean
     @Singleton
     public CleanerContext cleanerContext() {
