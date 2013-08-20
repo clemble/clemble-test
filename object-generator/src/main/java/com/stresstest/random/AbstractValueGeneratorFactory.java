@@ -182,7 +182,7 @@ abstract public class AbstractValueGeneratorFactory implements ValueGeneratorFac
             }
         }
         // Step 7. If there is no result throw IllegalArgumentException
-        throw new IllegalArgumentException("Can't construct " + klass.getSimpleName() + "(" + klass.getCanonicalName() + ")");
+        throw new IllegalArgumentException("Can't construct " + klass.getSimpleName() + "(" + (klass.getCanonicalName() != null ? klass.getCanonicalName() : (klass.getName() != null ? klass.getName() : klass)) + ")");
     }
 
     /**
