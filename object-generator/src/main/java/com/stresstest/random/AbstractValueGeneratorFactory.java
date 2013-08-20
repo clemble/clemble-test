@@ -1,7 +1,5 @@
 package com.stresstest.random;
 
-import java.lang.reflect.Modifier;
-import java.lang.reflect.TypeVariable;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -184,7 +182,7 @@ abstract public class AbstractValueGeneratorFactory implements ValueGeneratorFac
             }
         }
         // Step 7. If there is no result throw IllegalArgumentException
-        throw new IllegalArgumentException("Can't construct " + klass.getSimpleName());
+        throw new IllegalArgumentException("Can't construct " + klass.getSimpleName() + "(" + klass.getCanonicalName() + ")");
     }
 
     /**
