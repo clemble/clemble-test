@@ -282,7 +282,7 @@ abstract public class ClassPropertySetter<T> {
         }
         // Step 2. Create Collection of method setters
         for (Method method : Collections2.filter(searchClass.getMethods(), FILTER_APPLICABLE_METHODS)) {
-            if (method.getParameterTypes().length != 1 || method.getParameterTypes()[0] == Object.class)
+            if (method.getParameterTypes().length != 1 || method.getParameterTypes()[0] == Object.class || searchClass.getSourceClass().equals(method.getParameterTypes()[0]))
                 continue;
             ClassPropertySetter<?> propertySetter = createMethodSetter(searchClass, method);
             if (propertySetter != null) {
