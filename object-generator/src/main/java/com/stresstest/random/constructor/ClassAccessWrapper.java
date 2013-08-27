@@ -64,7 +64,12 @@ abstract public class ClassAccessWrapper<T> {
      * @return true if this class can be constructed (not abstract, or interface), false otherwise
      */
     final public boolean constructable() {
-        return (getSourceClass().getModifiers() & Modifier.ABSTRACT) == 0 && !getSourceClass().isInterface();
+        if (getSourceClass().isInterface())
+            return false;
+        if ((getSourceClass().getModifiers() & Modifier.ABSTRACT) != 0) {
+            return ClassConstructorBuilder.getPossibleBuilders(this).size() > 0 || ClassConstructorFactory.getPossibleFactoryMethods(this).size() > 0;
+        }
+        return true;
     }
 
     /**

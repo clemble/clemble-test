@@ -75,6 +75,30 @@ public class ClassConstructorBuilder<T> extends ClassConstructor<T> {
 		return new ClassConstructorBuilder<T>(builderFactoryMethod, classPropertySetter.clone(generatorsToUse), valueBuilderMethod);
 	}
 
+	public static Collection<Method> getPossibleBuilders(final ClassAccessWrapper<?> classToGenerate) {
+	       // Step 1. Filter static methods, that return instance of the type as a result
+        return Collections2.filter(classToGenerate.getMethods(), new Predicate<Method>() {
+            @Override
+            public boolean apply(final Method method) {
+                if ((method.getModifiers() & Modifier.STATIC) == 0)
+                    return false;
+                // Checking that returned type has methods, that return instance of target class
+                boolean builder = false;
+                for (Method builderMethod : classToGenerate.wrap(method.getReturnType()).getMethods()) {
+                    if (builderMethod.getDeclaringClass() != Object.class)
+                        builder = builder || classToGenerate.canBeReplacedWith(builderMethod.getReturnType());
+                }
+                if (!builder)
+                    return false;
+                // Checking list of parameters
+                for (Class<?> methodArgument : method.getParameterTypes())
+                    if (classToGenerate.canBeReplacedWith(methodArgument) || classToGenerate.canReplace(methodArgument))
+                        return false;
+                return true;
+            }
+        });
+	}
+	
 	/**
 	 * Tries to build {@link ClassConstructor} based on Builder class.
 	 * 
@@ -88,26 +112,7 @@ public class ClassConstructorBuilder<T> extends ClassConstructor<T> {
 	public static <T> ClassConstructorBuilder<T> build(final ClassAccessWrapper<?> classToGenerate,
 			final ValueGeneratorFactory valueGeneratorFactory) {
 		// Step 1. Filter static methods, that return instance of the type as a result
-		Collection<Method> possibleBuilders = Collections2.filter(classToGenerate.getMethods(), new Predicate<Method>() {
-			@Override
-			public boolean apply(final Method method) {
-				if ((method.getModifiers() & Modifier.STATIC) == 0)
-					return false;
-				// Checking that returned type has methods, that return instance of target class
-				boolean builder = false;
-				for (Method builderMethod : classToGenerate.wrap(method.getReturnType()).getMethods()) {
-					if (builderMethod.getDeclaringClass() != Object.class)
-						builder = builder || classToGenerate.canBeReplacedWith(builderMethod.getReturnType());
-				}
-				if (!builder)
-					return false;
-				// Checking list of parameters
-				for (Class<?> methodArgument : method.getParameterTypes())
-					if (classToGenerate.canBeReplacedWith(methodArgument) || classToGenerate.canReplace(methodArgument))
-						return false;
-				return true;
-			}
-		});
+		Collection<Method> possibleBuilders = getPossibleBuilders(classToGenerate);
 		// Step 2. If there is no such method return null
 		if (possibleBuilders.size() == 0)
 			return null;

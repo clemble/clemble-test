@@ -73,6 +73,21 @@ final public class ClassConstructorFactory<T> extends ClassConstructor<T> {
 		return new ClassConstructorFactory<T>(builder, generatorsToUse);
 	}
 
+	public static Collection<Method> getPossibleFactoryMethods(final ClassAccessWrapper<?> classToGenerate) {
+	    return Collections2.filter(classToGenerate.getMethods(), new Predicate<Method>() {
+            @Override
+            public boolean apply(final Method method) {
+                if ((method.getModifiers() & Modifier.STATIC) == 0 || !classToGenerate.canBeReplacedWith(method.getReturnType()))
+                    return false;
+                for (Class<?> parameter : method.getParameterTypes()) {
+                    if (classToGenerate.canBeReplacedWith(parameter) || classToGenerate.canReplace(parameter))
+                        return false;
+                }
+                return true;
+            }
+        });
+	}
+	
     /**
      * Tries to build {@link ClassConstructor} based on factory method.
      * 
@@ -85,18 +100,7 @@ final public class ClassConstructorFactory<T> extends ClassConstructor<T> {
     public static <T> ClassConstructorFactory<T> build(final ClassAccessWrapper<?> classToGenerate,
             final ValueGeneratorFactory valueGeneratorFactory) {
         // Step 1. Filter static methods, that return instance of the type as a result
-        Collection<Method> possibleBuilders = Collections2.filter(classToGenerate.getMethods(), new Predicate<Method>() {
-            @Override
-            public boolean apply(final Method method) {
-                if ((method.getModifiers() & Modifier.STATIC) == 0 || !classToGenerate.canBeReplacedWith(method.getReturnType()))
-                    return false;
-                for (Class<?> parameter : method.getParameterTypes()) {
-                    if (classToGenerate.canBeReplacedWith(parameter) || classToGenerate.canReplace(parameter))
-                        return false;
-                }
-                return true;
-            }
-        });
+        Collection<Method> possibleBuilders = getPossibleFactoryMethods(classToGenerate);
         // Step 2. If there is no such method return null
         if (possibleBuilders.size() == 0)
             return null;
