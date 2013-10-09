@@ -1,10 +1,12 @@
 ##Stress Test
 [![Build Status](https://travis-ci.org/AntonOparin/stress-test.png)](https://travis-ci.org/AntonOparin/stress-test.png)
 
-Simple Java framework, for junit testing.
+Collection of JUnit tools for more productive testing.
 
 ##Runners
-Extension of JUnit runner to run the same test in parrallel.
+Extension of JUnit runner to run the same test in parallel.
+
+
 
 ##Object Generator
 Arbitrary Object generator for testing.
