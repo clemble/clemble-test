@@ -21,10 +21,13 @@ public class FrequencyConfigurations {
     public FrequencyConfigurations(Method method) {
         this(method.getAnnotation(RunTimes.class), method.getAnnotation(RunInParallel.class));
     }
-    
+
     private FrequencyConfigurations(RunTimes annotation, RunInParallel runMultithreaded) {
-        runs = annotation != null ? Math.max(annotation.value(), MIN_RUNS) : (runMultithreaded != null ? Math.max(MIN_RUNS, runMultithreaded.numThreads())
-                : MIN_RUNS);
+        runs = annotation != null
+                   ? Math.max(annotation.value(), MIN_RUNS)
+                   : (runMultithreaded != null
+                       ? Math.max(MIN_RUNS, runMultithreaded.numThreads())
+                       : MIN_RUNS);
 
         multithread = runMultithreaded != null ? true : false;
         numThreads = runMultithreaded != null ? Math.min(getRuns(), runMultithreaded.maxThreads()) : getRuns();
