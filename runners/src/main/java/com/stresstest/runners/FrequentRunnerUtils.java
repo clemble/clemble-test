@@ -13,7 +13,7 @@ import org.junit.runners.model.TestClass;
 public class FrequentRunnerUtils {
 
     public static void runAfterChecks(final RunNotifier notifier, final Object testRef, final TestClass testClass) {
-    	List<Throwable> errors = new ArrayList<>();
+    	List<Throwable> errors = new ArrayList<Throwable>();
     	for (FrameworkMethod each : testClass.getAnnotatedMethods(CheckAfter.class)) {
     		try {
     			each.invokeExplosively(testRef);

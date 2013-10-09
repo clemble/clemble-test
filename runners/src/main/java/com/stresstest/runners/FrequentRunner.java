@@ -13,7 +13,7 @@ import org.junit.runners.model.Statement;
 
 public class FrequentRunner extends BlockJUnit4ClassRunner {
 
-    final private AtomicReference<Object> createdTestRef = new AtomicReference<>();
+    final private AtomicReference<Object> createdTestRef = new AtomicReference<Object>();
     final private Class<?> klassToRun;
 
     public FrequentRunner(Class<?> klass) throws InitializationError {

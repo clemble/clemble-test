@@ -15,7 +15,7 @@ import com.stresstest.runners.FrequentTestRunner;
 
 public class SpringJUnit4FrequentClassRunner extends SpringJUnit4ClassRunner {
 
-    final private AtomicReference<Object> createdTestRef = new AtomicReference<>();
+    final private AtomicReference<Object> createdTestRef = new AtomicReference<Object>();
     final private Class<?> klass;
 
     public SpringJUnit4FrequentClassRunner(Class<?> klass) throws InitializationError {

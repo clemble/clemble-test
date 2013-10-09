@@ -33,7 +33,7 @@ final public class ClassPropertySetterRegistry {
     /**
      * Registered abstract PropertySetters collection
      */
-    final private Set<AbstractPropertySetter<?>> abstractPropertySelectors = new HashSet<>();
+    final private Set<AbstractPropertySetter<?>> abstractPropertySelectors = new HashSet<AbstractPropertySetter<?>>();
 
     /**
      * Registers specified Property in PropertySelectors list.
@@ -82,9 +82,10 @@ final public class ClassPropertySetterRegistry {
      * @param valueGenerator
      *            {@link ValueGenerator} to use.
      */
-    public <T> void register(final Class<?> searchClass, final String name, final ValueGenerator<T> valueGenerator) {
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+	public <T> void register(final Class<?> searchClass, final String name, final ValueGenerator<T> valueGenerator) {
         if ((searchClass.getModifiers() & (Modifier.ABSTRACT | Modifier.INTERFACE)) > 0) {
-            abstractPropertySelectors.add(new AbstractPropertySetter<>(searchClass, name, valueGenerator));
+            abstractPropertySelectors.add(new AbstractPropertySetter(searchClass, name, valueGenerator));
         } else {
             addSpecificProperties(constructSetter(searchClass, name, valueGenerator));
         }
