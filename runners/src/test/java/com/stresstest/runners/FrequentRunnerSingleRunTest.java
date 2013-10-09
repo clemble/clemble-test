@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.junit.AfterClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -17,13 +16,7 @@ public class FrequentRunnerSingleRunTest {
 	private static AtomicInteger parallelCounter = new AtomicInteger(0);
 
 	@CheckAfter
-	public static void afterClass() {
-		try {
-			Thread.sleep(100000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	public void checkAfter() {
 		assertEquals(onceCounter.get(), 1);
 		assertEquals(parallelCounter.get(), 500);
 	}
