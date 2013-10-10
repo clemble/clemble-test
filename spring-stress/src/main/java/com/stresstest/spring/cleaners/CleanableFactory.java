@@ -13,60 +13,37 @@ public class CleanableFactory {
 		throw new IllegalAccessError("This is utility class");
 	}
 
-	private static HashMap<Class<?>, Boolean> PROCESSED_CLASSES = new HashMap<Class<?>, Boolean>();
+	private static HashMap<Class<?>, CleanableAdapter> PROCESSED_CLASSES = new HashMap<Class<?>, CleanableAdapter>();
 
 	public static Cleanable toCleanable(Object cleanable) {
-		if(cleanable instanceof Cleanable) {
-			return (cleanable instanceof Cleanable) ? (Cleanable) cleanable : null;
-		} else {
-			Collection<Method> cleaners = new ArrayList<Method>();
-			for(Method method: cleanable.getClass().getMethods()) {
-				if (method.getAnnotation(Cleaner.class) != null) {
-					cleaners.add(method);
-				}
-			}
-			return new MethodCleanableAddapter(cleanable, cleaners);
+		// Step 1. Looking for annotations in Object methods
+		if(cleanable != null && canApply(cleanable.getClass())) {
+			CleanableAdapter cleanableAdapter = PROCESSED_CLASSES.get(cleanable.getClass());
+			return cleanableAdapter != null ? cleanableAdapter.toCleanable(cleanable) : null;
 		}
+		return null;
 	}
 
 	public static <T> boolean canApply(Class<T> cleanableCandidate) {
-		Boolean canApply = PROCESSED_CLASSES.get(cleanableCandidate);
-		if (canApply == null) {
+		if (!PROCESSED_CLASSES.containsKey(cleanableCandidate)) {
+			CleanableAdapter adapter = null;
 			// Step 1. Check that it inherits from Cleanable
-			canApply = Cleanable.class.isAssignableFrom(cleanableCandidate);
-			// Step 2. Checking declared methods for @Cleaner
-			if(!canApply) {
+			if(Cleanable.class.isAssignableFrom(cleanableCandidate)) {
+				adapter = IdentityCleanableAdapter.INSTANCE;
+			} else {
+				// Step 2. Checking declared methods for @Cleaner
+				Collection<Method> cleanerMethods = new ArrayList<Method>();
 				for(Method method: cleanableCandidate.getMethods()) {
-					canApply = canApply || method.getAnnotation(Cleaner.class) != null;
+					if (method.getAnnotation(Cleaner.class) != null)
+						cleanerMethods.add(method);
 				}
+				if(cleanerMethods != null)
+					adapter = new MethodCleanableAdapter(cleanerMethods);
 			}
 			// Step 3. Saving for optimization
-			PROCESSED_CLASSES.put(cleanableCandidate, canApply);
+			PROCESSED_CLASSES.put(cleanableCandidate, adapter);
 		}
-		return canApply;
+		return PROCESSED_CLASSES.get(cleanableCandidate) != null;
 	}
 	
-	public static class MethodCleanableAddapter implements Cleanable {
-		
-		final private Collection<Method> cleanerMethods;
-		final private Object cleanable;
-		
-		public MethodCleanableAddapter(Object cleanable, Collection<Method> cleanerMethods) {
-			this.cleanable = cleanable;
-			this.cleanerMethods = cleanerMethods;
-		}
-
-		@Override
-		public void clean() {
-			for(Method method: cleanerMethods) {
-				try {
-					method.invoke(cleanable);
-				} catch (Throwable throwable) {
-					// DO NOTHING
-				}
-			}
-		}
-
-	}
-
 }
