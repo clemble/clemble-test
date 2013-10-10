@@ -10,13 +10,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.stresstest.runners.CheckAfter;
 import com.stresstest.runners.RunInParallel;
 import com.stresstest.runners.RunTimes;
 import com.stresstest.runners.SingleRun;
 
-@RunWith(SpringJUnit4FrequentClassRunner.class)
+@RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = SpringJUnit4FrequentClassRunnerSingleRunTest.EmptySpringConfiguration.class)
 @RunInParallel(maxThreads = 50)
 @RunTimes(500)

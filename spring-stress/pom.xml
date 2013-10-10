@@ -1,8 +1,8 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<artifactId>spring-runner</artifactId>
-	<name>spring-runner</name>
+	<artifactId>spring-stress</artifactId>
+	<name>spring-stress</name>
 	<parent>
 		<groupId>com.stresstest</groupId>
 		<artifactId>parent</artifactId>
@@ -11,11 +11,21 @@
 	<dependencies>
 		<dependency>
 			<groupId>com.stresstest</groupId>
-			<artifactId>common-spring</artifactId>
+			<artifactId>runners</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.stresstest</groupId>
-			<artifactId>runners</artifactId>
+			<artifactId>common-spring</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -26,11 +36,7 @@
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-tx</artifactId>
 			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<scope>compile</scope>
+			<optional>true</optional>
 		</dependency>
 
 	</dependencies>

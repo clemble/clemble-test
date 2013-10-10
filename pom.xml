@@ -36,11 +36,10 @@
     <modules>
         <module>common</module>
         <module>common-spring</module>
-        <module>spring-cleaners</module>
-        <module>jvm-support</module>
-        <module>runners</module>
-        <module>spring-runners</module>
         <module>object-generator</module>
+        <module>jvm-support</module>
+        <module>junit-stress</module>
+        <module>spring-stress</module>
         <module>jbehave-stress</module>
     </modules>
 
@@ -54,7 +53,7 @@
         <javax.validation.version>1.0.0.GA</javax.validation.version>
         <javax.inject.version>1</javax.inject.version>
         <!-- Test dependencies -->
-        <junit.version>4.10</junit.version>
+        <junit.version>4.11</junit.version>
         <!-- Build plugins dependencies -->
         <maven.compile.plugin.version>2.3.2</maven.compile.plugin.version>
         <java.version>1.6</java.version>
