@@ -1,4 +1,4 @@
-package com.stresstest.cleaners;
+package com.stresstest.spring.cleaners;
 
 import com.stresstest.spring.cleaners.Cleanable;
 

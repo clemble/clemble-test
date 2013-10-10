@@ -1,4 +1,4 @@
-package com.stresstest.cleaners;
+package com.stresstest.spring.cleaners;
 
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -19,7 +19,7 @@ import com.stresstest.spring.cleaners.context.CleanerContext;
 public class SimpleCleanableTest {
 
 	@Configuration
-	@EnableContextCleaner(packages = "com.stresstest.cleaners")
+	@EnableContextCleaner(packages = "com.stresstest.spring.cleaners")
 	public static class SimpleConfiguration {
 
 		@Bean
@@ -38,10 +38,6 @@ public class SimpleCleanableTest {
 	final static private AtomicReference<SimpleCleanable> cleanable = new AtomicReference<SimpleCleanable>();
 
 	private int order = 0;
-
-	public SimpleCleanableTest() {
-
-	}
 
 	@Test
 	public void testGenerated() {
