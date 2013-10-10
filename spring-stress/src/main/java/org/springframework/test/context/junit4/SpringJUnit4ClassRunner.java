@@ -418,6 +418,15 @@ public class SpringJUnit4ClassRunner extends BlockJUnit4ClassRunner {
 		return new SpringRepeat(next, frameworkMethod.getMethod(), repeat);
 	}
 	
+	/** =============================================================================================
+	 * 
+	 * Upper is a copy of SpringJUnit4ClassRunner
+	 * Lower is changes needed to run FrequentRunner
+	 * 
+	 *  =============================================================================================
+	 * */
+	
+	
 	final private AtomicReference<Object> createdTestRef = new AtomicReference<Object>();
 	
 	@Override
