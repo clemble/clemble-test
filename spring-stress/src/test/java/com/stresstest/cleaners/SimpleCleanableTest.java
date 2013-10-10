@@ -11,8 +11,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.stresstest.cleaners.configuration.EnableContextCleaner;
-import com.stresstest.cleaners.context.CleanerContext;
+import com.stresstest.spring.cleaners.configuration.EnableContextCleaner;
+import com.stresstest.spring.cleaners.context.CleanerContext;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = { SimpleCleanableTest.SimpleConfiguration.class })

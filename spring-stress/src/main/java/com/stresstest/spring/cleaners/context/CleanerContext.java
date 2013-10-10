@@ -1,10 +1,10 @@
-package com.stresstest.cleaners.context;
+package com.stresstest.spring.cleaners.context;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import com.stresstest.cleaners.Cleanable;
-import com.stresstest.cleaners.CleanableFactory;
+import com.stresstest.spring.cleaners.Cleanable;
+import com.stresstest.spring.cleaners.CleanableFactory;
 
 public class CleanerContext {
 

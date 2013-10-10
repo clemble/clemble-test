@@ -1,4 +1,4 @@
-package com.stresstest.cleaners;
+package com.stresstest.spring.cleaners;
 
 public interface CleanableService {
 

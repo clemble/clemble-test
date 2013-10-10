@@ -1,4 +1,4 @@
-package com.stresstest.cleaners.annotation;
+package com.stresstest.spring.cleaners.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

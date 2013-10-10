@@ -1,9 +1,9 @@
-package com.stresstest.cleaners.configuration;
+package com.stresstest.spring.cleaners.configuration;
 
 import org.springframework.test.context.TestContext;
 import org.springframework.test.context.TestExecutionListener;
 
-import com.stresstest.cleaners.context.CleanerContext;
+import com.stresstest.spring.cleaners.context.CleanerContext;
 
 public class ContextCleanerTestExecutionListener implements TestExecutionListener {
 

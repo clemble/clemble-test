@@ -1,4 +1,4 @@
-package com.stresstest.cleaners.configuration;
+package com.stresstest.spring.cleaners.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -6,8 +6,8 @@ import org.springframework.context.annotation.ImportAware;
 import org.springframework.core.annotation.AnnotationAttributes;
 import org.springframework.core.type.AnnotationMetadata;
 
-import com.stresstest.cleaners.aop.CleanerSpringAdvisor;
-import com.stresstest.cleaners.context.CleanerContext;
+import com.stresstest.spring.cleaners.aop.CleanerSpringAdvisor;
+import com.stresstest.spring.cleaners.context.CleanerContext;
 import com.stresstest.spring.listener.TestContextListenerRegistrator;
 
 @Configuration

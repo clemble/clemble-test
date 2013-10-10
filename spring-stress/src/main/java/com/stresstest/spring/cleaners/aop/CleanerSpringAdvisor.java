@@ -1,4 +1,4 @@
-package com.stresstest.cleaners.aop;
+package com.stresstest.spring.cleaners.aop;
 
 import org.aopalliance.aop.Advice;
 import org.aopalliance.intercept.MethodInterceptor;
@@ -18,8 +18,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
 import org.springframework.util.ClassUtils;
 
-import com.stresstest.cleaners.CleanableFactory;
-import com.stresstest.cleaners.context.CleanerContext;
+import com.stresstest.spring.cleaners.CleanableFactory;
+import com.stresstest.spring.cleaners.context.CleanerContext;
 
 public class CleanerSpringAdvisor extends ProxyConfig implements BeanPostProcessor, BeanClassLoaderAware, BeanFactoryAware,
 		InitializingBean, Ordered {

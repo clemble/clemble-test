@@ -1,4 +1,4 @@
-package com.stresstest.cleaners.configuration;
+package com.stresstest.spring.cleaners.configuration;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;

@@ -1,4 +1,4 @@
-package com.stresstest.cleaners.aop;
+package com.stresstest.spring.cleaners.aop;
 
 import java.lang.reflect.Method;
 
@@ -9,8 +9,8 @@ import org.springframework.aop.Pointcut;
 import org.springframework.aop.support.AbstractPointcutAdvisor;
 import org.springframework.aop.support.annotation.AnnotationMethodMatcher;
 
-import com.stresstest.cleaners.CleanableFactory;
-import com.stresstest.cleaners.annotation.Cleaner;
+import com.stresstest.spring.cleaners.CleanableFactory;
+import com.stresstest.spring.cleaners.annotation.Cleaner;
 
 public class CleanerPointcutAdvisor extends AbstractPointcutAdvisor {
 
