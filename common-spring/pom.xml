@@ -7,6 +7,7 @@
 		<version>0.1.0</version>
 	</parent>
 	<artifactId>common-spring</artifactId>
+	<name>common-spring</name>
 	<dependencies>
 		<dependency>
 			<groupId>com.stresstest</groupId>

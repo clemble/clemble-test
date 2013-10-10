@@ -5,6 +5,8 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import org.junit.AfterClass;
 import org.junit.internal.runners.statements.RunAfters;
+import org.junit.runner.Description;
+import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.BlockJUnit4ClassRunner;
 import org.junit.runners.model.FrameworkMethod;
@@ -14,24 +16,30 @@ import org.junit.runners.model.Statement;
 public class FrequentRunner extends BlockJUnit4ClassRunner {
 
     final private AtomicReference<Object> createdTestRef = new AtomicReference<Object>();
-    final private Class<?> klassToRun;
 
     public FrequentRunner(Class<?> klass) throws InitializationError {
         super(klass);
-        this.klassToRun = klass;
     }
 
     @Override
     public void run(final RunNotifier notifier) {
-        // Step 1. Executing klassToRun
-        FrequentTestRunner.run(klassToRun, new Runnable() {
+        // Step 0. Preparing test
+        try {
+            createdTestRef.set(super.createTest());
+        } catch (Exception exception) {
+            notifier.fireTestFailure(new Failure(Description.createSuiteDescription(getTestClass().getJavaClass()), exception));
+        }
+        // Step 1. Invoking CheckBefore
+        FrequentRunnerUtils.runChecks(CheckBefore.class, notifier, createdTestRef.get(), getTestClass());
+        // Step 2. Executing klassToRun
+        FrequentTestRunner.run(getTestClass().getJavaClass(), new Runnable() {
             @Override
             public void run() {
                 execute(notifier);
             }
         });
-        // Step 2. Invoking CheckAfter
-        FrequentRunnerUtils.runAfterChecks(notifier, createdTestRef.get(), getTestClass());
+        // Step 3. Invoking CheckAfter
+        FrequentRunnerUtils.runChecks(CheckAfter.class, notifier, createdTestRef.get(), getTestClass());
     }
 
     @Override
@@ -57,9 +65,7 @@ public class FrequentRunner extends BlockJUnit4ClassRunner {
 
     @Override
     public Object createTest() throws Exception {
-         Object cratedTest = super.createTest();
-         createdTestRef.set(cratedTest);
-         return cratedTest;
+         return createdTestRef.get();
     }
 
     public void execute(final RunNotifier notifier) {

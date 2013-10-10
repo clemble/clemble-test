@@ -12,8 +12,14 @@ import org.junit.runner.RunWith;
 @RunTimes(500)
 public class FrequentRunnerSingleRunTest {
 	
-	private static AtomicInteger onceCounter = new AtomicInteger(0);
-	private static AtomicInteger parallelCounter = new AtomicInteger(0);
+	private AtomicInteger onceCounter = new AtomicInteger(0);
+	private AtomicInteger parallelCounter = new AtomicInteger(0);
+
+	@CheckBefore
+	public void checkBefore() {
+		assertEquals(onceCounter.get(), 0);
+		assertEquals(parallelCounter.get(), 0);
+	}
 
 	@CheckAfter
 	public void checkAfter() {

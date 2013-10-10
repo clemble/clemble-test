@@ -5,22 +5,24 @@ package com.stresstest.runners.spring;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
+import org.junit.runner.Description;
+import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.InitializationError;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import com.stresstest.runners.CheckAfter;
+import com.stresstest.runners.CheckBefore;
 import com.stresstest.runners.FrequentRunnerUtils;
 import com.stresstest.runners.FrequentTestRunner;
 
 public class SpringJUnit4FrequentClassRunner extends SpringJUnit4ClassRunner {
 
     final private AtomicReference<Object> createdTestRef = new AtomicReference<Object>();
-    final private Class<?> klass;
 
     public SpringJUnit4FrequentClassRunner(Class<?> klass) throws InitializationError {
         super(klass);
-        this.klass = klass;
     }
 
     @Override
@@ -30,15 +32,23 @@ public class SpringJUnit4FrequentClassRunner extends SpringJUnit4ClassRunner {
 
     @Override
     public void run(final RunNotifier notifier) {
+        // Step 0. Preparing test
+        try {
+            createdTestRef.set(super.createTest());
+        } catch (Exception exception) {
+            notifier.fireTestFailure(new Failure(Description.createSuiteDescription(getTestClass().getClass()), exception));
+        }
+        // Step 1. Invoking CheckBefore
+        FrequentRunnerUtils.runChecks(CheckBefore.class, notifier, createdTestRef.get(), getTestClass());
     	// Step 1. Running actual test
-        FrequentTestRunner.run(klass, new Runnable() {
+        FrequentTestRunner.run(getTestClass().getJavaClass(), new Runnable() {
             @Override
             public void run() {
                 execute(notifier);
             }
         });
         // Step 2. Running after checks
-        FrequentRunnerUtils.runAfterChecks(notifier, createdTestRef.get(), getTestClass());
+        FrequentRunnerUtils.runChecks(CheckAfter.class, notifier, createdTestRef.get(), getTestClass());
     }
 
     @Override
@@ -53,9 +63,7 @@ public class SpringJUnit4FrequentClassRunner extends SpringJUnit4ClassRunner {
 
     @Override
     public Object createTest() throws Exception {
-         Object cratedTest = super.createTest();
-         createdTestRef.set(cratedTest);
-         return cratedTest;
+         return createdTestRef.get();
     }
 
     public void execute(final RunNotifier notifier) {
