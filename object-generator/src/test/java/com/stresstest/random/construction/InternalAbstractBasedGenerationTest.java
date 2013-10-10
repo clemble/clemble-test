@@ -3,7 +3,7 @@ package com.stresstest.random.construction;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.stresstest.random.ObjectGenerator;
+import com.clemble.test.random.ObjectGenerator;
 
 public class InternalAbstractBasedGenerationTest {
 

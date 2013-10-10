@@ -47,8 +47,8 @@ import org.springframework.util.Assert;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
 
-import com.stresstest.concurrent.ThreadLocalMap;
-import com.stresstest.concurrent.ValueFactory;
+import com.clemble.test.concurrent.ThreadLocalMap;
+import com.clemble.test.concurrent.ValueFactory;
 
 /**
  * <p>

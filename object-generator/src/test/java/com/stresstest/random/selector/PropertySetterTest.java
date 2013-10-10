@@ -6,14 +6,14 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.stresstest.random.ObjectGenerator;
-import com.stresstest.random.ValueGenerator;
-import com.stresstest.random.constructor.ClassPropertySetter;
-import com.stresstest.random.constructor.ClassConstructorSimple;
-import com.stresstest.random.constructor.ClassPropertySetterRegistry;
-import com.stresstest.random.constructor.ClassValueGenerator;
-import com.stresstest.random.generator.RandomValueGenerator;
-import com.stresstest.random.generator.SequentialValueGenerator;
+import com.clemble.test.random.ObjectGenerator;
+import com.clemble.test.random.ValueGenerator;
+import com.clemble.test.random.constructor.ClassConstructorSimple;
+import com.clemble.test.random.constructor.ClassPropertySetter;
+import com.clemble.test.random.constructor.ClassPropertySetterRegistry;
+import com.clemble.test.random.constructor.ClassValueGenerator;
+import com.clemble.test.random.generator.RandomValueGenerator;
+import com.clemble.test.random.generator.SequentialValueGenerator;
 
 @SuppressWarnings("all")
 public class PropertySetterTest {

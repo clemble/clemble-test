@@ -1,6 +1,6 @@
 package com.stresstest.random.simple;
 
-import com.stresstest.random.ObjectGenerator;
+import com.clemble.test.random.ObjectGenerator;
 
 public class BooleanObjectTest extends AbstractSimpleObjectTest<BooleanObject> {
 

@@ -1,13 +1,13 @@
 package com.stresstest.random.construction;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.stresstest.random.ObjectGenerator;
-import com.stresstest.random.generator.SequentialValueGenerator;
+import com.clemble.test.random.ObjectGenerator;
+import com.clemble.test.random.generator.SequentialValueGenerator;
 
 public class IndirrectSetTest {
 

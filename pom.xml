@@ -1,7 +1,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.stresstest</groupId>
+    <groupId>com.clemble.test</groupId>
     <artifactId>parent</artifactId>
     <version>0.1.0</version>
 
@@ -36,11 +36,11 @@
     <modules>
         <module>common</module>
         <module>common-spring</module>
-        <module>object-generator</module>
         <module>jvm-support</module>
         <module>junit-stress</module>
         <module>spring-stress</module>
         <module>jbehave-stress</module>
+        <module>object-generator</module>
     </modules>
 
     <properties>
@@ -71,32 +71,32 @@
             </dependency>
 
             <dependency>
-                <groupId>com.stresstest</groupId>
+                <groupId>com.clemble.test</groupId>
                 <artifactId>common</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.stresstest</groupId>
+                <groupId>com.clemble.test</groupId>
                 <artifactId>common-spring</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.stresstest</groupId>
+                <groupId>com.clemble.test</groupId>
                 <artifactId>junit-stress</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.stresstest</groupId>
+                <groupId>com.clemble.test</groupId>
                 <artifactId>jvm-support</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.stresstest</groupId>
+                <groupId>com.clemble.test</groupId>
                 <artifactId>spring-stress</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.stresstest</groupId>
+                <groupId>com.clemble.test</groupId>
                 <artifactId>object-generator</artifactId>
                 <version>${project.version}</version>
             </dependency>

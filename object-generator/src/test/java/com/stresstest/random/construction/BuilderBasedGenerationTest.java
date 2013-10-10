@@ -4,8 +4,8 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import com.stresstest.random.ObjectGenerator;
-import com.stresstest.runners.FrequentRunner;
+import com.clemble.test.random.ObjectGenerator;
+import com.clemble.test.runners.FrequentRunner;
 
 @RunWith(FrequentRunner.class)
 public class BuilderBasedGenerationTest {

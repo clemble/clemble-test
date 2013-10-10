@@ -1,10 +1,9 @@
 package com.stresstest.random.factory;
 
-import junit.framework.Assert;
-
+import org.junit.Assert;
 import org.junit.Test;
 
-import com.stresstest.random.generator.RandomValueGenerator;
+import com.clemble.test.random.generator.RandomValueGenerator;
 
 public class RandomValueGeneratorTest {
 

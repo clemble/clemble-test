@@ -1,11 +1,13 @@
 package com.stresstest.random.construction;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.junit.Test;
 
-import com.stresstest.random.ObjectGenerator;
-import com.stresstest.random.ValueGenerator;
+import com.clemble.test.random.ObjectGenerator;
+import com.clemble.test.random.ValueGenerator;
+import com.clemble.test.random.constructor.ClassConstructorBuilder;
+import com.clemble.test.random.constructor.ClassValueGenerator;
 import com.stresstest.random.construction.external.PrivateBuilderBasedClass;
 import com.stresstest.random.construction.external.PrivateClass;
 import com.stresstest.random.construction.external.PublicAbstractBuilderBasedClass;
@@ -17,8 +19,6 @@ import com.stresstest.random.construction.external.UncreatableInterface;
 import com.stresstest.random.construction.external.UncreatableObject;
 import com.stresstest.random.construction.external.impl.PublicAbstractClassImpl;
 import com.stresstest.random.construction.external.impl.PublicInterfaceImpl;
-import com.stresstest.random.constructor.ClassConstructorBuilder;
-import com.stresstest.random.constructor.ClassValueGenerator;
 
 public class ExternalPublicBasedGenerationTest {
 

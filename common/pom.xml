@@ -1,16 +1,17 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <groupId>com.stresstest</groupId>
-    <artifactId>parent</artifactId>
-    <version>0.1.0</version>
-  </parent>
-  <artifactId>common</artifactId>
-  <name>common</name>
-  <dependencies>
-          <dependency>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.clemble.test</groupId>
+        <artifactId>parent</artifactId>
+        <version>0.1.0</version>
+    </parent>
+    <artifactId>common</artifactId>
+    <name>common</name>
+    <dependencies>
+        <dependency>
             <groupId>org.reflections</groupId>
             <artifactId>reflections</artifactId>
         </dependency>
-  </dependencies>
+    </dependencies>
 </project>

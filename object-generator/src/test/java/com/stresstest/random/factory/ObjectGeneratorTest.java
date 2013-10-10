@@ -7,7 +7,7 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-import com.stresstest.random.ObjectGenerator;
+import com.clemble.test.random.ObjectGenerator;
 
 @SuppressWarnings("all")
 public class ObjectGeneratorTest {

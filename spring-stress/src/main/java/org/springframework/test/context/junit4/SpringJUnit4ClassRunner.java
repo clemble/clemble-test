@@ -50,10 +50,10 @@ import org.springframework.test.context.junit4.statements.SpringFailOnTimeout;
 import org.springframework.test.context.junit4.statements.SpringRepeat;
 import org.springframework.util.ReflectionUtils;
 
-import com.stresstest.runners.CheckAfter;
-import com.stresstest.runners.CheckBefore;
-import com.stresstest.runners.FrequentRunnerUtils;
-import com.stresstest.runners.FrequentTestRunner;
+import com.clemble.test.runners.CheckAfter;
+import com.clemble.test.runners.CheckBefore;
+import com.clemble.test.runners.FrequentRunnerUtils;
+import com.clemble.test.runners.FrequentTestRunner;
 
 /**
  * <p>

@@ -1,15 +1,15 @@
 package com.stresstest.random.construction;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.junit.Test;
 
-import com.stresstest.random.ValueGenerator;
-import com.stresstest.random.ValueGeneratorFactory;
-import com.stresstest.random.constructor.ClassConstructorSimple;
-import com.stresstest.random.constructor.ClassConstructorFactory;
-import com.stresstest.random.constructor.ClassValueGenerator;
-import com.stresstest.random.generator.RandomValueGeneratorFactory;
+import com.clemble.test.random.ValueGenerator;
+import com.clemble.test.random.ValueGeneratorFactory;
+import com.clemble.test.random.constructor.ClassConstructorFactory;
+import com.clemble.test.random.constructor.ClassConstructorSimple;
+import com.clemble.test.random.constructor.ClassValueGenerator;
+import com.clemble.test.random.generator.RandomValueGeneratorFactory;
 
 @SuppressWarnings("unused")
 public class ConstructionFactoryStructureTest {

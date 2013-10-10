@@ -2,7 +2,7 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>com.stresstest</groupId>
+        <groupId>com.clemble.test</groupId>
         <artifactId>parent</artifactId>
         <version>0.1.0</version>
     </parent>
@@ -10,11 +10,11 @@
     <name>jbehave-stress</name>
     <dependencies>
         <dependency>
-            <groupId>com.stresstest</groupId>
+            <groupId>com.clemble.test</groupId>
             <artifactId>common-spring</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.stresstest</groupId>
+            <groupId>com.clemble.test</groupId>
             <artifactId>jvm-support</artifactId>
         </dependency>
         <dependency>
@@ -66,7 +66,7 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
-                    <argLine>-javaagent:${settings.localRepository}/com/stresstest/jvm-support/${project.version}/jvm-support-${project.version}.jar</argLine>
+                    <argLine>-javaagent:${settings.localRepository}/com/clemble/test/jvm-support/${project.version}/jvm-support-${project.version}.jar</argLine>
                 </configuration>
             </plugin>
         </plugins>

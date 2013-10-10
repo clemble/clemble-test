@@ -3,10 +3,10 @@ package com.stresstest.random.factory;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.stresstest.random.ValueGenerator;
-import com.stresstest.random.ValueGeneratorFactory;
-import com.stresstest.random.generator.CachedValueGeneratorFactory;
-import com.stresstest.random.generator.RandomValueGeneratorFactory;
+import com.clemble.test.random.ValueGenerator;
+import com.clemble.test.random.ValueGeneratorFactory;
+import com.clemble.test.random.generator.CachedValueGeneratorFactory;
+import com.clemble.test.random.generator.RandomValueGeneratorFactory;
 
 @SuppressWarnings("all")
 public class ValueGeneratorsCaching {

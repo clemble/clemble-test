@@ -2,10 +2,9 @@ package com.stresstest.random.construction;
 
 import org.junit.Test;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
-import com.stresstest.random.ObjectGenerator;
-
+import com.clemble.test.random.ObjectGenerator;
 
 @SuppressWarnings("unused")
 public class MultiLevelConstructionTest {

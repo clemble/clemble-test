@@ -1,10 +1,10 @@
 package com.stresstest.random.simple;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.junit.Test;
 
-import com.stresstest.random.ObjectGenerator;
+import com.clemble.test.random.ObjectGenerator;
 
 abstract public class AbstractSimpleObjectTest<T> {
     

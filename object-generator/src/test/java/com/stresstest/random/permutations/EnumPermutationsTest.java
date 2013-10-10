@@ -2,11 +2,11 @@ package com.stresstest.random.permutations;
 
 import java.util.Iterator;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.junit.Test;
 
-import com.stresstest.random.ObjectGenerator;
+import com.clemble.test.random.ObjectGenerator;
 import com.stresstest.random.permutations.external.ExternalObjectWithDefaultEnum;
 import com.stresstest.random.permutations.external.ExternalObjectWithPublicEnum;
 import com.stresstest.random.permutations.external.ExternalPublicEnum;

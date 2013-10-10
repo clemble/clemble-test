@@ -4,14 +4,14 @@
     <artifactId>object-generator</artifactId>
     <name>object-generator</name>
     <parent>
-        <groupId>com.stresstest</groupId>
+        <groupId>com.clemble.test</groupId>
         <artifactId>parent</artifactId>
         <version>0.1.0</version>
     </parent>
 
     <dependencies>
         <dependency>
-            <groupId>com.stresstest</groupId>
+            <groupId>com.clemble.test</groupId>
             <artifactId>common</artifactId>
         </dependency>
         <dependency>
@@ -27,16 +27,16 @@
             <artifactId>guava</artifactId>
         </dependency>
         <dependency>
-			<groupId>javax.validation</groupId>
-			<artifactId>validation-api</artifactId>
-		</dependency>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+        </dependency>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>com.stresstest</groupId>
+            <groupId>com.clemble.test</groupId>
             <artifactId>junit-stress</artifactId>
             <scope>test</scope>
         </dependency>

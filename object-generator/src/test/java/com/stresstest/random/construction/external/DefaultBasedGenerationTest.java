@@ -1,15 +1,15 @@
 package com.stresstest.random.construction.external;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.junit.Test;
 
-import com.stresstest.random.ObjectGenerator;
-import com.stresstest.random.ValueGenerator;
-import com.stresstest.random.ValueGeneratorFactory;
-import com.stresstest.random.constructor.ClassConstructorBuilder;
-import com.stresstest.random.constructor.ClassValueGenerator;
-import com.stresstest.random.generator.RandomValueGeneratorFactory;
+import com.clemble.test.random.ObjectGenerator;
+import com.clemble.test.random.ValueGenerator;
+import com.clemble.test.random.ValueGeneratorFactory;
+import com.clemble.test.random.constructor.ClassConstructorBuilder;
+import com.clemble.test.random.constructor.ClassValueGenerator;
+import com.clemble.test.random.generator.RandomValueGeneratorFactory;
 
 public class DefaultBasedGenerationTest {
 
