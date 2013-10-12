@@ -4,11 +4,13 @@
 *.jar
 *.war
 *.ear
+*.iml
 # Eclipse configurations #
 .classpath
 .project
 .settings
 .checkstyle
+**/*.iml
 **/.classpath
 **/.project
 **/.settings
@@ -22,6 +24,7 @@ build
 **/bin
 **/*.xml.versionsBackup
 # Non related objects #
+.idea
 .gradle
 .DS_Store
 
