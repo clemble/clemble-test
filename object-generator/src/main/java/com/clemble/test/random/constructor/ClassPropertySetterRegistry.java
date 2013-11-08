@@ -64,7 +64,9 @@ final public class ClassPropertySetterRegistry {
         // Step 2. Filter all abstract properties
         for (AbstractPropertySetter<?> abstractProperty: abstractPropertySelectors) {
             if(abstractProperty.isApplicable(applicableClass)) {
-                applicableSelectors.add(constructSetter(applicableClass.getSourceClass(), abstractProperty.getName(), abstractProperty.getValueGenerator()));
+                ClassPropertySetter<?> propertySetter = constructSetter(applicableClass.getSourceClass(), abstractProperty.getName(), abstractProperty.getValueGenerator());
+                if(propertySetter != null)
+                    applicableSelectors.add(propertySetter);
             }
         }
         // Step 3. Returning result set to the

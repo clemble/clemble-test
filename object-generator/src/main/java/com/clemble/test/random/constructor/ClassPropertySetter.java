@@ -249,6 +249,9 @@ abstract public class ClassPropertySetter<T> {
     @SuppressWarnings("unchecked")
     public static <T> ClassPropertySetter<T> create(final ClassAccessWrapper<?> sourceClass, final Field field, final Method method,
             ValueGenerator<T> valueGenerator) {
+        if(field == null && method == null)
+            return null;
+
         Class<T> targetClass = (Class<T>) (field != null ? field.getType() : method.getParameterTypes()[0]);
         if (valueGenerator == null) {
             if (Collection.class.isAssignableFrom(targetClass)) {

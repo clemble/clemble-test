@@ -212,7 +212,7 @@ public abstract class RandomValueGenerator<T> extends AbstractValueGenerator<T> 
 
         @Override
         public String generate() {
-            return RandomStringUtils.random(DEFAULT_GENERATOR_SIZE);
+            return RandomStringUtils.randomAscii(DEFAULT_GENERATOR_SIZE);
         }
     };
 
