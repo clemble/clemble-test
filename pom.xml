@@ -21,15 +21,15 @@
     </licenses>
 
     <scm>
-        <connection>scm:git:git@github.com:AntonOparin/stress-test.git</connection>
-        <url>scm:git:git@github.com:AntonOparin/stress-test.git</url>
-        <developerConnection>scm:git:git@github.com:AntonOparin/stress-test.git</developerConnection>
+        <connection>scm:git:git@github.com:clemble/clemble-test.git</connection>
+        <url>scm:git:git@github.com:clemble/clemble-test.git</url>
+        <developerConnection>scm:git:git@github.com:clemble/clemble-test.git</developerConnection>
     </scm>
 
     <developers>
         <developer>
             <name>Anton Oparin</name>
-            <email>mavarazy@gmail.com</email>
+            <email>antono@clemble.com</email>
         </developer>
     </developers>
 
