@@ -41,6 +41,7 @@
         <module>spring-stress</module>
         <module>jbehave-stress</module>
         <module>object-generator</module>
+        <module>spring-android</module>
     </modules>
 
     <properties>
@@ -54,6 +55,7 @@
         <javax.inject.version>1</javax.inject.version>
         <!-- Test dependencies -->
         <junit.version>4.11</junit.version>
+        <robolectric.version>2.2</robolectric.version>
         <!-- Build plugins dependencies -->
         <maven.compile.plugin.version>2.3.2</maven.compile.plugin.version>
         <java.version>1.6</java.version>
@@ -68,6 +70,12 @@
                 <groupId>cglib</groupId>
                 <artifactId>cglib-nodep</artifactId>
                 <version>${cglib.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.robolectric</groupId>
+                <artifactId>robolectric</artifactId>
+                <version>${robolectric.version}</version>
             </dependency>
 
             <dependency>
