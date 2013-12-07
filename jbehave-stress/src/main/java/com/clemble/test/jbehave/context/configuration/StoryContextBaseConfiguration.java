@@ -15,8 +15,8 @@ import com.clemble.test.jbehave.context.StoryContext;
 import com.clemble.test.jbehave.context.aop.StoryContextConverter;
 import com.clemble.test.jbehave.context.aop.StoryContextSpringAdvisor;
 import com.clemble.test.jbehave.support.internal.StoryContextClassFileTransformer;
-import com.clemble.test.support.internal.startup.Startup;
 import com.clemble.test.spring.listener.TestContextListenerRegistrator;
+import com.clemble.test.support.internal.startup.Startup;
 
 @Configuration
 public class StoryContextBaseConfiguration implements ImportAware {
@@ -55,7 +55,7 @@ public class StoryContextBaseConfiguration implements ImportAware {
     @Bean
     @Singleton
     public TestContextListenerRegistrator storyContextListenerProcessingBean() {
-        return new TestContextListenerRegistrator(new StoryContextTestExecutionListener());
+        return new TestContextListenerRegistrator();
     }
 
     @Override

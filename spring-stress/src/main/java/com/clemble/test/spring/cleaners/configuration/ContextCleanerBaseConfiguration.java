@@ -16,13 +16,11 @@ public class ContextCleanerBaseConfiguration implements ImportAware {
     protected AnnotationAttributes enableContextCleaner;
 
     private CleanerContext cleanerContext = new CleanerContext();
-    private ContextCleanerTestExecutionListener cleanerTestExecutionListener = new ContextCleanerTestExecutionListener(cleanerContext);
-    private TestContextListenerRegistrator contextListenerRegistrator = new TestContextListenerRegistrator(cleanerTestExecutionListener);
 
     @Bean
     public CleanerSpringAdvisor cleanerSpringAdvisor() {
         if (enableContextCleaner != null) {
-            return new CleanerSpringAdvisor(enableContextCleaner.getStringArray("packages"));
+            return new CleanerSpringAdvisor(enableContextCleaner.getStringArray("value"));
         } else {
             return new CleanerSpringAdvisor(new String[0]);
         }
@@ -35,12 +33,12 @@ public class ContextCleanerBaseConfiguration implements ImportAware {
 
     @Bean
     public TestContextListenerRegistrator contextListenerRegistrator() {
-        return contextListenerRegistrator;
+        return new TestContextListenerRegistrator();
     }
 
     @Bean
     public ContextCleanerTestExecutionListener cleanerTestExecutionListener() {
-        return cleanerTestExecutionListener;
+        return new ContextCleanerTestExecutionListener(cleanerContext);
     }
 
     @Override

@@ -19,7 +19,7 @@ import com.clemble.test.spring.cleaners.context.CleanerContext;
 public class AnnotationCleanableTest {
 
 	@Configuration
-	@EnableContextCleaner(packages = "com.clemble.test.spring.cleaners")
+	@EnableContextCleaner("com.clemble.test.spring.cleaners")
 	public static class AnnotationConfiguration {
 
 		@Bean
