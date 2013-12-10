@@ -1,5 +1,5 @@
 ##Stress Test
-[![Build Status](https://travis-ci.org/clemble/test.png)](https://travis-ci.org/AntonOparin/stress-test.png)
+[![Build Status](https://travis-ci.org/clemble/clemble-test.png)](https://travis-ci.org/clemble/clemble-test.png)
 
 Collection of JUnit tools for more productive testing.
 
