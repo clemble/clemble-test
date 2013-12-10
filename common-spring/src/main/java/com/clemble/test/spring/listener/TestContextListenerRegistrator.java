@@ -23,16 +23,13 @@ public class TestContextListenerRegistrator implements BeanPostProcessor, Ordere
     }
 
     public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
-        if (bean instanceof TestContextManager) {
-            if (contextManager != null)
-                throw new RuntimeException("TestContextManager already defined");
+        if (bean instanceof TestContextManager && bean != contextManager) {
             contextManager = (TestContextManager) bean;
             contextManager.registerTestExecutionListeners(testExecutionListeners.toArray(new TestExecutionListener[0]));
         } else if (bean instanceof TestExecutionListener) {
+            testExecutionListeners.add((TestExecutionListener) bean);
             if(contextManager != null) {
                 contextManager.registerTestExecutionListeners((TestExecutionListener) bean);
-            } else {
-                testExecutionListeners.add((TestExecutionListener) bean);
             }
         }
 
