@@ -4,6 +4,9 @@ import com.clemble.test.random.constructor.ClassPropertySetterRegistry;
 import com.clemble.test.random.generator.CachedValueGeneratorFactory;
 import com.clemble.test.random.generator.RandomValueGeneratorFactory;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ObjectGenerator {
 
     final private static ClassPropertySetterRegistry SETTER_MANAGER = new ClassPropertySetterRegistry();
@@ -18,6 +21,18 @@ public class ObjectGenerator {
 
     public static <T> T generate(Class<T> classToGenerate) {
         return getValueGenerator(classToGenerate).generate();
+    }
+
+    public static <T> List<T> generateList(Class<T> classToGenerate) {
+        return generateList(classToGenerate, 2);
+    }
+
+    public static <T> List<T> generateList(Class<T> classToGenerate, int num) {
+        ValueGenerator<T> generator = getValueGenerator(classToGenerate);
+        List<T> results = new ArrayList<T>();
+        for(int i = 0; i < num; i++)
+            results.add(generator.generate());
+        return results;
     }
 
     public static <T> ValueGenerator<T> getValueGenerator(Class<T> classToGenerate) {

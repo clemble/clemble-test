@@ -40,12 +40,21 @@ abstract public class ClassConstructor<T> {
 	@SuppressWarnings({"unchecked"})
     public static <T> ClassConstructor<T> construct(final ClassAccessWrapper<?> classToGenerate, final ValueGeneratorFactory valueGeneratorFactory) {
         ClassConstructor<T> objectConstructor = null;
-        if ((objectConstructor = ClassConstructorFactory.build(classToGenerate, valueGeneratorFactory)) != null)
+        if ((objectConstructor = ClassConstructorFactory.build(classToGenerate, valueGeneratorFactory)) != null && canConstruct(objectConstructor))
             return objectConstructor;
-        if ((objectConstructor = ClassConstructorBuilder.build(classToGenerate, valueGeneratorFactory)) != null)
+        if ((objectConstructor = ClassConstructorBuilder.build(classToGenerate, valueGeneratorFactory)) != null && canConstruct(objectConstructor))
             return objectConstructor;
-        return (ClassConstructor<T>) ((classToGenerate.getModifiers() & Modifier.ABSTRACT) == 0 ? ClassConstructorSimple.build(classToGenerate,
-                valueGeneratorFactory) : null);
+        return (ClassConstructor<T>) ((classToGenerate.getModifiers() & Modifier.ABSTRACT) == 0 ? ClassConstructorSimple.build(classToGenerate, valueGeneratorFactory) : null);
+    }
+
+    private static boolean canConstruct(ClassConstructor<?> constructor) {
+        try {
+            constructor.construct();
+            // Step 4.2. We were able to generate value, continue
+            return true;
+        } catch (Throwable throwable) {
+        }
+        return false;
     }
 
 }

@@ -196,9 +196,10 @@ public class ConstructionBuilderStructureTest {
         }
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test
     public void testUnconstructableInitiation() {
         UnconstructableBuilderBasedClass result = ObjectGenerator.generate(UnconstructableBuilderBasedClass.class);
+        Assert.assertNotNull(result);
     }
 
     public static class UnconstructableBuilderBasedClass2 {
@@ -234,8 +235,9 @@ public class ConstructionBuilderStructureTest {
         }
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test
     public void testUnconstructableInitiation2() {
         UnconstructableBuilderBasedClass2 result = ObjectGenerator.generate(UnconstructableBuilderBasedClass2.class);
+        Assert.assertNotNull(result);
     }
 }
