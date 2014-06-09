@@ -3,13 +3,14 @@
     <parent>
         <groupId>com.clemble.test</groupId>
         <artifactId>parent</artifactId>
-        <version>0.1.1</version>
+        <version>0.1.3-SNAPSHOT</version>
     </parent>
-    <artifactId>spring-android</artifactId>
+    <artifactId>common</artifactId>
+    <name>common</name>
     <dependencies>
         <dependency>
-            <groupId>org.robolectric</groupId>
-            <artifactId>robolectric</artifactId>
+            <groupId>org.reflections</groupId>
+            <artifactId>reflections</artifactId>
         </dependency>
     </dependencies>
 </project>

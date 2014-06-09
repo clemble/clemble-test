@@ -3,7 +3,7 @@
     <parent>
         <groupId>com.clemble.test</groupId>
         <artifactId>parent</artifactId>
-        <version>0.1.1</version>
+        <version>0.1.4-SNAPSHOT</version>
     </parent>
     <artifactId>common</artifactId>
     <name>common</name>
