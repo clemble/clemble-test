@@ -28,6 +28,12 @@ public class AsyncCompletionUtils {
             try {
                 if(check.check())
                     return;
+                else
+                    try {
+                        Thread.sleep(300);
+                    } catch (InterruptedException e) {
+                        throw new AssertionError("Check failed");
+                    }
             } catch (Throwable throwable) {
                 if (maxTimeout < System.currentTimeMillis())
                     throw new AssertionError("Check failed");
