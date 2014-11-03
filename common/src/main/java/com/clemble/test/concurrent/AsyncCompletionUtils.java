@@ -42,4 +42,29 @@ public class AsyncCompletionUtils {
         throw new AssertionError("Check failed");
     }
 
+    public static <T> void equals(Get<T> a, Get<T> b){
+        equals(a, b, 5000);
+    }
+
+    public static <T> void equals(Get<T> a, Get<T> b, long timeout) {
+        long maxTimeout = System.currentTimeMillis() + timeout;
+        do {
+            try {
+                if(a.get().equals(b.get()))
+                    return;
+            } catch (Throwable throwable) {
+                if (maxTimeout < System.currentTimeMillis()) {
+                    throw new AssertionError("Expected " + a.get() + " Actual " + b.get());
+                } else {
+                    try {
+                        Thread.sleep(300);
+                    } catch (InterruptedException e) {
+                        throw new AssertionError("Expected " + a.get() + " Actual " + b.get());
+                    }
+                }
+            }
+        } while (maxTimeout > System.currentTimeMillis());
+        throw new AssertionError("Expected " + a.get() + " Actual " + b.get());
+    }
+
 }
