@@ -8,18 +8,17 @@ public class AsyncCompletionUtils {
             try {
                 return get.get();
             } catch (Throwable throwable) {
-                if (maxTimeout < System.currentTimeMillis())
+                if (maxTimeout < System.currentTimeMillis()) {
                     throw new AssertionError("Failed to get value");
-                else
-                    try {
-                        Thread.sleep(300);
-                    } catch (InterruptedException e) {
-                        throw new AssertionError("Failed to get value");
-                    }
+                }
+            }
+            try {
+                Thread.sleep(300);
+            } catch (InterruptedException e) {
+                throw new AssertionError("Failed to get value");
             }
         } while (maxTimeout > System.currentTimeMillis());
         throw new AssertionError("Failed to get value");
-
     }
 
     public static void check(Check check, long timeout) {
@@ -29,14 +28,14 @@ public class AsyncCompletionUtils {
                 if(check.check())
                     return;
             } catch (Throwable throwable) {
-                if (maxTimeout < System.currentTimeMillis())
+                if (maxTimeout < System.currentTimeMillis()) {
                     throw new AssertionError("Check failed");
-                else
-                    try {
-                        Thread.sleep(300);
-                    } catch (InterruptedException e) {
-                        throw new AssertionError("Check failed");
-                    }
+                }
+            }
+            try {
+                Thread.sleep(300);
+            } catch (InterruptedException e) {
+                throw new AssertionError("Check failed");
             }
         } while (maxTimeout > System.currentTimeMillis());
         throw new AssertionError("Check failed");
@@ -55,13 +54,12 @@ public class AsyncCompletionUtils {
             } catch (Throwable throwable) {
                 if (maxTimeout < System.currentTimeMillis()) {
                     throw new AssertionError("Expected " + a.get() + " Actual " + b.get());
-                } else {
-                    try {
-                        Thread.sleep(300);
-                    } catch (InterruptedException e) {
-                        throw new AssertionError("Expected " + a.get() + " Actual " + b.get());
-                    }
                 }
+            }
+            try {
+                Thread.sleep(300);
+            } catch (InterruptedException e) {
+                throw new AssertionError("Expected " + a.get() + " Actual " + b.get());
             }
         } while (maxTimeout > System.currentTimeMillis());
         throw new AssertionError("Expected " + a.get() + " Actual " + b.get());
