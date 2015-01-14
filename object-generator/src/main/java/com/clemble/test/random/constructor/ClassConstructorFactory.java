@@ -97,8 +97,9 @@ final public class ClassConstructorFactory<T> extends ClassConstructor<T> {
      *            {@link ValueGeneratorFactory} to use.
      * @return {@link ClassConstructor} if it is possible to generate one, <code>null</code> otherwise.
      */
-    public static <T> ClassConstructorFactory<T> build(final ClassAccessWrapper<?> classToGenerate,
-            final ValueGeneratorFactory valueGeneratorFactory) {
+    public static <T> ClassConstructorFactory<T> build(
+        final ClassAccessWrapper<?> classToGenerate,
+        final ValueGeneratorFactory valueGeneratorFactory) {
         // Step 1. Filter static methods, that return instance of the type as a result
         Collection<Method> possibleBuilders = getPossibleFactoryMethods(classToGenerate);
         // Step 2. If there is no such method return null
@@ -106,11 +107,23 @@ final public class ClassConstructorFactory<T> extends ClassConstructor<T> {
             return null;
         // Step 3. Select constructor with most arguments
         Method builder = null;
-        for (Method candidate : possibleBuilders)
-            if (builder == null || candidate.getParameterTypes().length > builder.getParameterTypes().length)
-                builder = candidate;
+        ClassConstructorFactory<T> constructorFactory = null;
+        for (Method candidate : possibleBuilders) {
+            try {
+                // Step 3.1. Checking can actually constuct the Object
+                ClassConstructorFactory<T> candidateFactory =  new ClassConstructorFactory<T>(candidate, valueGeneratorFactory.getValueGenerators(candidate.getParameterTypes()));
+                candidateFactory.construct();
+                // Step 3.2. If involves more parameters use it
+                if (builder == null || candidate.getParameterTypes().length > builder.getParameterTypes().length) {
+                    builder = candidate;
+                    constructorFactory = candidateFactory;
+                }
+            } catch (Throwable throwable) {
+
+            }
+        }
         // Step 4. Creating factory method based
-        return new ClassConstructorFactory<T>(builder, valueGeneratorFactory.getValueGenerators(builder.getParameterTypes()));
+        return constructorFactory;
     }
     
 }
