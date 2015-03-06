@@ -42,7 +42,6 @@
     <modules>
         <module>common</module>
         <module>common-spring</module>
-        <module>object-generator</module>
         <module>junit-stress</module>
         <module>spring-stress</module>
         <module>jvm-support</module>
@@ -106,11 +105,6 @@
             <dependency>
                 <groupId>com.clemble.test</groupId>
                 <artifactId>spring-stress</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.clemble.test</groupId>
-                <artifactId>object-generator</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
